@@ -1,0 +1,118 @@
+body {
+	background-color: black;
+}
+
+main > .container {
+  padding: 30px 15px;
+}
+
+.navbar-brand {
+	display: block;
+}
+
+.navbar-collapse {
+	margin-left: 100px;
+}
+
+#logo {
+	width: 50px;
+	height: 50px;
+	float: left;
+	margin-right: 20px;
+}
+
+.navbar-brand a {
+	width: 300px;
+	color: #eee;
+	text-decoration: none;
+}
+
+footer {
+	background-color: #222;
+	height: 80px;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+
+	.copyright {
+		color: #eee;
+		margin-top: auto;
+		margin-bottom: auto;
+		margin-left: 20px;
+
+		a {
+			color: #eee;
+		}
+	}
+}
+
+#server-form {
+	margin: 0 auto;
+
+	.form-control {
+		width: 600px;
+	}
+}
+
+.container {
+	margin-bottom: 70px;
+	margin-top: 70px;
+}
+
+table {
+	margin-top: 20px;
+}
+
+.btn-group {
+	float: right;
+}
+
+.drug {
+	margin-bottom: 10px;
+}
+
+.drug-tier-select {
+	width: 100% !important;
+	margin-right: 15px !important;
+}
+
+.appointment_required {
+	float: left;
+	display: inline block;
+	padding: 7px 15px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	border-radius: 20px;
+}
+
+.appointment_required {
+	background-color: #c44;
+}
+
+.step-therapy {
+	background-color: #494;
+}
+
+.quantity-limit {
+	background-color: #39b;
+}
+
+.messages {
+	margin-bottom: -100px;
+}
+
+@media (min-width: 200px) and (max-width: 767px) {
+	#server-form {
+		display: block;
+		margin: 0 auto;
+
+		.form-control, .btn {
+			width: 300px;
+			margin-bottom: 10px;
+		}
+
+		.btn {
+			margin-left: 15px;
+		}
+	}
+}

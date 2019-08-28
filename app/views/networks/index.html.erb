@@ -1,0 +1,23 @@
+<section class='container'>
+  <section class='row col-12'>
+    <div class='col-12'>
+      <h3 class='float-left text-white'>Networks</h3>
+      <%= render 'partials/pagination', resource: :networks %>
+    </div>
+    <table class='table table-dark'>
+      <tr>
+        <th scope='col'>Name</th>
+      </tr>
+      <% @networks.each do |fhir_network| %>
+        <% network = Network.new(fhir_network) %>
+        <tr>
+          <td><%= network.name %></td>
+        </tr>
+      <% end %>
+    </table>
+    <div class='col-12'>
+      <%= render 'partials/pagination', resource: :networks %>
+    </div>
+  </section>
+</section>
+

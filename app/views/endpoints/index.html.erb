@@ -1,0 +1,40 @@
+<section class='container'>
+  <section class='row col-12'>
+    <div class='col-12'>
+      <h3 class='float-left text-white'>Endpoints</h3>
+      <%= render 'partials/pagination', resource: :endpoints %>
+    </div>
+    <table class='table table-dark'>
+      <tr>
+        <th scope='col'>Name</th>
+        <th scope='col'>Connection Type</th>
+        <th scope='col'>Managing Organization</th>
+        <th scope='col'>Contacts</th>
+        <th scope='col'>Period</th>
+        <th scope='col'>Payload Types</th>
+        <th scope='col'>Payload MIME Types</th>
+        <th scope='col'>Headers</th>
+      </tr>
+      <% @endpoints.each do |fhir_endpoint| %>
+        <% endpoint = Endpoint.new(fhir_endpoint) %>
+        <tr>
+          <td><%= endpoint.name %></td>
+          <td><%= endpoint.connection_type.display %></td>
+          <td><%= endpoint.managing_organization.display %></td>
+          <td>
+            <% endpoint.contacts.each do |contact| %>
+              <%= display_telecom(contact) %><br />
+            <% end %>
+          </td>
+          <td><%= endpoint.period %></td>
+          <td><%= display_coding_list(endpoint.payload_types) %></td>
+          <td><%= endpoint.payload_mime_types.join(', ') %></td>
+          <td><%= display_list(endpoint.headers) %></td>
+        </tr>
+      <% end %>
+    </table>
+    <div class='col-12'>
+      <%= render 'partials/pagination', resource: :endpoints %>
+    </div>
+  </section>
+</section>

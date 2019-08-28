@@ -1,0 +1,31 @@
+<section class='container'>
+  <section class='row col-12'>
+    Name: <%= display_name(@practitioner.name.first) %><br />
+    Contact:<br />
+    <% @practitioner.telecom.each do |telecom| %>
+      <%= display_telecom(telecom) %><br />
+    <% end %><br />
+    Addresses:<br />
+    <% @practitioner.address.each do |address| %>
+      <% address.line.each do |line| %>
+        <%= line %><br />
+      <% end %>
+      <%= address.city %>, <%= address.state %> <%= address.postalCode %><br />
+      <br />
+    <% end %>
+    Gender: <%= @practitioner.gender %><br />
+    Qualifications: <br />            
+    <% @practitioner.qualification.each do |qualification| %>
+      <% qualification.identifier.each do |identifier| %>
+        Identifier: <%= display_identifier(identifier) %><br />
+      <% end %>
+      <% qualification.code.coding.each do |coding| %>
+        Code: <%= [ coding.system, coding.code, coding.display ].join(', ') %><br />
+        <br />
+      <% end %>
+      Period: <%= display_period(qualification.period) %><br />
+      Issuer: <%= display_issuer(qualification.issuer) %><br />
+      <br />
+    <% end %>
+  </section>
+</section>

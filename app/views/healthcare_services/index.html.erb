@@ -1,0 +1,70 @@
+<section class='container'>
+  <section class='row col-12'>
+    <div class='col-12'>
+      <h3 class='float-left text-white'>Healthcare Services</h3>
+      <%= render 'partials/pagination', resource: :healthcare_services %>
+    </div>
+    <table class='table table-dark'>
+      <tr>
+        <th scope='col'>Name</th>
+        <th scope='col'>Type</th>
+        <th scope='col'>Provided By</th>
+        <th scope='col'>Categories</th>
+        <th scope='col'>Specialties</th>
+        <th scope='col'>Locations</th>
+        <th scope='col'>Telecoms</th>
+        <th scope='col'>Coverage Areas</th>
+        <th scope='col'>Service Provision Codes</th>
+        <th scope='col'>Eligibilities</th>
+        <th scope='col'>Programs</th>
+        <th scope='col'>Characteristics</th>
+        <th scope='col'>Communications</th>
+        <th scope='col'>Referral Methods</th>
+        <th scope='col'>Available Times</th>
+        <th scope='col'>Not Availables</th>
+        <th scope='col'>Availability Exceptions</th>
+        <th scope='col'>Endpoints</th>
+      </tr>
+      <% @healthcare_services.each do |fhir_healthcare_service| %>
+        <% healthcare_service = HealthcareService.new(fhir_healthcare_service) %>
+        <tr>
+          <td>
+            <%= healthcare_service.name %>
+            <% if healthcare_service.appointment_required %>
+              <span class='appointment_required'>Appointment Required</span>
+            <% end %>
+          </td>
+          <td><%= display_coding_list(healthcare_service.type) %></td>
+          <td><%= healthcare_service.provided_by.display %></td>
+          <td><%= display_list(healthcare_service.categories) %></td>
+          <td><%= display_coding_list(healthcare_service.specialties) %></td>
+          <td><%= display_list(healthcare_service.locations) %></td>
+          <td>
+            <% healthcare_service.telecoms.each do |telecom| %>
+              <%= display_telecom(telecom) %><br />
+            <% end %>
+          </td>
+          <td><%= display_list(healthcare_service.coverage_areas) %></td>
+          <td><%= display_coding_list(healthcare_service.service_provision_codes) %></td>
+          <td><%= display_list(healthcare_service.eligibilities) %></td>
+          <td><%= display_list(healthcare_service.programs) %></td>
+          <td><%= display_list(healthcare_service.characteristics) %></td>
+          <td><%= display_list(healthcare_service.communications) %></td>
+          <td><%= display_coding_list(healthcare_service.referral_methods) %></td>
+          <td>
+            <% healthcare_service.available_times.each do |time| %>
+              <%= time.daysOfWeek.join(', ') %>: 
+              <%= time.availableStartTime %> to <%= time.availableEndTime %><br />
+            <% end %>
+          </td>
+          <td><%= display_list(healthcare_service.not_availables) %></td>
+          <td><%= healthcare_service.availability_exceptions %></td>
+          <td><%= display_list(healthcare_service.endpoints) %></td>
+        </tr>
+      <% end %>
+    </table>
+    <div class='col-12'>
+      <%= render 'partials/pagination', resource: :healthcare_services %>
+    </div>
+  </section>
+</section>

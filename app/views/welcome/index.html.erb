@@ -1,0 +1,14 @@
+<section class='container'>
+	<section class='row col-12'>
+		<%= form_tag practitioners_path, method: 'get', class: 'form-inline', id: 'server-form' do %>
+			<div class='form-group col-md-10'>
+				<%= text_field_tag :server_url, cookies[:server_url], class: 'form-control',
+							placeholder: 'http://your-plan-network-server.org' %>
+			</div>
+
+			<%= button_tag class: 'btn btn-primary col-md-2', id: 'server-url' do %>
+				Lookup
+			<% end %>
+		<% end %>
+	</section>
+</section>

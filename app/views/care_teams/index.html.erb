@@ -1,0 +1,22 @@
+<section class='container'>
+  <section class='row col-12'>
+    <div class='col-12'>
+      <h3 class='float-left text-white'>Care Teams</h3>
+      <%= render 'partials/pagination', resource: :care_teams %>
+    </div>
+    <table class='table table-dark'>
+      <tr>
+        <th scope='col'>Name</th>
+      </tr>
+      <% @care_teams.each do |fhir_care_team| %>
+        <% care_team = CareTeam.new(fhir_care_team) %>
+        <tr>
+          <td><%= care_team.name %></td>
+        </tr>
+      <% end %>
+    </table>
+    <div class='col-12'>
+      <%= render 'partials/pagination', resource: :care_teams %>
+    </div>
+  </section>
+</section>
