@@ -38,7 +38,7 @@ module ApplicationHelper
 	#-----------------------------------------------------------------------------
 
 	def display_telecom(telecom)
-		return telecom.system + ": " + telecom.value
+		return telecom.system + ": " + number_to_phone(telecom.value, area_code: true)
 	end
 
 	#-----------------------------------------------------------------------------
@@ -80,6 +80,13 @@ module ApplicationHelper
 		end
 
 		return result
+	end
+
+	#-----------------------------------------------------------------------------
+
+	def display_postal_code(postal_code)
+  	postal_code.match(/^\d{9}$/) ?
+  			postal_code.strip.sub(/([A-Z0-9]+)([A-Z0-9]{4})/, '\1-\2') : postal_code
 	end
 
 end
