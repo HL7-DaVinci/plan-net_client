@@ -38,6 +38,10 @@ group :development do
   # gem 'capistrano-rails'            # Use Capistrano for deployment
 end
 
+group :production do
+	gem 'pg'
+end
+
 group :test do
   gem 'capybara', '>= 2.15'     # Adds support for Capybara system testing and selenium driver
   gem 'selenium-webdriver'      # WebDriver JavaScript bindings from the Selenium project
