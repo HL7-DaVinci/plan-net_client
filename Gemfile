@@ -4,7 +4,6 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.6.3'
 
 gem 'rails', '~> 5.2.3'         # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'sqlite3'                   # Use sqlite3 as the database for Active Record
 gem 'puma', '~> 3.11'           # Use Puma as the app server
 gem 'sass-rails', '~> 5.0'      # Use SCSS for stylesheets
 gem 'uglifier', '>= 1.3.0'      # Use Uglifier as compressor for JavaScript assets
@@ -27,6 +26,7 @@ gem 'jquery-rails'              # Automate using jQuery with Rails
 gem 'bootstrap', '~> 4.3.1'     # Integrates Bootstrap HTML, CSS, and JavaScript framework
 
 group :development, :test do
+	gem 'sqlite3'                   # Use sqlite3 as the database for Active Record
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]     # Call 'byebug' anywhere in the code to stop execution and get a debugger console
 end
 
