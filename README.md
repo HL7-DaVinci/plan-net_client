@@ -1,4 +1,4 @@
-# Da Vinci Plan Coverage and Medical Formulary Client Reference Implementation
+# Da Vinci Plan-Net Reference Implementation
 
 ## Installation and Deployment
 
@@ -12,8 +12,8 @@ And run the following commands from the terminal:
 
 ```sh
 # MacOS or Linux
-git clone https://github.com/FHIR/dv-formulary-client
-cd dv-formulary-client
+git clone https://github.com/FHIR/davinci-pdex-plan-net
+cd davinci-pdex-plan-net
 bundle install
 rails s
 ```
@@ -28,7 +28,7 @@ rails s -p 4000
 
 ### Reference Implementation
 
-While it is recommended that users install the client locally, an instance of the client is hosted at https://formulary-client.herokuapp.com
+While it is recommended that users install the client locally, an instance of the client is hosted at https://plan-net-client.herokuapp.com
 
 Users that would like to try out the client before installing locally can use that reference implementation.
 
