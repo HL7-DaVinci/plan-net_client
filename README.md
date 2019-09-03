@@ -32,6 +32,18 @@ While it is recommended that users install the client locally, an instance of th
 
 Users that would like to try out the client before installing locally can use that reference implementation.
 
+### Docker Container
+
+If you prefer, you can also build the client application within a Docker container.  When you
+run the docker container, it will indicate the local port that should be used to access the client.
+
+```sh
+git clone https://github.com/FHIR/davinci-pdex-plan-net
+cd davinci-pdex-plan-net
+docker build -t plan-net .
+docker run -itP plan-net
+```
+
 ## Supported Browsers
 
 The client has been tested on the latest versions of Chrome and Safari.  
