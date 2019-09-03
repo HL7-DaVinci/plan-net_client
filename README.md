@@ -35,7 +35,7 @@ Users that would like to try out the client before installing locally can use th
 ### Docker Container
 
 If you prefer, you can also build the client application within a Docker container.  When you
-run the docker container, it will indicate the local port that should be used to access the client.
+run the Docker container, it will indicate the local port that should be used to access the client.
 
 ```sh
 git clone https://github.com/FHIR/davinci-pdex-plan-net
