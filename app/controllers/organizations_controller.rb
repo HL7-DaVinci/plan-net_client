@@ -38,7 +38,7 @@ class OrganizationsController < ApplicationController
 
 	def show
 		reply = @@client.search(FHIR::Organization, 
-											search: { parameters: { id: params[:id] } })
+											search: { parameters: { identifier: params[:id] } })
 	end
 
 end

@@ -39,7 +39,7 @@ class PractitionersController < ApplicationController
 
 	def show
 		reply = @@client.search(FHIR::Practitioner, 
-											search: { parameters: { id: params[:id] } })
+											search: { parameters: { identifier: params[:id] } })
 	end
 
 end

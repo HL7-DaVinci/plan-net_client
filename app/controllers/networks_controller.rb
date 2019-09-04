@@ -26,7 +26,7 @@ class NetworksController < ApplicationController
 			else
 				reply = @@client.search(FHIR::Organization,
 													search: { parameters: { 
-														profile: "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network" 
+														_profile: "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network"
 													} })
 			end
 			@@bundle = reply.resource
