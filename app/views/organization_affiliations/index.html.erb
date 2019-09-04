@@ -1,0 +1,48 @@
+<section class='container'>
+  <section class='row col-12'>
+    <div class='col-12'>
+      <h3 class='float-left text-white'>Organization Affiliations</h3>
+      <%= render 'partials/pagination', resource: :organization_affiliations %>
+    </div>
+    <table class='table table-dark'>
+      <tr>
+        <th scope='col'>Networks</th>
+        <th scope='col'>Identifiers</th>
+        <th scope='col'>Organization</th>
+        <th scope='col'>Participating Organization</th>
+        <th scope='col'>Codes</th>
+        <th scope='col'>Specialties</th>
+        <th scope='col'>Locations</th>
+        <th scope='col'>Healthcare Services</th>
+        <th scope='col'>Phone/Fax</th>
+        <th scope='col'>Endpoints</th>
+      </tr>
+      <% @organization_affiliations.each do |fhir_organization_affiliation| %>
+        <% organization_affiliation = OrganizationAffiliation.new(fhir_organization_affiliation) %>
+        <tr>
+          <td>
+            <%= sanitize(display_extension_list(organization_affiliation.networks)) %>
+          </td>
+          <td>
+            <% organization_affiliation.identifiers.each do |identifier| %>
+              <%= display_identifier(identifier) %><br />
+              <%= display_period(identifier.period) %><br />
+            <% end %>
+          </td>
+          <td><%= display_reference(organization_affiliation.organization) %></td>
+          <td><%= display_reference(organization_affiliation.participating_organization) %></td>
+          <td><%= display_coding_list(organization_affiliation.codes) %></td>
+          <td><%= display_list(organization_affiliation.specialties) %></td>
+          <td><%= display_list(organization_affiliation.locations) %></td>
+          <td><%= display_reference_list(organization_affiliation.healthcare_services) %></td>
+          <td><%= display_list(organization_affiliation.telecoms) %></td>
+          <td><%= display_list(organization_affiliation.endpoints) %></td>
+        </tr>
+      <% end %>
+    </table>
+    <div class='col-12'>
+      <%= render 'partials/pagination', resource: :organization_affiliations %>
+    </div>
+  </section>
+
+</section>

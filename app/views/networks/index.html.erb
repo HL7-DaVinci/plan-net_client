@@ -11,7 +11,7 @@
       <% @networks.each do |fhir_network| %>
         <% network = Network.new(fhir_network) %>
         <tr>
-          <td><%= network.name %></td>
+          <td><%= sanitize(network.name) %></td>
         </tr>
       <% end %>
     </table>

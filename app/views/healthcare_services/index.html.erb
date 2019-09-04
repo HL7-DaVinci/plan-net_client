@@ -35,7 +35,7 @@
             <% end %>
           </td>
           <td><%= display_coding_list(healthcare_service.type) %></td>
-          <td><%= healthcare_service.provided_by.display %></td>
+          <td><%= sanitize(healthcare_service.provided_by.display) %></td>
           <td><%= display_list(healthcare_service.categories) %></td>
           <td><%= display_coding_list(healthcare_service.specialties) %></td>
           <td><%= display_list(healthcare_service.locations) %></td>
@@ -53,12 +53,13 @@
           <td><%= display_coding_list(healthcare_service.referral_methods) %></td>
           <td>
             <% healthcare_service.available_times.each do |time| %>
-              <%= time.daysOfWeek.join(', ') %>: 
-              <%= time.availableStartTime %> to <%= time.availableEndTime %><br />
+              <%= sanitize(time.daysOfWeek.join(', ')) %>: 
+              <%= sanitize(time.availableStartTime) %> to 
+              <%= sanitize(time.availableEndTime) %><br />
             <% end %>
           </td>
           <td><%= display_list(healthcare_service.not_availables) %></td>
-          <td><%= healthcare_service.availability_exceptions %></td>
+          <td><%= sanitize(healthcare_service.availability_exceptions) %></td>
           <td><%= display_list(healthcare_service.endpoints) %></td>
         </tr>
       <% end %>

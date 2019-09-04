@@ -32,19 +32,19 @@ module ApplicationHelper
 		result = name.prefix.join(', ') + ' ' + name.family + ', ' + 
 							name.given.join(' ')
 		result += ', ' + name.suffix.join(', ') if name.suffix.present?
-		return result
+		return sanitize(result)
 	end
 
 	#-----------------------------------------------------------------------------
 
 	def display_telecom(telecom)
-		return telecom.system + ": " + number_to_phone(telecom.value, area_code: true)
+		return sanitize(telecom.system + ": " + number_to_phone(telecom.value, area_code: true))
 	end
 
 	#-----------------------------------------------------------------------------
 
 	def display_identifier(identifier)
-		return [ identifier.type.text, identifier.value, identifier.assigner.display ].join(', ')
+		return sanitize([ identifier.type.text, identifier.value, identifier.assigner.display ].join(', '))
 	end
 
 	#-----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ module ApplicationHelper
 	# Concatenates a list of display elements.
 
 	def display_list(list)
-		list.empty? ? "None" : list.map(&:display).join(', ')
+		sanitize(list.empty? ? "None" : list.map(&:display).join(', '))
 	end
 
 	#-----------------------------------------------------------------------------
@@ -60,7 +60,7 @@ module ApplicationHelper
 	# Concatenates a list of code elements.
 
 	def display_code_list(list)
-		list.empty? ? "None" : list.map(&:code).join(', ')
+		sanitize(list.empty? ? "None" : list.map(&:code).join(', '))
 	end
 
 	#-----------------------------------------------------------------------------
@@ -79,14 +79,32 @@ module ApplicationHelper
 			result = result.join(', ')
 		end
 
-		return result
+		return sanitize(result)
 	end
 
 	#-----------------------------------------------------------------------------
 
 	def display_postal_code(postal_code)
-  	postal_code.match(/^\d{9}$/) ?
-  			postal_code.strip.sub(/([A-Z0-9]+)([A-Z0-9]{4})/, '\1-\2') : postal_code
+  	sanitize(postal_code.match(/^\d{9}$/) ?
+  			postal_code.strip.sub(/([A-Z0-9]+)([A-Z0-9]{4})/, '\1-\2') : postal_code)
+	end
+
+	#-----------------------------------------------------------------------------
+
+	def display_reference(reference)
+		sanitize(link_to(reference.display, reference.reference))
+	end
+
+	#-----------------------------------------------------------------------------
+
+	def display_reference_list(list)
+		sanitize(list.map { |element| display_reference(element) }.join(', '))
+	end
+
+	#-----------------------------------------------------------------------------
+
+	def display_extension_list(list)
+		sanitize(list.map { |extension| display_reference(extension.valueReference) }.join(', '))
 	end
 
 end

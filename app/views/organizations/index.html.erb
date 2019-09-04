@@ -14,7 +14,7 @@
       <% @organizations.each do |fhir_organization| %>
         <% organization = Organization.new(fhir_organization) %>
         <tr>
-          <td><%= organization.name %></td>
+          <td><%= sanitize(organization.name) %></td>
           <td>
             <% organization.telecoms.each do |telecom| %>
               <%= display_telecom(telecom) %><br />
@@ -23,10 +23,11 @@
           <td>
             <% organization.addresses.each do |address| %>
               <% address.line.each do |line| %>
-                <%= line %><br />
+                <%= sanitize(line) %><br />
               <% end %>
-              <%= address.city %>, 
-              <%= address.state %> <%= display_postal_code(address.postalCode) %><br />
+              <%= sanitize(address.city) %>, 
+              <%= sanitize(address.state) %> 
+              <%= display_postal_code(address.postalCode) %><br />
               <br />
             <% end %>
           </td>

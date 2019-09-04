@@ -18,17 +18,17 @@
       <% @endpoints.each do |fhir_endpoint| %>
         <% endpoint = Endpoint.new(fhir_endpoint) %>
         <tr>
-          <td><%= endpoint.name %></td>
-          <td><%= endpoint.connection_type.display %></td>
-          <td><%= endpoint.managing_organization.display %></td>
+          <td><%= sanitize(endpoint.name) %></td>
+          <td><%= sanitize(endpoint.connection_type.display) %></td>
+          <td><%= sanitize(endpoint.managing_organization.display) %></td>
           <td>
             <% endpoint.contacts.each do |contact| %>
               <%= display_telecom(contact) %><br />
             <% end %>
           </td>
-          <td><%= endpoint.period %></td>
+          <td><%= sanitize(endpoint.period) %></td>
           <td><%= display_coding_list(endpoint.payload_types) %></td>
-          <td><%= endpoint.payload_mime_types.join(', ') %></td>
+          <td><%= sanitize(endpoint.payload_mime_types.join(', ')) %></td>
           <td><%= display_list(endpoint.headers) %></td>
         </tr>
       <% end %>

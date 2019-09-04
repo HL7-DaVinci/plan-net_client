@@ -9,31 +9,25 @@
 module PractitionerHelper
 
 	def display_qualification(qualification)
-		return qualification.identifier
-	end
-
-	#-----------------------------------------------------------------------------
-
-	def display_identifier(identifier)
-		return [ identifier.type.text, identifier.value, identifier.assigner.display ].join(', ')
+		return sanitize(qualification.identifier)
 	end
 
 	#-----------------------------------------------------------------------------
 
 	def display_code(code)
-		return code.coding.display
+		return sanitize(code.coding.display)
 	end
 
 	#-----------------------------------------------------------------------------
 
 	def display_period(period)
-		return period.present? ? period.start + ' to ' + period.end : "Not available"
+		return period.present? ? sanitize(period.start + ' to ' + period.end) : "Not available"
 	end
 
 	#-----------------------------------------------------------------------------
 
 	def display_issuer(issuer)
-		return issuer.display
+		return sanitize(issuer.display)
 	end
 
 end

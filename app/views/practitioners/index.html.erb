@@ -24,10 +24,11 @@
           <td>
             <% practitioner.addresses.each do |address| %>
               <% address.line.each do |line| %>
-                <%= line %><br />
+                <%= sanitize(line) %><br />
               <% end %>
-              <%= address.city %>, 
-              <%= address.state %> <%= display_postal_code(address.postalCode) %><br />
+              <%= sanitize(address.city) %>, 
+              <%= sanitize(address.state) %> 
+              <%= display_postal_code(address.postalCode) %><br />
               <br />
             <% end %>
           </td>
@@ -39,7 +40,7 @@
                 <%= display_period(identifier.period) %><br />
               <% end %>
               <% qualification.code.coding.each do |coding| %>
-                <%= coding.display %><br />
+                <%= sanitize(coding.display) %><br />
                 <br />
               <% end %>
             <% end %>
