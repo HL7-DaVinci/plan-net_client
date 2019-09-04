@@ -1,7 +1,10 @@
 <section class='container'>
   <section class='row col-12'>
     <div class='col-12'>
-      <h3 class='float-left text-white'>Practitioners</h3>
+      <h3 class='float-left text-white'>
+        Practitioners
+        <%= ("named '" + sanitize(@params[:name]) + "'") unless @params[:name].nil? %>
+      </h3>
       <%= render 'partials/pagination', resource: :practitioners %>
     </div>
     <table class='table table-dark'>

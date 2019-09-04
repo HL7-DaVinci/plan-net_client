@@ -22,14 +22,15 @@ class PractitionersController < ApplicationController
 		else
 			if params[:name].present?
 				reply = @@client.search(FHIR::Practitioner, 
-											search: { parameters: { classification: params[:name] } })
+											search: { parameters: { family: params[:name] } })
 			else
 				reply = @@client.search(FHIR::Practitioner)
 			end
 			@@bundle = reply.resource
 		end
 
-		@practitioners = @@bundle.entry.map(&:resource)
+		@practitioners = @@bundle.present? ? @@bundle.entry.map(&:resource) : []
+		@params = params
 	end
 
 	#-----------------------------------------------------------------------------
