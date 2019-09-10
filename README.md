@@ -28,7 +28,7 @@ rails s -p 4000
 
 ### Reference Implementation
 
-While it is recommended that users install the client locally, an instance of the client is hosted at https://plan-net-client.herokuapp.com
+While it is recommended that users install the client locally, an instance of the client is hosted at https://davinci-plan-net-client.logicahealth.org
 
 Users that would like to try out the client before installing locally can use that reference implementation.
 
