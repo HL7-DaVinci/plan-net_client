@@ -17,6 +17,7 @@ class Practitioner < Resource
 	#-----------------------------------------------------------------------------
 
 	def initialize(practitioner)
+		@id 						= practitioner.id
 		@name						= practitioner.name
 		@telecoms 			= practitioner.telecom
 		@addresses 			= practitioner.address

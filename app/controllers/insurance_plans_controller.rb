@@ -38,7 +38,11 @@ class InsurancePlansController < ApplicationController
 
 	def show
 		reply = @@client.search(FHIR::InsurancePlan, 
-											search: { parameters: { id: params[:id] } })
+											search: { parameters: { _id: params[:id] } })
+		bundle = reply.resource
+		fhir_insurnace_plan = bundle.entry.map(&:resource).first
+		
+		@insurance_plan = InsurancePlan.new(fhir_insurnace_plan) unless fhir_insurnace_plan.nil?
 	end
 
 end

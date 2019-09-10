@@ -21,6 +21,7 @@ class HealthcareService < Resource
 	#-----------------------------------------------------------------------------
 
 	def initialize(healthcare_service)
+		@id 											= healthcare_service.id
 		@provided_by							= healthcare_service.providedBy
 		@categories								= healthcare_service.category
 		@type											= healthcare_service.type

@@ -18,6 +18,7 @@ class Endpoint < Resource
 	#-----------------------------------------------------------------------------
 
 	def initialize(endpoint)
+		@id 										= endpoint.id
 		@connection_type				= endpoint.connectionType
 		@name										= endpoint.name
 		@managing_organization	= endpoint.managingOrganization

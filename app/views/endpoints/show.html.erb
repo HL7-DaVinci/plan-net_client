@@ -1,0 +1,43 @@
+<section class='container'>
+  <section class='row col-12'>
+    <% unless @endpoint.nil? %>
+      <h2><%= sanitize(@endpoint.name) %></h2>
+      <table class='table table-dark'>
+        <tr>
+          <td>Connection Type:</td>
+          <td><%= sanitize(@endpoint.connection_type.display) %></td>
+        </tr>
+        <tr>
+          <td>Managing Organization:</td>
+          <td><%= display_reference(@endpoint.managing_organization) %></td>
+        </tr>
+        <tr>
+          <td>Phone/Fax:</td>
+          <td>
+            <% @endpoint.contacts.each do |contact| %>
+              <%= display_telecom(contact) %><br />
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <td>Period:</td>
+          <td><%= sanitize(@endpoint.period) %></td>
+        </tr>
+        <tr>
+          <td>Payload Types:</td>
+          <td><%= display_coding_list(@endpoint.payload_types) %></td>
+        </tr>
+        <tr>
+          <td>Payload MIME Types:</td>
+          <td><%= sanitize(@endpoint.payload_mime_types.join(', ')) %></td>
+        </tr>
+        <tr>
+          <td>Headers</td>
+          <td><%= display_list(@endpoint.headers) %></td>
+        </tr>
+      </table>
+    <% else %>
+      Not available
+    <% end %>
+  </section>
+</section>

@@ -16,10 +16,11 @@ class Network < Resource
 	#-----------------------------------------------------------------------------
 
 	def initialize(network)
-		@name						= organization.name
-		@telecoms 			= organization.telecom
-		@addresses 			= organization.address
-		@contacts				= organization.contact
+		@id 						= network.id
+		@name						= network.name
+		@telecoms 			= network.telecom
+		@addresses 			= network.address
+		@contacts				= network.contact
 	end
 	
 end

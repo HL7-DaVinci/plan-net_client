@@ -39,7 +39,11 @@ class PractitionersController < ApplicationController
 
 	def show
 		reply = @@client.search(FHIR::Practitioner, 
-											search: { parameters: { identifier: params[:id] } })
+											search: { parameters: { _id: params[:id] } })
+		bundle = reply.resource
+		fhir_practitioner = bundle.entry.map(&:resource).first
+		
+		@practitioner = Practitioner.new(fhir_practitioner) unless fhir_practitioner.nil?
 	end
 
 end

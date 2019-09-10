@@ -29,7 +29,7 @@
         <% healthcare_service = HealthcareService.new(fhir_healthcare_service) %>
         <tr>
           <td>
-            <%= healthcare_service.name %>
+            <%= link_to healthcare_service.name, healthcare_service_path(healthcare_service.id) %>
             <% if healthcare_service.appointment_required %>
               <span class='appointment_required'>Appointment Required</span>
             <% end %>

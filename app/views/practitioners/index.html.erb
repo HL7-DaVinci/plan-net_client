@@ -18,7 +18,8 @@
       <% @practitioners.each do |fhir_practitioner| %>
         <% practitioner = Practitioner.new(fhir_practitioner) %>
         <tr>
-          <td><%= display_human_name(practitioner.name.first) %></td>
+          <td><%= link_to display_human_name(practitioner.name.first),
+                            practitioner_path(practitioner.id) %></td>
           <td>
             <% practitioner.telecoms.each do |telecom| %>
               <%= display_telecom(telecom) %><br />

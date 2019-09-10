@@ -38,7 +38,11 @@ class EndpointsController < ApplicationController
 
 	def show
 		reply = @@client.search(FHIR::Endpoint, 
-											search: { parameters: { id: params[:id] } })
+											search: { parameters: { _id: params[:id] } })
+		bundle = reply.resource
+		fhir_endpoint = bundle.entry.map(&:resource).first
+		
+		@endpoint = Endpoint.new(fhir_endpoint) unless fhir_endpoint.nil?
 	end
 
 end

@@ -38,7 +38,11 @@ class OrganizationsController < ApplicationController
 
 	def show
 		reply = @@client.search(FHIR::Organization, 
-											search: { parameters: { identifier: params[:id] } })
+											search: { parameters: { _id: params[:id] } })
+		bundle = reply.resource
+		fhir_organization = bundle.entry.map(&:resource).first
+		
+		@organization = Organization.new(fhir_organization) unless fhir_organization.nil?
 	end
 
 end

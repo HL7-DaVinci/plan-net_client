@@ -18,9 +18,9 @@
       <% @endpoints.each do |fhir_endpoint| %>
         <% endpoint = Endpoint.new(fhir_endpoint) %>
         <tr>
-          <td><%= sanitize(endpoint.name) %></td>
+          <td><%= link_to sanitize(endpoint.name), endpoint_path(endpoint.id) %></td>
           <td><%= sanitize(endpoint.connection_type.display) %></td>
-          <td><%= sanitize(endpoint.managing_organization.display) %></td>
+          <td><%= display_reference(endpoint.managing_organization) %></td>
           <td>
             <% endpoint.contacts.each do |contact| %>
               <%= display_telecom(contact) %><br />

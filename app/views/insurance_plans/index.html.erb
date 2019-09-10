@@ -17,7 +17,7 @@
 			<% @insurance_plans.each do |fhir_insurance_plan| %>
 				<% insurance_plan = InsurancePlan.new(fhir_insurance_plan) %>
 				<tr>
-					<td><%= sanitize(insurance_plan.name) %></td>
+					<td><%= link_to sanitize(insurance_plan.name), insurance_plan_path(insurance_plan.id) %></td>
 					<td><%= sanitize(insurance_plan.owned_by.display) %></td>
 					<td><%= sanitize(insurance_plan.administered_by.display) %></td>
 					<td><%= sanitize(insurance_plan.coverage_areas.map(&:display).join(', ')) %></td>

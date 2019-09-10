@@ -18,6 +18,7 @@ class InsurancePlan < Resource
 	#-----------------------------------------------------------------------------
 
 	def initialize(insurance_plan)
+		@id 							= insurance_plan.id
 		@status						= insurance_plan.status
 		@type							= insurance_plan.type
 		@name							= insurance_plan.name

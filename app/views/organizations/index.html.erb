@@ -8,13 +8,13 @@
       <tr>
         <th scope='col'>Name</th>
         <th scope='col'>Phone/Fax</th>
-        <th scope='col'>Addresses</th>
+        <th scope='col'>Locations</th>
         <th scope='col'>Contacts</th>
       </tr>
       <% @organizations.each do |fhir_organization| %>
         <% organization = Organization.new(fhir_organization) %>
         <tr>
-          <td><%= sanitize(organization.name) %></td>
+          <td><%= link_to sanitize(organization.name), organization_path(organization.id) %></td>
           <td>
             <% organization.telecoms.each do |telecom| %>
               <%= display_telecom(telecom) %><br />

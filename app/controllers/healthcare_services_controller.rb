@@ -38,7 +38,12 @@ class HealthcareServicesController < ApplicationController
 
 	def show
 		reply = @@client.search(FHIR::HealthcareService, 
-											search: { parameters: { id: params[:id] } })
+											search: { parameters: { _id: params[:id] } })
+		bundle = reply.resource
+		fhir_healthcare_service = bundle.entry.map(&:resource).first
+		
+		@healthcare_service = HealthcareService.new(fhir_healthcare_service) unless 
+															fhir_healthcare_service.nil?
 	end
 
 end

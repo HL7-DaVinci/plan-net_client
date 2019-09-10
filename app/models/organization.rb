@@ -16,6 +16,7 @@ class Organization < Resource
 	#-----------------------------------------------------------------------------
 
 	def initialize(organization)
+		@id 						= organization.id
 		@name						= organization.name
 		@telecoms 			= organization.telecom
 		@addresses 			= organization.address

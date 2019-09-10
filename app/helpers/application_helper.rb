@@ -92,7 +92,9 @@ module ApplicationHelper
 	#-----------------------------------------------------------------------------
 
 	def display_reference(reference)
-		sanitize(link_to(reference.display, reference.reference))
+		components = reference.reference.split('/')
+		sanitize(link_to(reference.display, 
+								[ components.first.underscore.pluralize, '/', components.last].join))
 	end
 
 	#-----------------------------------------------------------------------------

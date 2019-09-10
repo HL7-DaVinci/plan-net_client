@@ -18,6 +18,7 @@ class OrganizationAffiliation < Resource
 	#-----------------------------------------------------------------------------
 
 	def initialize(organization_affiliation)
+		@id 													= organization_affiliation.id
 		@networks 										= organization_affiliation.extension
 		@identifiers 									= organization_affiliation.identifier
 		@organization 								= organization_affiliation.organization

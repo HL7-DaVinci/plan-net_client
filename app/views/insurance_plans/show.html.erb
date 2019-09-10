@@ -1,2 +1,36 @@
 <section class='container'>
+  <section class='row col-12'>
+    <% unless @insurance_plan.nil? %>
+      <h2><%= sanitize(@insurance_plan.name) %></h2>
+      <table class='table table-dark'>
+        <tr>
+          <td>Owned by:</td>
+          <td><%= sanitize(@insurance_plan.owned_by.display) %></td>
+        </tr>
+        <tr>
+          <td>Administered by:</td>
+          <td><%= sanitize(@insurance_plan.administered_by.display) %></td>
+        </tr>
+        <tr>
+          <td>Coverage Areas:</td>
+          <td><%= sanitize(@insurance_plan.coverage_areas.map(&:display).join(', ')) %></td>
+        </tr>
+        <tr>
+          <td>Contacts:</td>
+          <td><%= display_list(@insurance_plan.contacts) %></td>
+        </tr>
+        <tr>
+          <td>Endpoints:</td>
+          <td><%= display_list(@insurance_plan.endpoints) %></td>
+        </tr>
+        <tr>
+          <td>Networks:</td>
+          <td><%= display_list(@insurance_plan.networks) %></td>
+        </tr>
+      </table>
+    <% else %>
+      Not available
+    <% end %>
+  </section>
 </section>
+

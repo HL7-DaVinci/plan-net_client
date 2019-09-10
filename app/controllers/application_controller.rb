@@ -8,11 +8,7 @@
 
 class ApplicationController < ActionController::Base
 
-	#-----------------------------------------------------------------------------
-	protected
-	#-----------------------------------------------------------------------------
-
-	# Connect the FHIR client with the specified server and save the connection
+  # Connect the FHIR client with the specified server and save the connection
 	# for future requests.
 
 	def connect_to_server

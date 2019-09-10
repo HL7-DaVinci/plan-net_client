@@ -21,8 +21,9 @@ class NetworksController < ApplicationController
 			@@bundle = update_page(params[:page], @@bundle)
 		else
 			if params[:name].present?
-				reply = @@client.search(FHIR::Network, 
-											search: { parameters: { classification: params[:name] } })
+				reply = @@client.search(FHIR::Organization, 
+											search: { parameters: { classification: params[:name],
+											_profile: "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network" } })
 			else
 				reply = @@client.search(FHIR::Organization,
 													search: { parameters: { 
@@ -40,8 +41,13 @@ class NetworksController < ApplicationController
 	# GET /insurance_plans/[id]
 
 	def show
-		reply = @@client.search(FHIR::Network, 
-											search: { parameters: { id: params[:id] } })
+		reply = @@client.search(FHIR::Organization, 
+											search: { parameters: { _id: params[:id], 
+											_profile: "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network" } })
+		bundle = reply.resource
+		fhir_network = bundle.entry.map(&:resource).first
+		
+		@network = Network.new(fhir_network) unless fhir_network.nil?
 	end
 
 end

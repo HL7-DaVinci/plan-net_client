@@ -17,6 +17,7 @@ class PractitionerRole < Resource
 	#-----------------------------------------------------------------------------
 
 	def initialize(practitioner_role)
+		@id 											= practitioner_role.id
 		@period 									= practitioner_role.period
 		@code 										= practitioner_role.code
 		@specialties 							= practitioner_role.specialty
