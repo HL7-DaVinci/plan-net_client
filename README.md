@@ -12,8 +12,8 @@ And run the following commands from the terminal:
 
 ```sh
 # MacOS or Linux
-git clone https://github.com/FHIR/davinci-pdex-plan-net
-cd davinci-pdex-plan-net
+git clone https://github.com/HL7-DaVinci/plan-net_client
+cd plan-net_client
 bundle install
 rails s
 ```
@@ -38,8 +38,8 @@ If you prefer, you can also build the client application within a Docker contain
 run the Docker container, it will indicate the local port that should be used to access the client.
 
 ```sh
-git clone https://github.com/FHIR/davinci-pdex-plan-net
-cd davinci-pdex-plan-net
+git clone https://github.com/HL7-DaVinci/plan-net_client
+cd plan-net_client
 docker build -t plan-net .
 docker run -itP plan-net
 ```
