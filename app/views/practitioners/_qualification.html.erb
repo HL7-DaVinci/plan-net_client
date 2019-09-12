@@ -1,0 +1,8 @@
+<% qualification.identifier.each do |identifier| %>
+  <%= display_identifier(identifier) %>
+  (<%= display_period(identifier.period) %>)<br />
+<% end %>
+<% qualification.code.coding.each do |coding| %>
+  <%= sanitize(coding.display) %><br />
+  <br />
+<% end %>

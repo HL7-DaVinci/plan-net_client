@@ -29,8 +29,7 @@ module ApplicationHelper
 	#-----------------------------------------------------------------------------
 
 	def display_human_name(name)
-		result = name.prefix.join(', ') + ' ' + name.family + ', ' + 
-							name.given.join(' ')
+		result = [ name.prefix.join(', '), name.given.join(' '), name.family ].join(' ')
 		result += ', ' + name.suffix.join(', ') if name.suffix.present?
 		return sanitize(result)
 	end
@@ -84,6 +83,12 @@ module ApplicationHelper
 
 	#-----------------------------------------------------------------------------
 
+	def google_maps(address)
+		"https://www.google.com/maps/search/" + html_escape(address.text)
+  end
+
+	#-----------------------------------------------------------------------------
+
 	def display_postal_code(postal_code)
   	sanitize(postal_code.match(/^\d{9}$/) ?
   			postal_code.strip.sub(/([A-Z0-9]+)([A-Z0-9]{4})/, '\1-\2') : postal_code)
@@ -92,9 +97,11 @@ module ApplicationHelper
 	#-----------------------------------------------------------------------------
 
 	def display_reference(reference)
-		components = reference.reference.split('/')
-		sanitize(link_to(reference.display, 
-								[ components.first.underscore.pluralize, '/', components.last].join))
+		if reference.present?
+			components = reference.reference.split('/')
+			sanitize(link_to(reference.display, 
+									[ components.first.underscore.pluralize, '/', components.last].join))
+		end
 	end
 
 	#-----------------------------------------------------------------------------

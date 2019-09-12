@@ -11,42 +11,36 @@
       <tr>
         <th scope='col'>Name</th>
         <th scope='col'>Phone/Fax</th>
-        <th scope='col'>Addresses</th>
+        <th scope='col'>Locations</th>
         <th scope='col'>Gender</th>
-        <th scope='col'>Qualifications</th>
+        <th scope='col'>Licenses</th>
       </tr>
       <% @practitioners.each do |fhir_practitioner| %>
         <% practitioner = Practitioner.new(fhir_practitioner) %>
         <tr>
-          <td><%= link_to display_human_name(practitioner.name.first),
-                            practitioner_path(practitioner.id) %></td>
+          <td>
+            <%= link_to practitioner_path(practitioner.id) do %>
+              <%= display_photo(practitioner.photo, practitioner.gender, 
+                        class: 'list-photo') %><br />
+              <%= display_human_name(practitioner.name.first) %>
+            <% end %>
+          </td>
           <td>
             <% practitioner.telecoms.each do |telecom| %>
-              <%= display_telecom(telecom) %><br />
+              <%= display_telecom(telecom) %><br /><br />
             <% end %>
           </td>
           <td>
             <% practitioner.addresses.each do |address| %>
-              <% address.line.each do |line| %>
-                <%= sanitize(line) %><br />
-              <% end %>
-              <%= sanitize(address.city) %>, 
-              <%= sanitize(address.state) %> 
-              <%= display_postal_code(address.postalCode) %><br />
-              <br />
+              <%= render partial: 'partials/address', 
+                          locals: { address: address } %>
             <% end %>
           </td>
           <td><%= practitioner.gender %></td>
           <td>
             <% practitioner.qualifications.each do |qualification| %>
-              <% qualification.identifier.each do |identifier| %>
-                <%= display_identifier(identifier) %><br />
-                <%= display_period(identifier.period) %><br />
-              <% end %>
-              <% qualification.code.coding.each do |coding| %>
-                <%= sanitize(coding.display) %><br />
-                <br />
-              <% end %>
+              <%= render partial: 'qualification', 
+                        locals: { qualification: qualification } %>
             <% end %>
           </td>
         </tr>

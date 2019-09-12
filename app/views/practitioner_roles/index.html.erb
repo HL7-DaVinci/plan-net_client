@@ -7,17 +7,34 @@
     <table class='table table-dark'>
       <tr>
         <th scope='col'>Period</th>
+        <th scope='col'>Practitioner</th>
+        <th scope='col'>Organization</th>
         <th scope='col'>Specialties</th>
+        <th scope='col'>Locations</th>
+        <th scope='col'>Healthcare Services</th>
         <th scope='col'>Phone/Fax</th>
         <th scope='col'>Available Times</th>
         <th scope='col'>Not Available</th>
         <th scope='col'>Availability Exceptions</th>
+        <th scope='col'>Endpoints</th>
       </tr>
       <% @practitioner_roles.each do |fhir_practitioner_role| %>
         <% practitioner_role = PractitionerRole.new(fhir_practitioner_role) %>
         <tr>
           <td><%= sanitize(practitioner_role.period) || "None" %></td>
+          <td><%= display_reference(practitioner_role.practitioner) %></td>
+          <td><%= display_reference(practitioner_role.organization) %></td>
           <td><%= display_coding_list(practitioner_role.specialties) %></td>
+          <td>
+            <% practitioner_role.locations.each do |location| %>
+              <%= display_reference(location) %><br />
+            <% end %>
+          </td>
+          <td>
+            <% practitioner_role.healthcare_services.each do |healthcare_service| %>
+              <%= display_reference(healthcare_service) %><br />
+            <% end %>
+          </td>
           <td>
             <% practitioner_role.telecoms.each do |telecom| %>
               <%= display_telecom(telecom) %><br />
@@ -30,8 +47,13 @@
               <%= sanitize(time.availableEndTime) %><br />
             <% end %>
           </td>
-          <td><%= display_list(practitioner_role.not_available) %></td>
+          <td><%= display_list(practitioner_role.not_availables) %></td>
           <td><%= sanitize(practitioner_role.availability_exceptions) || "None" %></td>
+          <td>
+            <% practitioner_role.endpoints do |endpoint| %>
+              <%= display_reference(endpoint) %>
+            <% end %>
+          </td>
         </tr>
       <% end %>
     </table>

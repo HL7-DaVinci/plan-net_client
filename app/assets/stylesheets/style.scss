@@ -102,6 +102,20 @@ table {
 	margin-bottom: -100px;
 }
 
+.profile-photo {
+	background-color: gray;
+	padding: 15px;	
+	margin-right: 20px;
+	margin-top: 20px;
+}
+
+.list-photo {
+	background-color: gray;
+	padding: 15px;	
+	margin-right: 20px;
+	margin-bottom: 20px;
+}
+
 @media (min-width: 200px) and (max-width: 767px) {
 	#server-form {
 		display: block;

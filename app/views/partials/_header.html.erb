@@ -2,7 +2,7 @@
 	<nav class='navbar fixed-top navbar-expand-lg bg-dark navbar-dark'>
 		<div class='navbar-brand'>
 			<%= link_to root_path do %>
-				<%# image_tag 'logo.png', id: 'logo', alt: '' %>
+				<%= image_tag 'telephone-directory.svg', id: 'logo', alt: '' %>
 				<h1>
 					<i class="fas fa-address-book"></i>
 					Plan Networks
@@ -23,6 +23,7 @@
 	          <%= link_to 'Endpoints', endpoints_path, class: 'dropdown-item' %>
 	          <%= link_to 'Healthcare Services', healthcare_services_path, class: 'dropdown-item' %>
 	          <%= link_to 'Insurance Plans', insurance_plans_path, class: 'dropdown-item' %>
+	          <%= link_to 'Locations', locations_path, class: 'dropdown-item' %>
 	          <%= link_to 'Networks', networks_path, class: 'dropdown-item' %>
 	          <%= link_to 'Organizations', organizations_path, class: 'dropdown-item' %>
 	          <%= link_to 'Organization Affiliation', organization_affiliations_path, class: 'dropdown-item' %>
