@@ -4,8 +4,7 @@
       <div class='col-12'>
         <h2><%= sanitize(@network.name) %></h2>
       </div>
-      <div class='col-6'>
-        Map goes here...
+      <div class='col-6' id='map'>
       </div>
       <div class='col-6'>
         <table class='table table-dark'>
@@ -44,5 +43,6 @@
     <% else %>
       Not available
     <% end %>
+    <%= render 'partials/map' %>
   </section>
 </section>

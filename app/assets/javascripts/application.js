@@ -16,4 +16,6 @@
 //= require jquery3
 //= require popper
 //= require bootstrap-sprockets
+//= require leaflet
+//= require leaflet.awesome-markers
 //= require_tree .

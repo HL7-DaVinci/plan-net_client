@@ -1,0 +1,18 @@
+<script>
+	var map = L.map('map');
+
+	map.setView([42.3601, -71.0589], 12)
+
+	var centerMarker = L.AwesomeMarkers.icon({
+		icon: 'home',
+		prefix: 'fa',
+		markerColor: 'red'
+	});
+
+	marker = L.marker([42.3601, -71.0589], { icon: centerMarker }).addTo(map);
+
+	L.tilelayer('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+							attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+							maxZoom: 18,
+	}).addTo(map);
+</script>

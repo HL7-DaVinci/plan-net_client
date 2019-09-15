@@ -24,6 +24,9 @@ gem 'bootsnap', '>= 1.1.0', require: false  # Reduces boot times through caching
 gem 'fhir_client'               # Handles FHIR client requests 
 gem 'jquery-rails'              # Automate using jQuery with Rails
 gem 'bootstrap', '~> 4.3.1'     # Integrates Bootstrap HTML, CSS, and JavaScript framework
+gem 'leaflet-rails'             # Handles Leaflet-based maps
+gem 'leaflet-awesome-markers-rails',    # Custom markers for Leaflet
+      '~> 2.0'
 
 group :development, :test do
 	gem 'sqlite3'                   # Use sqlite3 as the database for Active Record
