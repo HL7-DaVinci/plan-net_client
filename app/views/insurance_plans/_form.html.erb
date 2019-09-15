@@ -1,0 +1,145 @@
+<%= form_tag endpoints_path, method: 'get' do %>
+  <div class='row'>
+    <div class='col'>
+      <%= text_field_tag 'query[_id]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'ID' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[administered-by]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Administered By' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[coverage-area]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Coverage Area' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[coverage-benefit]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Coverage Benefit' %>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col'>
+      <%= text_field_tag 'query[coverage-limit-value]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Coverage Limit Value' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[coverage-network]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Coverage Network' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[coverage-type]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Coverage Type' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[endpoints_path]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Endpoint' %>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col'>
+      <%= text_field_tag 'query[general-cost-groupsize]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'General Cost Group Size' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[general-cost-type]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'General Cost Type' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[general-cost-value]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'General Cost Value' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[identifier]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Identifier' %>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col'>
+      <%= text_field_tag 'query[name]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Name' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[network]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Network' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[owned-by]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Owned By' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[plan-coverage-area]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Plan Coverage Area' %>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col'>
+      <%= text_field_tag 'query[plan-identifier]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Plan Identifier' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[plan-network]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Plan Network' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[plan-type]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Plan Type' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[specific-cost-benefit-type]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Specific Cost Benefit Type' %>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col'>
+      <%= text_field_tag 'query[specific-cost-category]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Specific Cost Category' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[specific-cost-cost-type]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Specific Cost Cost Type' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[specific-cost-value]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Specific Cost Value' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[status]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Status' %>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col'>
+      <%= text_field_tag 'query[type]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Type' %>
+    </div>
+  </div>
+
+  <%= button_tag class: 'btn btn-outline-success my-2 my-sm-0' do %>
+    Find
+  <% end %>
+<% end %>

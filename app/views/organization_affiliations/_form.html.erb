@@ -1,0 +1,67 @@
+<%= form_tag endpoints_path, method: 'get' do %>
+  <div class='row'>
+    <div class='col'>
+      <%= text_field_tag 'query[_id]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'ID' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[identifier-assigner]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Identifier-assigner' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[identifier]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Identifier' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[location]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Location' %>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col'>
+      <%= text_field_tag 'query[network]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Network' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[participating-organization]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Participating Organization' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[primary-organization]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Primary Organization' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[role]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Role' %>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col'>
+      <%= text_field_tag 'query[service]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Service' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[specialty]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Specialty' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[via-intermediary]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Intermediary' %>
+    </div>
+  </div>
+
+  <%= button_tag class: 'btn btn-outline-success my-2 my-sm-0' do %>
+    Find
+  <% end %>
+<% end %>

@@ -30,16 +30,14 @@ class ApplicationController < ActionController::Base
   # 	+bundle+:: Bundle to use to retrieve page
 
 	def update_page(page, bundle)
-		link = nil
-
 		case page
 		when 'previous'
-			bundle = previous_bundle(bundle)
+			new_bundle = previous_bundle(bundle)
 		when 'next'
-			bundle = bundle.next_bundle
+			new_bundle = bundle.next_bundle
 		end
 
-		return bundle
+		return (new_bundle.nil? ? bundle : new_bundle)
 	end
 
 	#-----------------------------------------------------------------------------

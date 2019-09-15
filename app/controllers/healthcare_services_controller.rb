@@ -37,7 +37,7 @@ class HealthcareServicesController < ApplicationController
 	# GET /healthcare_services/[id]
 
 	def show
-		reply = @@client.search(FHIR::HealthcareService, 
+		reply = @@client.search(FHIR::Organization, 
 											search: { parameters: { _id: params[:id] } })
 		bundle = reply.resource
 		fhir_healthcare_service = bundle.entry.map(&:resource).first

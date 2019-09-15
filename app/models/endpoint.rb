@@ -29,4 +29,22 @@ class Endpoint < Resource
 		@headers								= endpoint.header
 	end
 	
+	#-----------------------------------------------------------------------------
+
+	# FHIR search query parameters for Endpoints are:
+	#
+	# 	_id, _language, connection-type, identifier, identifier-assigner, mime-type, 
+	# 	name, organization, payload-type, status, usecase-standard, usecase-type, 
+	# 	via-intermediary
+
+	def self.search(server, query)
+		parameters = {}
+
+		query.each do |key, value|
+			parameters[key] = value unless value.empty?
+		end
+
+		return server.search(FHIR::Endpoint, search: { parameters: parameters })
+	end
+
 end

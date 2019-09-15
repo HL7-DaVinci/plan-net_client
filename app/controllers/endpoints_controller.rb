@@ -20,9 +20,9 @@ class EndpointsController < ApplicationController
 		if params[:page].present?
 			@@bundle = update_page(params[:page], @@bundle)
 		else
-			if params[:name].present?
-				reply = @@client.search(FHIR::Endpoint, 
-											search: { parameters: { classification: params[:name] } })
+			if params[:query].present?
+				@query = params[:query]
+				reply = Endpoint.search(@@client, @query)
 			else
 				reply = @@client.search(FHIR::Endpoint)
 			end

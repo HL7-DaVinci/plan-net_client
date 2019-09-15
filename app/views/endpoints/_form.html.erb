@@ -1,0 +1,50 @@
+<%= form_tag endpoints_path, method: 'get' do %>
+  <div class='row'>
+    <div class='col'>
+      <%= text_field_tag 'query[_id]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'ID' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[name]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Name' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[mime-type]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'MIME Type' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[organization]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Organization' %>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col'>
+      <%= text_field_tag 'query[payload-type]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Payload' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[status]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Status' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[usecase-standard]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Standard' %>
+    </div>
+    <div class='col'>
+      <%= text_field_tag 'query[via-intermediary]', nil, 
+                class: 'form-control bg-dark text-white', 
+                placeholder: 'Intermediary' %>
+    </div>
+  </div>
+
+  <%= button_tag class: 'btn btn-outline-success my-2 my-sm-0' do %>
+    Find
+  <% end %>
+<% end %>

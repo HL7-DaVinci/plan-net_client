@@ -116,6 +116,22 @@ table {
 	margin-bottom: 20px;
 }
 
+.card-header {
+	padding: 0 0;
+}
+
+.table {
+	margin-top: 0;
+}
+
+.btn-group {
+	margin-bottom: 20px;
+}
+
+form > .row {
+	margin-bottom: 30px;
+}
+
 @media (min-width: 200px) and (max-width: 767px) {
 	#server-form {
 		display: block;

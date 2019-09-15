@@ -4,6 +4,24 @@
 			<h3 class='float-left text-white'>Insurance Plans</h3>
       <%= render 'partials/pagination', resource: :insurance_plans %>
 		</div>
+    <div class='col-12 search'>
+      <div class="accordion" id="accordionExample">
+        <div class="card">
+          <div class="card-header bg-dark text-white" id="headingOne">
+            <h2 class="mb-0">
+              <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                Search
+              </button>
+            </h2>
+          </div>
+          <div id="collapseOne" class="collapse bg-dark text-white" aria-labelledby="headingOne" data-parent="#accordionExample">
+            <div class="card-body">
+              <%= render 'form' %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 		<table class='table table-dark'>
 			<tr>
 				<th scope='col'>Name</th>

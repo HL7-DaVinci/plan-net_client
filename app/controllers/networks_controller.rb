@@ -43,7 +43,7 @@ class NetworksController < ApplicationController
 	def show
 		reply = @@client.search(FHIR::Organization, 
 											search: { parameters: { _id: params[:id], 
-											_profile: "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network" } })
+												_profile: "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network" } })
 		bundle = reply.resource
 		fhir_network = bundle.entry.map(&:resource).first
 		
