@@ -7,11 +7,12 @@
 ################################################################################
 
 require 'json'
-	
+
 class PractitionersController < ApplicationController
 
 	before_action :connect_to_server, only: [ :index, :show ]
 
+  FHIR.logger.level = Logger::WARN
 	#-----------------------------------------------------------------------------
 
 	# GET /practitioners
@@ -20,9 +21,10 @@ class PractitionersController < ApplicationController
 		if params[:page].present?
 			@@bundle = update_page(params[:page], @@bundle)
 		else
-			if params[:name].present?
+			if params[:query_string].present?
+        parameters = query_hash_from_string(params[:query_string]).merge(_sort: :family)
 				reply = @@client.search(FHIR::Practitioner, 
-											search: { parameters: { family: params[:name], _sort: :given } })
+											search: { parameters: parameters })
 			else
 				reply = @@client.search(FHIR::Practitioner,
 											search: { parameters: { _sort: :family } } )
@@ -43,8 +45,14 @@ class PractitionersController < ApplicationController
 											search: { parameters: { _id: params[:id] } })
 		bundle = reply.resource
 		fhir_practitioner = bundle.entry.map(&:resource).first
-		
+
 		@practitioner = Practitioner.new(fhir_practitioner) unless fhir_practitioner.nil?
 	end
 
+  def query_hash_from_string(query_string)
+    query_string.split('&').each_with_object({}) do |string, hash|
+      key, value = string.split('=')
+      hash[key] = value
+    end
+  end
 end
