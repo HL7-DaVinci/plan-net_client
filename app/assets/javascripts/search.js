@@ -16,25 +16,24 @@ const updateQueryString = function (_event) {
   $('#query_string')[0].value = query;
 };
 
+let searchField;
+const getSearchField = function () {
+  if (!searchField) {
+    searchField = $('#search-params > div').first().clone();
+    searchField.children('div > div').prepend(
+      '<button class="btn btn-outline-secondary" type="button" onclick="removeSearchField(event)">-</button>'
+    );
+    searchField.children('div > input')[0].value = '';
+  }
+};
+
 const addSearchField = function (_event) {
-  const searchField = `
-    <div class="input-group mb-3">
-      <select class="custom-select" onchange="updateQueryString(event)">
-        <option value="name">name</option>
-        <option value="_id">id</option>
-      </select>
-      <input type="text" class="form-control bg-dark text-white" onkeyup="updateQueryString(event)">
-      <div class="input-group-append">
-        <button class="btn btn-outline-secondary" type="button" onclick="removeSearchField(event)">-</button>
-        <button class="btn btn-outline-secondary" type="button" onclick="addSearchField(event)">+</button>
-      </div>
-    </div>
-  `;
-  $('#search-params').append(searchField);
+  $('#search-params').append(searchField.clone());
 };
 
 const removeSearchField = function(event) {
   $(event.target).parent().parent().remove();
+  updateQueryString();
 };
 
 const loadQueriesFromUrl = function () {
@@ -48,6 +47,7 @@ const loadQueriesFromUrl = function () {
 };
 
 $(() => {
+  getSearchField();
   loadQueriesFromUrl();
   updateQueryString();
 });

@@ -7,6 +7,7 @@
 ################################################################################
 
 require 'json'
+require 'pry'
 
 class PractitionersController < ApplicationController
 
@@ -32,6 +33,7 @@ class PractitionersController < ApplicationController
 			@@bundle = reply.resource
 		end
 
+    @query_params = query_params
 		@practitioners = @@bundle.present? ? @@bundle.entry.map(&:resource) : []
 		@params = params
 	end
@@ -54,5 +56,62 @@ class PractitionersController < ApplicationController
       key, value = string.split('=')
       hash[key] = value
     end
+  end
+
+  def query_params
+    [
+      {
+        name: 'Endpoint',
+        value: 'endpoint'
+      },
+      {
+        name: 'Family name',
+        value: 'family'
+      },
+      {
+        name: 'Given name',
+        value: 'given'
+      },
+      {
+        name: 'Identfier Assigner',
+        value: 'identifier-assigner'
+      },
+      {
+        name: 'Identifier',
+        value: 'identifier'
+      },
+      {
+        name: 'Name',
+        value: 'name'
+      },
+      {
+        name: 'Phonetic',
+        value: 'phonetic'
+      },
+      {
+        name: 'Qualification Code',
+        value: 'qualification-code'
+      },
+      {
+        name: 'Qualification Issuer',
+        value: 'qualification-issuer'
+      },
+      {
+        name: 'Qualification Period',
+        value: 'qualification-period'
+      },
+      {
+        name: 'Qualification Status',
+        value: 'qualification-status'
+      },
+      {
+        name: 'Qualification Where Valid Code',
+        value: 'qualification-wherevalid-code'
+      },
+      {
+        name: 'Qualification Where Valid Location',
+        value: 'qualification-wherevalid-location'
+      }
+    ]
   end
 end

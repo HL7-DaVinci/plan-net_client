@@ -1,8 +1,9 @@
 <div id="search-params">
   <div class="input-group mb-3">
     <select class="custom-select" onchange="updateQueryString(event)">
-      <option value="name">name</option>
-      <option value="_id">id</option>
+      <% query_params.each do |param| %>
+        <option value="<%= param[:value] %>"><%= param[:name] %></option>
+      <% end %>
     </select>
     <input type="text" class="form-control bg-dark text-white" onkeyup="updateQueryString(event)">
     <div class="input-group-append">
