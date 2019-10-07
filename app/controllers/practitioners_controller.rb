@@ -12,7 +12,7 @@ class PractitionersController < ApplicationController
 
 	before_action :connect_to_server, only: [ :index, :show ]
 
-  FHIR.logger.level = Logger::WARN
+  # FHIR.logger.level = Logger::WARN
 	#-----------------------------------------------------------------------------
 
 	# GET /practitioners

@@ -16,7 +16,7 @@ const updateQueryString = function (_event) {
   $('#query_string')[0].value = query;
 };
 
-const addSearchField = function (event) {
+const addSearchField = function (_event) {
   const searchField = `
     <div class="input-group mb-3">
       <select class="custom-select" onchange="updateQueryString(event)">
@@ -31,13 +31,23 @@ const addSearchField = function (event) {
     </div>
   `;
   $('#search-params').append(searchField);
-  const addedField = $('#search-params > div').last();
 };
 
 const removeSearchField = function(event) {
   $(event.target).parent().parent().remove();
 };
 
+const loadQueriesFromUrl = function () {
+  const queryString = new URLSearchParams(window.location.search).get('query_string');
+  const queries = new URLSearchParams(queryString);
+  for (const [query, value] of queries) {
+    $('#search-params > div').last().children('select')[0].value = query;
+    $('#search-params > div').last().children('input')[0].value = value;
+    addSearchField();
+  }
+};
+
 $(() => {
+  loadQueriesFromUrl();
   updateQueryString();
 });
