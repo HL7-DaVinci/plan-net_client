@@ -7,7 +7,7 @@
 ################################################################################
 
 require 'json'
-require 'pry'
+# require 'pry'
 
 class PractitionersController < ApplicationController
 

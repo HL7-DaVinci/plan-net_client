@@ -38,11 +38,13 @@ const removeSearchField = function(event) {
 
 const loadQueriesFromUrl = function () {
   const queryString = new URLSearchParams(window.location.search).get('query_string');
-  const queries = new URLSearchParams(queryString);
-  for (const [query, value] of queries) {
-    $('#search-params > div').last().children('select')[0].value = query;
-    $('#search-params > div').last().children('input')[0].value = value;
-    addSearchField();
+  if (queryString) {
+    const queries = new URLSearchParams(queryString);
+    for (const [query, value] of queries) {
+      $('#search-params > div').last().children('select')[0].value = query;
+      $('#search-params > div').last().children('input')[0].value = value;
+      addSearchField();
+    }
   }
 };
 
