@@ -7,7 +7,7 @@
 ################################################################################
 
 require 'json'
-	
+
 class InsurancePlansController < ApplicationController
 
 	before_action :connect_to_server, only: [ :index, :show ]
@@ -29,6 +29,7 @@ class InsurancePlansController < ApplicationController
 			@@bundle = reply.resource
 		end
 
+    @query_params = query_params
 		@insurance_plans = @@bundle.entry.map(&:resource)
 	end
 
@@ -41,8 +42,112 @@ class InsurancePlansController < ApplicationController
 											search: { parameters: { _id: params[:id] } })
 		bundle = reply.resource
 		fhir_insurnace_plan = bundle.entry.map(&:resource).first
-		
+
 		@insurance_plan = InsurancePlan.new(fhir_insurnace_plan) unless fhir_insurnace_plan.nil?
 	end
 
+  def query_params
+    [
+      {
+        name: 'Administered By',
+        value: 'administered-by'
+      },
+      {
+        name: 'Coverage Area',
+        value: 'coverage-area'
+      },
+      {
+        name: 'Coverage Benefit Type',
+        value: 'coverage-benefit-type'
+      },
+      {
+        name: 'Coverage Limit Value',
+        value: 'coverage-limit-value'
+      },
+      {
+        name: 'Coverage Network',
+        value: 'coverage-network'
+      },
+      {
+        name: 'Coverage Type',
+        value: 'coverage-type'
+      },
+      {
+        name: 'Endpoint',
+        value: 'endpoint'
+      },
+      {
+        name: 'General Cost Group Size',
+        value: 'general-cost-groupsize'
+      },
+      {
+        name: 'General Cost Type',
+        value: 'general-cost-type'
+      },
+      {
+        name: 'General Cost Value',
+        value: 'general-cost-value'
+      },
+      {
+        name: 'ID',
+        value: '_id'
+      },
+      {
+        name: 'Identifier',
+        value: 'identifier'
+      },
+      {
+        name: 'Name',
+        value: 'name'
+      },
+      {
+        name: 'Network',
+        value: 'network'
+      },
+      {
+        name: 'Owned By',
+        value: 'owned-by'
+      },
+      {
+        name: 'Plan Coverage Area',
+        value: 'plan-coverage-area'
+      },
+      {
+        name: 'Plan Identifier',
+        value: 'plan-identifier'
+      },
+      {
+        name: 'Plan Network',
+        value: 'plan-network'
+      },
+      {
+        name: 'Plan Type',
+        value: 'plan-type'
+      },
+      {
+        name: 'Specific Cost Benefit Type',
+        value: 'specific-cost-benefit-type'
+      },
+      {
+        name: 'Specific Cost Category',
+        value: 'specific-cost-category'
+      },
+      {
+        name: 'Specific Cost Type',
+        value: 'specific-cost-type'
+      },
+      {
+        name: 'Specific Cost Value',
+        value: 'specific-cost-value'
+      },
+      {
+        name: 'Status',
+        value: 'status'
+      },
+      {
+        name: 'Type',
+        value: 'type'
+      }
+    ]
+  end
 end
