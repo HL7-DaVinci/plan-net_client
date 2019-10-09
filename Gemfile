@@ -31,6 +31,7 @@ gem 'leaflet-awesome-markers-rails',    # Custom markers for Leaflet
 group :development, :test do
 	gem 'sqlite3'                   # Use sqlite3 as the database for Active Record
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]     # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'pry'
 end
 
 group :development do
