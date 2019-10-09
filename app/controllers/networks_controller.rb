@@ -20,15 +20,25 @@ class NetworksController < ApplicationController
 		if params[:page].present?
 			@@bundle = update_page(params[:page], @@bundle)
 		else
-			if params[:name].present?
-				reply = @@client.search(FHIR::Organization, 
-											search: { parameters: { classification: params[:name],
-											_profile: "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network" } })
+			if params[:query_string].present?
+        parameters = query_hash_from_string(params[:query_string])
+				reply = @@client.search(
+          FHIR::Organization,
+					search: {
+            parameters: parameters.merge(
+							_profile: "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network"
+            )
+          }
+        )
 			else
-				reply = @@client.search(FHIR::Organization,
-													search: { parameters: { 
-														_profile: "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network"
-													} })
+				reply = @@client.search(
+          FHIR::Organization,
+					search: {
+            parameters: {
+							_profile: "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network"
+						}
+          }
+        )
 			end
 			@@bundle = reply.resource
 		end

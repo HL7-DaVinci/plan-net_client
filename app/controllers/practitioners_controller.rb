@@ -23,7 +23,7 @@ class PractitionersController < ApplicationController
 		else
 			if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string]).merge(_sort: :family)
-				reply = @@client.search(FHIR::Practitioner, 
+				reply = @@client.search(FHIR::Practitioner,
 											search: { parameters: parameters })
 			else
 				reply = @@client.search(FHIR::Practitioner,
@@ -42,20 +42,13 @@ class PractitionersController < ApplicationController
 	# GET /practitioners/[id]
 
 	def show
-		reply = @@client.search(FHIR::Practitioner, 
+		reply = @@client.search(FHIR::Practitioner,
 											search: { parameters: { _id: params[:id] } })
 		bundle = reply.resource
 		fhir_practitioner = bundle.entry.map(&:resource).first
 
 		@practitioner = Practitioner.new(fhir_practitioner) unless fhir_practitioner.nil?
 	end
-
-  def query_hash_from_string(query_string)
-    query_string.split('&').each_with_object({}) do |string, hash|
-      key, value = string.split('=')
-      hash[key] = value
-    end
-  end
 
   def query_params
     [

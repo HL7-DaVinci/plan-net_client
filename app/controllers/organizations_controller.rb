@@ -7,7 +7,7 @@
 ################################################################################
 
 require 'json'
-	
+
 class OrganizationsController < ApplicationController
 
 	before_action :connect_to_server, only: [ :index, :show ]
@@ -20,9 +20,10 @@ class OrganizationsController < ApplicationController
 		if params[:page].present?
 			@@bundle = update_page(params[:page], @@bundle)
 		else
-			if params[:name].present?
-				reply = @@client.search(FHIR::Organization, 
-											search: { parameters: { classification: params[:name] } })
+			if params[:query_string].present?
+        parameters = query_hash_from_string(params[:query_string])
+				reply = @@client.search(FHIR::Organization,
+											search: { parameters: parameters })
 			else
 				reply = @@client.search(FHIR::Organization)
 			end
@@ -42,7 +43,7 @@ class OrganizationsController < ApplicationController
 											search: { parameters: { _id: params[:id] } })
 		bundle = reply.resource
 		fhir_organization = bundle.entry.map(&:resource).first
-		
+
 		@organization = Organization.new(fhir_organization) unless fhir_organization.nil?
 	end
 

@@ -20,9 +20,10 @@ class InsurancePlansController < ApplicationController
 		if params[:page].present?
 			@@bundle = update_page(params[:page], @@bundle)
 		else
-			if params[:name].present?
-				reply = @@client.search(FHIR::InsurancePlan, 
-											search: { parameters: { classification: params[:name] } })
+			if params[:query_string].present?
+        parameters = query_hash_from_string(params[:query_string])
+				reply = @@client.search(FHIR::InsurancePlan,
+											search: { parameters: parameters })
 			else
 				reply = @@client.search(FHIR::InsurancePlan)
 			end
