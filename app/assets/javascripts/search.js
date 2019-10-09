@@ -1,4 +1,4 @@
-const updateQueryString = function (_event) {
+const updateQueryString = function (event) {
   let query='';
   $('#search-params > div').each(function () {
     let param = $(this).children('select')[0].value;
@@ -12,8 +12,13 @@ const updateQueryString = function (_event) {
     }
     query += `${param}=${value}`;
   });
+
   $('#search-url').html(query);
   $('#query_string')[0].value = query;
+
+  if (event.key === 'Enter') {
+    $('#search-button').click();
+  }
 };
 
 let searchField;
@@ -49,7 +54,9 @@ const loadQueriesFromUrl = function () {
 };
 
 $(() => {
-  getSearchField();
-  loadQueriesFromUrl();
-  updateQueryString();
+  if ($('search-params').length > 0) {
+    getSearchField();
+    loadQueriesFromUrl();
+    updateQueryString();
+  }
 });
