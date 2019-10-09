@@ -16,7 +16,10 @@
           </div>
           <div id="collapseOne" class="collapse bg-dark text-white" aria-labelledby="headingOne" data-parent="#accordionExample">
             <div class="card-body">
-              <%= render 'form' %>
+              <%= render 'partials/search_form',
+                         query_params: @query_params,
+                         search_path: networks_path
+              %>
             </div>
           </div>
         </div>
