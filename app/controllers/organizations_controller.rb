@@ -29,6 +29,7 @@ class OrganizationsController < ApplicationController
 			@@bundle = reply.resource
 		end
 
+    @query_params = query_params
 		@organizations = @@bundle.entry.map(&:resource)
 	end
 
@@ -45,4 +46,100 @@ class OrganizationsController < ApplicationController
 		@organization = Organization.new(fhir_organization) unless fhir_organization.nil?
 	end
 
+  def query_params
+    [
+      {
+        name: 'Active',
+        value: 'active'
+      },
+      {
+        name: 'Address',
+        value: 'address'
+      },
+      {
+        name: 'City',
+        value: 'address-city'
+      },
+      {
+        name: 'Country',
+        value: 'address-country'
+      },
+      {
+        name: 'Coverage Area',
+        value: 'coverage-area'
+      },
+      {
+        name: 'Endpoint',
+        value: 'endpoint'
+      },
+      {
+        name: 'ID',
+        value: '_id'
+      },
+      {
+        name: 'Identifier',
+        value: 'identifier'
+      },
+      {
+        name: 'Identifier Assigner',
+        value: 'identifier-assigner'
+      },
+      {
+        name: 'Intermediary',
+        value: 'via-intermediary'
+      },
+      {
+        name: 'Name',
+        value: 'name'
+      },
+      {
+        name: 'Part of',
+        value: 'partof'
+      },
+      {
+        name: 'Postal Code',
+        value: 'address-postalcode'
+      },
+      {
+        name: 'Qualification Code',
+        value: 'qualification-code'
+      },
+      {
+        name: 'Qualification Issuer',
+        value: 'qualification-issuer'
+      },
+      {
+        name: 'Qualification Status',
+        value: 'qualification-status'
+      },
+      {
+        name: 'Qualification Where Valid Code',
+        value: 'qualification-wherevalid-code'
+      },
+      {
+        name: 'Qualification Where Valid Location',
+        value: 'qualification-wherevalid-location'
+      },
+      {
+        name: 'State',
+        value: 'address-state'
+      },
+      {
+        name: 'Telecom Available Days',
+        value: 'telecom-available-days'
+      },
+      {
+        name: 'Telecom Available End Time',
+        value: 'telecom-available-endtime'
+      },
+      {
+        name: 'Telecom Available Start Time',
+        value: 'telecom-available-start-time'
+      },
+      {
+        name: 'Type',
+        value: 'type'
+      }
+    ]
+  end
 end
