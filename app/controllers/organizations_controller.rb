@@ -22,10 +22,10 @@ class OrganizationsController < ApplicationController
 		else
 			if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string])
-				reply = @@client.search(FHIR::Organization,
+				reply = @client.search(FHIR::Organization,
 											search: { parameters: parameters })
 			else
-				reply = @@client.search(FHIR::Organization)
+				reply = @client.search(FHIR::Organization)
 			end
 			@@bundle = reply.resource
 		end
@@ -39,7 +39,7 @@ class OrganizationsController < ApplicationController
 	# GET /organizations/[id]
 
 	def show
-		reply = @@client.search(FHIR::Organization, 
+		reply = @client.search(FHIR::Organization, 
 											search: { parameters: { _id: params[:id] } })
 		bundle = reply.resource
 		fhir_organization = bundle.entry.map(&:resource).first

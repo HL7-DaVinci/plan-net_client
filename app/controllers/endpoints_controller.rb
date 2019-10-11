@@ -22,10 +22,10 @@ class EndpointsController < ApplicationController
 		else
 			if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string])
-				reply = @@client.search(FHIR::Endpoint,
+				reply = @client.search(FHIR::Endpoint,
                                 search: { parameters: parameters })
 			else
-				reply = @@client.search(FHIR::Endpoint)
+				reply = @client.search(FHIR::Endpoint)
 			end
 			@@bundle = reply.resource
 		end
@@ -39,7 +39,7 @@ class EndpointsController < ApplicationController
 	# GET /endpoints/[id]
 
 	def show
-		reply = @@client.search(FHIR::Endpoint,
+		reply = @client.search(FHIR::Endpoint,
 											search: { parameters: { _id: params[:id] } })
 		bundle = reply.resource
 		fhir_endpoint = bundle.entry.map(&:resource).first

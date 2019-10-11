@@ -22,10 +22,10 @@ class PractitionerRolesController < ApplicationController
 		else
 			if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string])
-				reply = @@client.search(FHIR::PractitionerRole,
+				reply = @client.search(FHIR::PractitionerRole,
 											search: { parameters: parameters })
 			else
-				reply = @@client.search(FHIR::PractitionerRole)
+				reply = @client.search(FHIR::PractitionerRole)
 			end
 			@@bundle = reply.resource
 		end
@@ -39,7 +39,7 @@ class PractitionerRolesController < ApplicationController
 	# GET /practitioner_roles/[id]
 
 	def show
-		reply = @@client.search(FHIR::PractitionerRole,
+		reply = @client.search(FHIR::PractitionerRole,
 											search: { parameters: { id: params[:id] } })
 	end
 

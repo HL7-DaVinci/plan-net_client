@@ -22,10 +22,10 @@ class InsurancePlansController < ApplicationController
 		else
 			if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string])
-				reply = @@client.search(FHIR::InsurancePlan,
+				reply = @client.search(FHIR::InsurancePlan,
 											search: { parameters: parameters })
 			else
-				reply = @@client.search(FHIR::InsurancePlan)
+				reply = @client.search(FHIR::InsurancePlan)
 			end
 			@@bundle = reply.resource
 		end
@@ -39,7 +39,7 @@ class InsurancePlansController < ApplicationController
 	# GET /insurance_plans/[id]
 
 	def show
-		reply = @@client.search(FHIR::InsurancePlan, 
+		reply = @client.search(FHIR::InsurancePlan, 
 											search: { parameters: { _id: params[:id] } })
 		bundle = reply.resource
 		fhir_insurnace_plan = bundle.entry.map(&:resource).first

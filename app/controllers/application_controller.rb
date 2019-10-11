@@ -8,14 +8,20 @@
 
 class ApplicationController < ActionController::Base
 
+  # Get the FHIR server url
+  def server_url
+    params[:server_url] || session[:server_url]
+  end
+
   # Connect the FHIR client with the specified server and save the connection
 	# for future requests.
 
 	def connect_to_server
-		if params[:server_url].present?
-			@@client = FHIR::Client.new(params[:server_url])
-			@@client.use_r4
-		elsif !defined?(@@client)
+		if server_url.present?
+			@client = FHIR::Client.new(server_url)
+			@client.use_r4
+      session[:server_url] = server_url
+		else
 			redirect_to root_path, flash: { error: "Please specify a plan network server" }
 		end
 	end
@@ -53,8 +59,8 @@ class ApplicationController < ActionController::Base
 		link = bundle.previous_link
 
 		if link.present?
-			new_bundle = @@client.parse_reply(bundle.class, @@client.default_format, 
-									@@client.raw_read_url(link.url))
+			new_bundle = @client.parse_reply(bundle.class, @client.default_format, 
+									@client.raw_read_url(link.url))
 			bundle = new_bundle unless new_bundle.nil?
 		end
 

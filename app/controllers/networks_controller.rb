@@ -22,7 +22,7 @@ class NetworksController < ApplicationController
 		else
 			if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string])
-				reply = @@client.search(
+				reply = @client.search(
           FHIR::Organization,
 					search: {
             parameters: parameters.merge(
@@ -31,7 +31,7 @@ class NetworksController < ApplicationController
           }
         )
 			else
-				reply = @@client.search(
+				reply = @client.search(
           FHIR::Organization,
 					search: {
             parameters: {
@@ -52,7 +52,7 @@ class NetworksController < ApplicationController
 	# GET /insurance_plans/[id]
 
 	def show
-		reply = @@client.search(FHIR::Organization, 
+		reply = @client.search(FHIR::Organization, 
 											search: { parameters: { _id: params[:id], 
 												_profile: "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network" } })
 		bundle = reply.resource

@@ -22,10 +22,10 @@ class LocationsController < ApplicationController
 		else
 			if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string])
-				reply = @@client.search(FHIR::Location,
+				reply = @client.search(FHIR::Location,
 											search: { parameters: parameters })
 			else
-				reply = @@client.search(FHIR::Location)
+				reply = @client.search(FHIR::Location)
 			end
 			@@bundle = reply.resource
 		end
@@ -39,7 +39,7 @@ class LocationsController < ApplicationController
 	# GET /locations/[id]
 
 	def show
-		reply = @@client.search(FHIR::Location,
+		reply = @client.search(FHIR::Location,
 											search: { parameters: { _id: params[:id] } })
 		bundle = reply.resource
 		fhir_location = bundle.entry.map(&:resource).first
