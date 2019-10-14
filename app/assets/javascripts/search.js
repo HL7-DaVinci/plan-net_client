@@ -16,7 +16,7 @@ const updateQueryString = function (event) {
   $('#search-url').html(query);
   $('#query_string')[0].value = query;
 
-  if (event.key === 'Enter') {
+  if (event && event.key === 'Enter') {
     $('#search-button').click();
   }
 };
@@ -54,7 +54,7 @@ const loadQueriesFromUrl = function () {
 };
 
 $(() => {
-  if ($('search-params').length > 0) {
+  if ($('#search-params').length > 0) {
     getSearchField();
     loadQueriesFromUrl();
     updateQueryString();
