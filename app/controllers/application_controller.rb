@@ -26,46 +26,50 @@ class ApplicationController < ActionController::Base
 		end
 	end
 
+  def update_bundle_links
+    session[:next_bundle] = @bundle&.next_link&.url
+    session[:previous_bundle] = @bundle&.previous_link&.url
+  end
+
 	#-----------------------------------------------------------------------------
 
-	# Performs pagination on the resource list, reading 10 resources from
-	# the server at a time.
+	# Performs pagination on the resource list.
 	#
 	# Params:
-  # 	+page+:: Page number to update
-  # 	+bundle+:: Bundle to use to retrieve page
+  # 	+page+:: which page to get
 
-	def update_page(page, bundle)
+	def update_page(page)
 		case page
 		when 'previous'
-			new_bundle = previous_bundle(bundle)
+			@bundle = previous_bundle
 		when 'next'
-			new_bundle = bundle.next_bundle
+			@bundle = next_bundle
 		end
-
-		return (new_bundle.nil? ? bundle : new_bundle)
 	end
 
 	#-----------------------------------------------------------------------------
 
-	# Retrieves the previous 10 resources from the current position in the 
-	# bundle.  FHIR::Bundle in the fhir-client gem only provides direct support 
-	# for the next bundle, not the previous bundle.
-	#
-	# Params:
-  # 	+bundle+:: Bundle to use to retrieve previous page from
+	# Retrieves the previous bundle page from the FHIR server.
 
-	def previous_bundle(bundle)
-		link = bundle.previous_link
+	def previous_bundle
+		url = session[:previous_bundle]
 
-		if link.present?
-			new_bundle = @client.parse_reply(bundle.class, @client.default_format, 
-									@client.raw_read_url(link.url))
-			bundle = new_bundle unless new_bundle.nil?
+		if url.present?
+			@client.parse_reply(FHIR::Bundle, @client.default_format,
+									@client.raw_read_url(url))
 		end
-
-		return bundle
 	end
+
+	# Retrieves the next bundle page from the FHIR server.
+
+  def next_bundle
+		url = session[:next_bundle]
+
+		if url.present?
+			@client.parse_reply(FHIR::Bundle, @client.default_format,
+									        @client.raw_read_url(url))
+		end
+  end
 
   # Turns a query string such as "name=abc&id=123" into a hash like
   # { 'name' => 'abc', 'id' => '123' }

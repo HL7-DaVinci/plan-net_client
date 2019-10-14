@@ -19,7 +19,7 @@ class PractitionersController < ApplicationController
 
 	def index
 		if params[:page].present?
-			@@bundle = update_page(params[:page], @@bundle)
+			update_page(params[:page])
 		else
 			if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string]).merge(_sort: :family)
@@ -29,11 +29,15 @@ class PractitionersController < ApplicationController
 				reply = @client.search(FHIR::Practitioner,
 											search: { parameters: { _sort: :family } } )
 			end
-			@@bundle = reply.resource
+			@bundle = reply.resource
 		end
 
+    update_bundle_links
+
     @query_params = query_params
-		@practitioners = @@bundle.present? ? @@bundle.entry.map(&:resource) : []
+		@practitioners = @bundle.present? ? @bundle.entry.map(&:resource) : []
+    @next_page = session[:next_bundle].blank? ? 'disabled' : ''
+    @previous_page = session[:previous_bundle].blank? ? 'disabled' : ''
 		@params = params
 	end
 
