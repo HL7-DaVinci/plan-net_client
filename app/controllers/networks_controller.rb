@@ -18,7 +18,7 @@ class NetworksController < ApplicationController
 
 	def index
 		if params[:page].present?
-			@@bundle = update_page(params[:page], @@bundle)
+			update_page(params[:page])
 		else
 			if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string])
@@ -40,11 +40,13 @@ class NetworksController < ApplicationController
           }
         )
 			end
-			@@bundle = reply.resource
+			@bundle = reply.resource
 		end
 
+    update_bundle_links
+
     @query_params = query_params
-		@networks = @@bundle.entry.map(&:resource)
+		@networks = @bundle.entry.map(&:resource)
 	end
 
 	#-----------------------------------------------------------------------------

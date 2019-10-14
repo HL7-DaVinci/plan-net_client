@@ -18,7 +18,7 @@ class InsurancePlansController < ApplicationController
 
 	def index
 		if params[:page].present?
-			@@bundle = update_page(params[:page], @@bundle)
+			update_page(params[:page])
 		else
 			if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string])
@@ -27,11 +27,13 @@ class InsurancePlansController < ApplicationController
 			else
 				reply = @client.search(FHIR::InsurancePlan)
 			end
-			@@bundle = reply.resource
+			@bundle = reply.resource
 		end
 
+    update_bundle_links
+
     @query_params = query_params
-		@insurance_plans = @@bundle.entry.map(&:resource)
+		@insurance_plans = @bundle.entry.map(&:resource)
 	end
 
 	#-----------------------------------------------------------------------------

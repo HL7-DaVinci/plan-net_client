@@ -29,6 +29,8 @@ class ApplicationController < ActionController::Base
   def update_bundle_links
     session[:next_bundle] = @bundle&.next_link&.url
     session[:previous_bundle] = @bundle&.previous_link&.url
+    @next_page = session[:next_bundle].blank? ? 'disabled' : ''
+    @previous_page = session[:previous_bundle].blank? ? 'disabled' : ''
   end
 
 	#-----------------------------------------------------------------------------

@@ -18,7 +18,7 @@ class PractitionerRolesController < ApplicationController
 
 	def index
 		if params[:page].present?
-			@@bundle = update_page(params[:page], @@bundle)
+			update_page(params[:page])
 		else
 			if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string])
@@ -27,11 +27,13 @@ class PractitionerRolesController < ApplicationController
 			else
 				reply = @client.search(FHIR::PractitionerRole)
 			end
-			@@bundle = reply.resource
+			@bundle = reply.resource
 		end
 
+    update_bundle_links
+
     @query_params = query_params
-		@practitioner_roles = @@bundle.entry.map(&:resource)
+		@practitioner_roles = @bundle.entry.map(&:resource)
 	end
 
 	#-----------------------------------------------------------------------------

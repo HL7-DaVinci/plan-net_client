@@ -36,8 +36,6 @@ class PractitionersController < ApplicationController
 
     @query_params = query_params
 		@practitioners = @bundle.present? ? @bundle.entry.map(&:resource) : []
-    @next_page = session[:next_bundle].blank? ? 'disabled' : ''
-    @previous_page = session[:previous_bundle].blank? ? 'disabled' : ''
 		@params = params
 	end
 
