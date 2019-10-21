@@ -61,4 +61,12 @@ class ApplicationController < ActionController::Base
 		return bundle
 	end
 
+  # Turns a query string such as "name=abc&id=123" into a hash like
+  # { 'name' => 'abc', 'id' => '123' }
+  def query_hash_from_string(query_string)
+    query_string.split('&').each_with_object({}) do |string, hash|
+      key, value = string.split('=')
+      hash[key] = value
+    end
+  end
 end

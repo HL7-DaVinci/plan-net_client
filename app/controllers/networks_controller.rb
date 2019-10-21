@@ -7,7 +7,7 @@
 ################################################################################
 
 require 'json'
-	
+
 class NetworksController < ApplicationController
 
 	before_action :connect_to_server, only: [ :index, :show ]
@@ -20,19 +20,30 @@ class NetworksController < ApplicationController
 		if params[:page].present?
 			@@bundle = update_page(params[:page], @@bundle)
 		else
-			if params[:name].present?
-				reply = @@client.search(FHIR::Organization, 
-											search: { parameters: { classification: params[:name],
-											_profile: "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network" } })
+			if params[:query_string].present?
+        parameters = query_hash_from_string(params[:query_string])
+				reply = @@client.search(
+          FHIR::Organization,
+					search: {
+            parameters: parameters.merge(
+							_profile: "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network"
+            )
+          }
+        )
 			else
-				reply = @@client.search(FHIR::Organization,
-													search: { parameters: { 
-														_profile: "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network"
-													} })
+				reply = @@client.search(
+          FHIR::Organization,
+					search: {
+            parameters: {
+							_profile: "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network"
+						}
+          }
+        )
 			end
 			@@bundle = reply.resource
 		end
 
+    @query_params = query_params
 		@networks = @@bundle.entry.map(&:resource)
 	end
 
@@ -46,8 +57,68 @@ class NetworksController < ApplicationController
 												_profile: "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network" } })
 		bundle = reply.resource
 		fhir_network = bundle.entry.map(&:resource).first
-		
+
 		@network = Network.new(fhir_network) unless fhir_network.nil?
 	end
 
+  def query_params
+    [
+      {
+        name: 'Active',
+        value: 'active'
+      },
+      {
+        name: 'Address',
+        value: 'address'
+      },
+      {
+        name: 'City',
+        value: 'address-city'
+      },
+      {
+        name: 'Country',
+        value: 'address-country'
+      },
+      {
+        name: 'Coverage Area',
+        value: 'coverage-area'
+      },
+      {
+        name: 'Endpoint',
+        value: 'endpoint'
+      },
+      {
+        name: 'ID',
+        value: '_id'
+      },
+      {
+        name: 'Identifier',
+        value: 'identifier'
+      },
+      {
+        name: 'Identifier Assigner',
+        value: 'identifier-assigner'
+      },
+      {
+        name: 'Name',
+        value: 'name'
+      },
+      {
+        name: 'Part Of',
+        value: 'partof'
+      },
+      {
+        name: 'Postal Code',
+        value: 'address-postalcode'
+      },
+      {
+        name: 'State',
+        value: 'address-state'
+      },
+      {
+        name: 'Type',
+        value: 'type'
+      }
+    ]
+  end
 end

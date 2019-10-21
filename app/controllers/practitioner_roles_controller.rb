@@ -7,7 +7,7 @@
 ################################################################################
 
 require 'json'
-	
+
 class PractitionerRolesController < ApplicationController
 
 	before_action :connect_to_server, only: [ :index, :show ]
@@ -20,15 +20,17 @@ class PractitionerRolesController < ApplicationController
 		if params[:page].present?
 			@@bundle = update_page(params[:page], @@bundle)
 		else
-			if params[:name].present?
-				reply = @@client.search(FHIR::PractitionerRole, 
-											search: { parameters: { classification: params[:name] } })
+			if params[:query_string].present?
+        parameters = query_hash_from_string(params[:query_string])
+				reply = @@client.search(FHIR::PractitionerRole,
+											search: { parameters: parameters })
 			else
 				reply = @@client.search(FHIR::PractitionerRole)
 			end
 			@@bundle = reply.resource
 		end
 
+    @query_params = query_params
 		@practitioner_roles = @@bundle.entry.map(&:resource)
 	end
 
@@ -37,8 +39,132 @@ class PractitionerRolesController < ApplicationController
 	# GET /practitioner_roles/[id]
 
 	def show
-		reply = @@client.search(FHIR::PractitionerRole, 
+		reply = @@client.search(FHIR::PractitionerRole,
 											search: { parameters: { id: params[:id] } })
 	end
 
+  def query_params
+    [
+      {
+        name: 'Active',
+        value: 'active'
+      },
+      {
+        name: 'Available Days',
+        value: 'available-days'
+      },
+      {
+        name: 'Available End Time',
+        value: 'available-endtime'
+      },
+      {
+        name: 'Available Start Time',
+        value: 'available-start-time'
+      },
+      {
+        name: 'Date',
+        value: 'date'
+      },
+      {
+        name: 'Email',
+        value: 'email'
+      },
+      {
+        name: 'Endpoint',
+        value: 'endpoint'
+      },
+      {
+        name: 'ID',
+        value: '_id'
+      },
+      {
+        name: 'Identifier',
+        value: 'identifier'
+      },
+      {
+        name: 'Identifier Assigner',
+        value: 'identifier-assigner'
+      },
+      {
+        name: 'Intermediary',
+        value: 'intermediary'
+      },
+      {
+        name: 'Location',
+        value: 'location'
+      },
+      {
+        name: 'Network',
+        value: 'network'
+      },
+      {
+        name: 'New Patient',
+        value: 'new-patient'
+      },
+      {
+        name: 'New Patient Network',
+        value: 'new-patient-network'
+      },
+      {
+        name: 'Organization',
+        value: 'organization'
+      },
+      {
+        name: 'Phone',
+        value: 'phone'
+      },
+      {
+        name: 'Practitioner',
+        value: 'practitioner'
+      },
+      {
+        name: 'Telecom',
+        value: 'telecom'
+      },
+      {
+        name: 'Telecom Available Days',
+        value: 'telecom-available-days'
+      },
+      {
+        name: 'Telecom Available End Time',
+        value: 'telecom-available-endtime'
+      },
+      {
+        name: 'Telecom Available Start Time',
+        value: 'telecom-available-start-time'
+      },
+      {
+        name: 'Qualification Code',
+        value: 'qualification-code'
+      },
+      {
+        name: 'Qualification Issuer',
+        value: 'qualification-issuer'
+      },
+      {
+        name: 'Qualification Status',
+        value: 'qualification-status'
+      },
+      {
+        name: 'Qualification Where Valid Code',
+        value: 'qualification-wherevalid-code'
+      },
+      {
+        name: 'Qualification Where Valid Location',
+        value: 'qualification-wherevalid-location'
+      },
+      {
+        name: 'Role',
+        value: 'role'
+      },
+      {
+        name: 'Service',
+        value: 'service'
+      },
+      {
+        name: 'Specialty',
+        value: 'specialty'
+      }
+    ]
+  end
 end

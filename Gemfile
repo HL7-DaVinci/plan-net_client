@@ -12,7 +12,6 @@ gem 'uglifier', '>= 1.3.0'      # Use Uglifier as compressor for JavaScript asse
 # gem 'mini_racer', platforms: :ruby    # Minimal embedded v8 engine for Ruby
 
 gem 'coffee-rails', '~> 4.2'    # Use CoffeeScript for .coffee assets and views
-gem 'turbolinks', '~> 5'        # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'jbuilder', '~> 2.5'        # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 
 # gem 'redis', '~> 4.0'         # Use Redis adapter to run Action Cable in production
@@ -31,6 +30,7 @@ gem 'leaflet-awesome-markers-rails',    # Custom markers for Leaflet
 group :development, :test do
 	gem 'sqlite3'                   # Use sqlite3 as the database for Active Record
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]     # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'pry'
 end
 
 group :development do

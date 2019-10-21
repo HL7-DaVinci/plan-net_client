@@ -1,0 +1,25 @@
+<div id="search-params">
+  <div class="input-group mb-3">
+    <select class="custom-select" onchange="updateQueryString(event)">
+      <% query_params.each do |param| %>
+        <option value="<%= param[:value] %>"><%= param[:name] %></option>
+      <% end %>
+    </select>
+    <input type="text" class="form-control bg-dark text-white" onkeyup="updateQueryString(event)">
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary" type="button" onclick="addSearchField(event)">+</button>
+    </div>
+  </div>
+</div>
+<div id="search-url">
+
+</div>
+<%= form_tag search_path, method: 'get' do %>
+  <div class='row'>
+  </div>
+
+  <%= hidden_field_tag(:query_string) %>
+  <%= button_tag id: 'search-button', class: 'btn btn-outline-success my-2 my-sm-0' do %>
+    Find
+  <% end %>
+<% end %>
