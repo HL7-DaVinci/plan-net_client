@@ -1,0 +1,22 @@
+<div class='container'>
+  <!-- <div class='row'> -->
+  <!-- <div class='col-12'> -->
+  <!-- <h3 class='float-left text-white'> -->
+  <!-- Practitioners -->
+  <!-- </h3> -->
+  <!-- </div> -->
+  <!-- </div> -->
+  <div class=row'>
+    <div class='col-6'>
+      Search
+      <select id="payer-select" class="custom-select"">
+        <% @payers.each do |param| %>
+          <option value="<%= param[:value] %>"><%= param[:name] %></option>
+        <% end %>
+      </select>
+    </div>
+    <div class='col-6'>
+      Results
+    </div>
+  </div>
+</div>

@@ -81,4 +81,16 @@ class ApplicationController < ActionController::Base
       hash[key] = value
     end
   end
+
+  def fetch_payers
+    @payers = @client.search(
+      FHIR::Organization,
+      search: { parameters: { type: 'pay' } }
+    )&.resource&.entry&.map do |entry|
+      {
+        value: entry&.resource&.id,
+        name: entry&.resource&.name
+      }
+    end
+  end
 end

@@ -11,4 +11,5 @@ Rails.application.routes.draw do
   resources :organization_affiliations, only: [:index, :show]
   resources :practitioners, 				    only: [:index, :show]
   resources :practitioner_roles,        only: [:index, :show]
+  resources :providers,                 only: [:index]
 end
