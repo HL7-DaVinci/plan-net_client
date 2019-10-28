@@ -12,4 +12,6 @@ Rails.application.routes.draw do
   resources :practitioners, 				    only: [:index, :show]
   resources :practitioner_roles,        only: [:index, :show]
   resources :providers,                 only: [:index]
+
+  get '/providers/networks', to: 'providers#networks'
 end

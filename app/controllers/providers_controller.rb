@@ -10,7 +10,7 @@ require 'json'
 
 class ProvidersController < ApplicationController
 
-	before_action :connect_to_server, only: [ :index ]
+	before_action :connect_to_server
   before_action :fetch_payers, only: [:index]
 
 	#-----------------------------------------------------------------------------
@@ -20,4 +20,22 @@ class ProvidersController < ApplicationController
 	def index
     @params = {}
 	end
+
+  def networks
+    id = params[:payer_id]
+    network_list = @client.search(
+      FHIR::Organization,
+      search: { parameters: {
+                  _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network',
+                  partof: "Organization/#{id}"
+                } }
+    )&.resource&.entry&.map do |entry|
+      {
+        value: entry&.resource&.id,
+        name: entry&.resource&.name
+      }
+    end
+
+    render json: network_list
+  end
 end

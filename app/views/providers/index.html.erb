@@ -8,11 +8,16 @@
   <!-- </div> -->
   <div class=row'>
     <div class='col-6'>
-      Search
-      <select id="payer-select" class="custom-select"">
+      <h6>Search</h6>
+      Insurance Provider:
+      <select id="payer-select" class="custom-select" onchange="updateNetworkList(event)">
+        <option value=""></option>
         <% @payers.each do |param| %>
           <option value="<%= param[:value] %>"><%= param[:name] %></option>
         <% end %>
+      </select>
+      Network:
+      <select id="network-select" class="custom-select">
       </select>
     </div>
     <div class='col-6'>
