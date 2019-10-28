@@ -7,7 +7,7 @@
 ################################################################################
 
 require 'json'
-	
+
 class WelcomeController < ApplicationController
 
 	# GET /
