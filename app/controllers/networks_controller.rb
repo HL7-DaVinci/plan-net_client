@@ -18,11 +18,11 @@ class NetworksController < ApplicationController
 
 	def index
 		if params[:page].present?
-			@@bundle = update_page(params[:page], @@bundle)
+			update_page(params[:page])
 		else
 			if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string])
-				reply = @@client.search(
+				reply = @client.search(
           FHIR::Organization,
 					search: {
             parameters: parameters.merge(
@@ -31,7 +31,7 @@ class NetworksController < ApplicationController
           }
         )
 			else
-				reply = @@client.search(
+				reply = @client.search(
           FHIR::Organization,
 					search: {
             parameters: {
@@ -40,11 +40,13 @@ class NetworksController < ApplicationController
           }
         )
 			end
-			@@bundle = reply.resource
+			@bundle = reply.resource
 		end
 
+    update_bundle_links
+
     @query_params = query_params
-		@networks = @@bundle.entry.map(&:resource)
+		@networks = @bundle.entry.map(&:resource)
 	end
 
 	#-----------------------------------------------------------------------------
@@ -52,7 +54,7 @@ class NetworksController < ApplicationController
 	# GET /insurance_plans/[id]
 
 	def show
-		reply = @@client.search(FHIR::Organization, 
+		reply = @client.search(FHIR::Organization, 
 											search: { parameters: { _id: params[:id], 
 												_profile: "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network" } })
 		bundle = reply.resource

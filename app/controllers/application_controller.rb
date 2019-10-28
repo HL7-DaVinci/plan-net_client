@@ -8,58 +8,70 @@
 
 class ApplicationController < ActionController::Base
 
+  # Get the FHIR server url
+  def server_url
+    params[:server_url] || session[:server_url]
+  end
+
   # Connect the FHIR client with the specified server and save the connection
 	# for future requests.
 
 	def connect_to_server
-		if params[:server_url].present?
-			@@client = FHIR::Client.new(params[:server_url])
-			@@client.use_r4
-		elsif !defined?(@@client)
+		if server_url.present?
+			@client = FHIR::Client.new(server_url)
+			@client.use_r4
+      session[:server_url] = server_url
+		else
 			redirect_to root_path, flash: { error: "Please specify a plan network server" }
 		end
 	end
 
+  def update_bundle_links
+    session[:next_bundle] = @bundle&.next_link&.url
+    session[:previous_bundle] = @bundle&.previous_link&.url
+    @next_page_disabled = session[:next_bundle].blank? ? 'disabled' : ''
+    @previous_page_disabled = session[:previous_bundle].blank? ? 'disabled' : ''
+  end
+
 	#-----------------------------------------------------------------------------
 
-	# Performs pagination on the resource list, reading 10 resources from
-	# the server at a time.
+	# Performs pagination on the resource list.
 	#
 	# Params:
-  # 	+page+:: Page number to update
-  # 	+bundle+:: Bundle to use to retrieve page
+  # 	+page+:: which page to get
 
-	def update_page(page, bundle)
+	def update_page(page)
 		case page
 		when 'previous'
-			new_bundle = previous_bundle(bundle)
+			@bundle = previous_bundle
 		when 'next'
-			new_bundle = bundle.next_bundle
+			@bundle = next_bundle
 		end
-
-		return (new_bundle.nil? ? bundle : new_bundle)
 	end
 
 	#-----------------------------------------------------------------------------
 
-	# Retrieves the previous 10 resources from the current position in the 
-	# bundle.  FHIR::Bundle in the fhir-client gem only provides direct support 
-	# for the next bundle, not the previous bundle.
-	#
-	# Params:
-  # 	+bundle+:: Bundle to use to retrieve previous page from
+	# Retrieves the previous bundle page from the FHIR server.
 
-	def previous_bundle(bundle)
-		link = bundle.previous_link
+	def previous_bundle
+		url = session[:previous_bundle]
 
-		if link.present?
-			new_bundle = @@client.parse_reply(bundle.class, @@client.default_format, 
-									@@client.raw_read_url(link.url))
-			bundle = new_bundle unless new_bundle.nil?
+		if url.present?
+			@client.parse_reply(FHIR::Bundle, @client.default_format,
+									@client.raw_read_url(url))
 		end
-
-		return bundle
 	end
+
+	# Retrieves the next bundle page from the FHIR server.
+
+  def next_bundle
+		url = session[:next_bundle]
+
+		if url.present?
+			@client.parse_reply(FHIR::Bundle, @client.default_format,
+									        @client.raw_read_url(url))
+		end
+  end
 
   # Turns a query string such as "name=abc&id=123" into a hash like
   # { 'name' => 'abc', 'id' => '123' }

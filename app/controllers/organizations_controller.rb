@@ -18,20 +18,22 @@ class OrganizationsController < ApplicationController
 
 	def index
 		if params[:page].present?
-			@@bundle = update_page(params[:page], @@bundle)
+			update_page(params[:page])
 		else
 			if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string])
-				reply = @@client.search(FHIR::Organization,
+				reply = @client.search(FHIR::Organization,
 											search: { parameters: parameters })
 			else
-				reply = @@client.search(FHIR::Organization)
+				reply = @client.search(FHIR::Organization)
 			end
-			@@bundle = reply.resource
+			@bundle = reply.resource
 		end
 
+    update_bundle_links
+
     @query_params = query_params
-		@organizations = @@bundle.entry.map(&:resource)
+		@organizations = @bundle.entry.map(&:resource)
 	end
 
 	#-----------------------------------------------------------------------------
@@ -39,7 +41,7 @@ class OrganizationsController < ApplicationController
 	# GET /organizations/[id]
 
 	def show
-		reply = @@client.search(FHIR::Organization, 
+		reply = @client.search(FHIR::Organization, 
 											search: { parameters: { _id: params[:id] } })
 		bundle = reply.resource
 		fhir_organization = bundle.entry.map(&:resource).first

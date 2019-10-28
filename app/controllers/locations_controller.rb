@@ -18,20 +18,22 @@ class LocationsController < ApplicationController
 
 	def index
 		if params[:page].present?
-			@@bundle = update_page(params[:page], @@bundle)
+			update_page(params[:page])
 		else
 			if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string])
-				reply = @@client.search(FHIR::Location,
+				reply = @client.search(FHIR::Location,
 											search: { parameters: parameters })
 			else
-				reply = @@client.search(FHIR::Location)
+				reply = @client.search(FHIR::Location)
 			end
-			@@bundle = reply.resource
+			@bundle = reply.resource
 		end
 
+    update_bundle_links
+
     @query_params = query_params
-		@locations = @@bundle.entry.map(&:resource)
+		@locations = @bundle.entry.map(&:resource)
 	end
 
 	#-----------------------------------------------------------------------------
@@ -39,7 +41,7 @@ class LocationsController < ApplicationController
 	# GET /locations/[id]
 
 	def show
-		reply = @@client.search(FHIR::Location,
+		reply = @client.search(FHIR::Location,
 											search: { parameters: { _id: params[:id] } })
 		bundle = reply.resource
 		fhir_location = bundle.entry.map(&:resource).first

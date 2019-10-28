@@ -18,20 +18,22 @@ class EndpointsController < ApplicationController
 
 	def index
 		if params[:page].present?
-			@@bundle = update_page(params[:page], @@bundle)
+			update_page(params[:page])
 		else
 			if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string])
-				reply = @@client.search(FHIR::Endpoint,
+				reply = @client.search(FHIR::Endpoint,
                                 search: { parameters: parameters })
 			else
-				reply = @@client.search(FHIR::Endpoint)
+				reply = @client.search(FHIR::Endpoint)
 			end
-			@@bundle = reply.resource
+			@bundle = reply.resource
 		end
 
+    update_bundle_links
+
     @query_params = query_params
-		@endpoints = @@bundle.entry.map(&:resource)
+		@endpoints = @bundle.entry.map(&:resource)
 	end
 
 	#-----------------------------------------------------------------------------
@@ -39,7 +41,7 @@ class EndpointsController < ApplicationController
 	# GET /endpoints/[id]
 
 	def show
-		reply = @@client.search(FHIR::Endpoint,
+		reply = @client.search(FHIR::Endpoint,
 											search: { parameters: { _id: params[:id] } })
 		bundle = reply.resource
 		fhir_endpoint = bundle.entry.map(&:resource).first
