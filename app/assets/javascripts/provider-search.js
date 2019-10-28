@@ -5,6 +5,8 @@ $(() => {
 });
 
 const updateNetworkList = function (event) {
+  updateSearchParam(event, 'network');
+
   if(event.target.value === '') {
     $('#network-select').html('');
   } else {
@@ -17,4 +19,9 @@ const updateNetworkList = function (event) {
         $('#network-select').html(htmlString);
       });
   }
+};
+
+let searchParams = {};
+const updateSearchParam = function(event, param) {
+  searchParams[param] = event.target.value;
 };
