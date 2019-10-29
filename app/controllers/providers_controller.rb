@@ -9,7 +9,6 @@
 require 'json'
 
 class ProvidersController < ApplicationController
-
 	before_action :connect_to_server
   before_action :fetch_payers, only: [:index]
 
@@ -39,6 +38,63 @@ class ProvidersController < ApplicationController
 
     render json: network_list
   end
+
+  def search
+    query =
+      SEARCH_PARAMS
+        .select { |key, _value| params[key].present? }
+        .each_with_object({}) do |(local_key, fhir_key), search_params|
+          search_params[fhir_key] = params[local_key]
+        end
+
+    bundle = @client.search(
+      FHIR::Practitioner,
+      search: { parameters: query }
+    ).resource
+
+    providers = bundle.entry.map(&:resource).map do |practitioner|
+      {
+        id: practitioner.id,
+        name: display_human_name(practitioner.name.first),
+        telecom: practitioner.telecom.map { |telecom| display_telecom(telecom) },
+        address: practitioner.address.map { |address| display_address(address) },
+        gender: practitioner.gender,
+        specialty: practitioner.qualification.map(&:code).map(&:text).compact.uniq
+      }
+    end
+
+    render json: providers
+  end
+
+	def display_human_name(name)
+		result = [ name.prefix.join(', '), name.given.join(' '), name.family ].join(' ')
+		result += ', ' + name.suffix.join(', ') if name.suffix.present?
+		return result
+	end
+
+	def display_telecom(telecom)
+		return telecom.system + ": " + telecom.value
+	end
+
+  def display_address(address)
+    return address.line.join('<br>') + "<br>#{address.city}, #{address.state} #{format_zip(address.postalCode)}"
+  end
+
+  def format_zip(zip)
+    if (zip.length > 5)
+      "#{zip[0..4]}-#{zip[5..-1]}"
+    else
+      zip
+    end
+  end
+
+  SEARCH_PARAMS = {
+    network: '_has:PractitionerRole:practitioner:network',
+    zip: 'address-postalcode',
+    city: 'address-city',
+    specialty: 'qualification-code',
+    name: 'name'
+  }
 
   NUCC_CODES = [
     {:value=>"101Y00000X", :name=>"Counselor"},

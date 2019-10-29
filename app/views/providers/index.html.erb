@@ -1,7 +1,6 @@
-<div class='container'>
-  <div class=row'>
-    <div class='col-6'>
-      <h6>Search</h6>
+<div class='container-fluid'>
+  <div class='row'>
+    <div class='col-3'>
       <label for="payer-select">Insurance Provider</label>
       <select id="payer-select" class="custom-select" onchange="updateNetworkList(event)">
         <option value=""></option>
@@ -11,16 +10,16 @@
       </select>
 
       <label for="network-select">Network</label>
-      <select id="network-select" class="custom-select" onchange="updateSearchParam(event,'network')"></select>
+      <select id="network-select" class="custom-select" onchange="updateNetwork(event)"></select>
 
       <label for="zip-input">Zip Code</label>
-      <input id="zip-input" type="text" class="form-control bg-dark text-white" onkeyup="updateSearchParam(event,'zip')">
+      <input id="zip-input" type="text" class="form-control bg-dark text-white" onkeyup="updateZip(event)">
 
       <label for="city-input">City</label>
-      <input id="city-input" type="text" class="form-control bg-dark text-white" onkeyup="updateSearchParam(event,'city')">
+      <input id="city-input" type="text" class="form-control bg-dark text-white" onkeyup="updateCity(event)">
 
       <label for="specialty-select">Specialty</label>
-      <select id="specialty-select" class="custom-select" onchange="updateSearchParam(event,'specialty')">
+      <select id="specialty-select" class="custom-select" onchange="updateSpecialty(event)">
       <option value=""></option>
         <% @nucc_codes.each do |param| %>
           <option value="<%= param[:value] %>"><%= param[:name] %></option>
@@ -28,10 +27,15 @@
       </select>
 
       <label for="name-input">Name</label>
-      <input id="name-input" type="text" class="form-control bg-dark text-white" onkeyup="updateSearchParam(event,'name')">
+      <input id="name-input" type="text" class="form-control bg-dark text-white" onkeyup="updateName(event)">
+
+      <button id="provider-search-button", class="btn btn-outline-success" onclick="submitProviderSearch(event)">
+        Find
+      </button>
     </div>
-    <div class='col-6'>
-      Results
+    <div class='col-9'>
+      <table id="providers-table" class="table table-dark">
+      </table>
     </div>
   </div>
 </div>

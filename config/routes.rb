@@ -14,4 +14,5 @@ Rails.application.routes.draw do
   resources :providers,                 only: [:index]
 
   get '/providers/networks', to: 'providers#networks'
+  get '/providers/search', to: 'providers#search'
 end
