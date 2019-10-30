@@ -14,6 +14,7 @@ class ProvidersController < ApplicationController
 
 	#-----------------------------------------------------------------------------
 
+  FHIR.logger.level = Logger::WARN
 	# GET /providers
 
 	def index
@@ -40,19 +41,25 @@ class ProvidersController < ApplicationController
   end
 
   def search
-    query =
-      SEARCH_PARAMS
-        .select { |key, _value| params[key].present? }
-        .each_with_object({}) do |(local_key, fhir_key), search_params|
-          search_params[fhir_key] = params[local_key]
-        end
+    if params[:page].present?
+			update_page(params[:page])
+    else
+      query =
+        SEARCH_PARAMS
+          .select { |key, _value| params[key].present? }
+          .each_with_object({}) do |(local_key, fhir_key), search_params|
+        search_params[fhir_key] = params[local_key]
+      end
 
-    bundle = @client.search(
-      FHIR::Practitioner,
-      search: { parameters: query }
-    ).resource
+      @bundle = @client.search(
+        FHIR::Practitioner,
+        search: { parameters: query }
+      ).resource
+    end
 
-    providers = bundle.entry.map(&:resource).map do |practitioner|
+    update_bundle_links
+
+    providers = @bundle.entry.map(&:resource).map do |practitioner|
       {
         id: practitioner.id,
         name: display_human_name(practitioner.name.first),
@@ -63,7 +70,11 @@ class ProvidersController < ApplicationController
       }
     end
 
-    render json: providers
+    render json: {
+             providers: providers,
+             nextPage: @next_page_disabled,
+             previousPage: @previous_page_disabled
+           }
   end
 
 	def display_human_name(name)

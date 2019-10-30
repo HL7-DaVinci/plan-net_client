@@ -59,12 +59,50 @@ const submitProviderSearch = function (_event) {
 
   console.log(params);
 
+  fetchProviders(params);
+};
+
+const fetchProviders = function (params) {
   fetch(`/providers/search.json?${params}`)
     .then(response => response.json())
-    .then(providers => {
-      const rows = providerRows(providers);
-      $('#providers-table').html(rows);
+    .then(response => {
+      const { providers, nextPage, previousPage } = response;
+      updateProviders(providers);
+      updateNavigationButtons(nextPage, previousPage);
     });
+};
+
+const updateProviders = function (providers) {
+  const rows = providerRows(providers);
+  $('#providers-table').html(rows);
+};
+
+const updateNavigationButtons = function (nextPage, previousPage) {
+  const hasNextPage = nextPage !== 'disabled';
+  const hasPreviousPage = previousPage !== 'disabled';
+
+  if (hasNextPage) {
+    $('#next-button').removeClass('disabled');
+  } else {
+    $('#next-button').addClass('disabled');
+  }
+  if (hasPreviousPage) {
+    $('#previous-button').removeClass('disabled');
+  } else {
+    $('#previous-button').addClass('disabled');
+  }
+  updateNavigationActions(hasNextPage, hasPreviousPage);
+};
+
+const updateNavigationActions = function (hasNextPage, hasPreviousPage) {
+  $('#next-button').off('click');
+  $('#previous-button').off('click');
+  if (hasNextPage) {
+    $('#next-button').on('click', () => fetchProviders('page=next'));
+  }
+  if (hasPreviousPage) {
+    $('#previous-button').on('click', () => fetchProviders('page=previous'));
+  }
 };
 
 const headerRow = `
