@@ -7,6 +7,7 @@
 ################################################################################
 
 class ApplicationController < ActionController::Base
+  FHIR.logger.level = Logger::WARN
 
   # Get the FHIR server url
   def server_url

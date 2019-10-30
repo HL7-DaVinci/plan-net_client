@@ -1,8 +1,8 @@
 .container-fluid {
 	margin-bottom: 70px;
 	margin-top: 82px;
-  margin-left: 5%;
-  margin-right: 5%;
+  padding-left: 5%;
+  padding-right: 5%;
   padding-top: 20px;
 }
 
