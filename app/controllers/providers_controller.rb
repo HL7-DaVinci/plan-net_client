@@ -44,37 +44,65 @@ class ProvidersController < ApplicationController
     if params[:page].present?
 			update_page(params[:page])
     else
+      base_params = {
+        _include: ['PractitionerRole:practitioner', 'PractitionerRole:location']
+      }
       query =
         SEARCH_PARAMS
           .select { |key, _value| params[key].present? }
-          .each_with_object({}) do |(local_key, fhir_key), search_params|
+          .each_with_object(base_params) do |(local_key, fhir_key), search_params|
         search_params[fhir_key] = params[local_key]
       end
 
       @bundle = @client.search(
-        FHIR::Practitioner,
+        FHIR::PractitionerRole,
         search: { parameters: query }
       ).resource
     end
 
     update_bundle_links
 
-    providers = @bundle.entry.map(&:resource).map do |practitioner|
-      {
-        id: practitioner.id,
-        name: display_human_name(practitioner.name.first),
-        telecom: practitioner.telecom.map { |telecom| display_telecom(telecom) },
-        address: practitioner.address.map { |address| display_address(address) },
-        gender: practitioner.gender,
-        specialty: practitioner.qualification.map(&:code).map(&:text).compact.uniq
-      }
-    end
-
     render json: {
              providers: providers,
              nextPage: @next_page_disabled,
              previousPage: @previous_page_disabled
            }
+  end
+
+  def providers
+    practitioners
+      .map do |practitioner|
+        roles = practitioner_roles(practitioner.id)
+        practitioner_locations = role_locations(roles.flat_map(&:location).map(&:reference))
+        {
+          id: practitioner.id,
+          name: display_human_name(practitioner.name.first),
+          gender: practitioner.gender,
+          specialty: practitioner.qualification.map(&:code).map(&:text).compact.uniq,
+          telecom: roles.flat_map(&:telecom).map { |telecom| display_telecom(telecom) },
+          address: practitioner_locations.flat_map(&:address).map { |address| display_address(address) },
+        }
+      end
+  end
+
+  def practitioners
+    @practitioners ||= @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::Practitioner }.map(&:resource)
+  end
+
+  def practitioner_roles(practitioner_id)
+    roles.select { |role| role.practitioner.reference.end_with? practitioner_id }
+  end
+
+  def role_locations(location_references)
+    location_references.map { |reference| locations.find { |location| reference.end_with? location.id } }
+  end
+
+  def locations
+    @locations ||= @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::Location }.map(&:resource)
+  end
+
+  def roles
+    @roles ||= @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::PractitionerRole }.map(&:resource)
   end
 
 	def display_human_name(name)
@@ -100,11 +128,11 @@ class ProvidersController < ApplicationController
   end
 
   SEARCH_PARAMS = {
-    network: '_has:PractitionerRole:practitioner:network',
-    zip: 'address-postalcode',
-    city: 'address-city',
-    specialty: 'qualification-code',
-    name: 'name'
+    network: 'network',
+    zip: 'location.address-postalcode',
+    city: 'location.address-city',
+    specialty: 'practitioner.qualification-code',
+    name: 'practitioner.name'
   }
 
   NUCC_CODES = [
