@@ -114,6 +114,8 @@ table {
 	padding: 15px;	
 	margin-right: 20px;
 	margin-bottom: 20px;
+  height: 150px;
+  width: 150px;
 }
 
 .card-header {
@@ -146,4 +148,8 @@ form > .row {
 			margin-left: 15px;
 		}
 	}
+}
+
+.nav-link {
+  margin-right: 50px;
 }

@@ -7,6 +7,7 @@
 ################################################################################
 
 class ApplicationController < ActionController::Base
+  FHIR.logger.level = Logger::WARN
 
   # Get the FHIR server url
   def server_url
@@ -79,6 +80,18 @@ class ApplicationController < ActionController::Base
     query_string.split('&').each_with_object({}) do |string, hash|
       key, value = string.split('=')
       hash[key] = value
+    end
+  end
+
+  def fetch_payers
+    @payers = @client.search(
+      FHIR::Organization,
+      search: { parameters: { type: 'pay' } }
+    )&.resource&.entry&.map do |entry|
+      {
+        value: entry&.resource&.id,
+        name: entry&.resource&.name
+      }
     end
   end
 end

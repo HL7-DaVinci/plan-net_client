@@ -11,4 +11,12 @@ Rails.application.routes.draw do
   resources :organization_affiliations, only: [:index, :show]
   resources :practitioners, 				    only: [:index, :show]
   resources :practitioner_roles,        only: [:index, :show]
+  resources :providers,                 only: [:index]
+  resources :pharmacies,                 only: [:index]
+
+  get '/providers/networks', to: 'providers#networks'
+  get '/providers/search', to: 'providers#search'
+
+  get '/pharmacies/networks', to: 'pharmacies#networks'
+  get '/pharmacies/search', to: 'pharmacies#search'
 end
