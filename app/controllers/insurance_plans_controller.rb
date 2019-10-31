@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ################################################################################
 #
 # Insurance Plans Controller
@@ -9,45 +11,44 @@
 require 'json'
 
 class InsurancePlansController < ApplicationController
+  before_action :connect_to_server, only: [:index, :show]
 
-	before_action :connect_to_server, only: [ :index, :show ]
+  #-----------------------------------------------------------------------------
 
-	#-----------------------------------------------------------------------------
+  # GET /insurance_plans
 
-	# GET /insurance_plans
-
-	def index
-		if params[:page].present?
-			update_page(params[:page])
-		else
-			if params[:query_string].present?
+  def index
+    if params[:page].present?
+      update_page(params[:page])
+    else
+      if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string])
-				reply = @client.search(FHIR::InsurancePlan,
-											search: { parameters: parameters })
-			else
-				reply = @client.search(FHIR::InsurancePlan)
-			end
-			@bundle = reply.resource
-		end
+        reply = @client.search(FHIR::InsurancePlan,
+                               search: { parameters: parameters })
+      else
+        reply = @client.search(FHIR::InsurancePlan)
+      end
+      @bundle = reply.resource
+    end
 
     update_bundle_links
 
     @query_params = query_params
-		@insurance_plans = @bundle.entry.map(&:resource)
-	end
+    @insurance_plans = @bundle.entry.map(&:resource)
+  end
 
-	#-----------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
 
-	# GET /insurance_plans/[id]
+  # GET /insurance_plans/[id]
 
-	def show
-		reply = @client.search(FHIR::InsurancePlan, 
-											search: { parameters: { _id: params[:id] } })
-		bundle = reply.resource
-		fhir_insurnace_plan = bundle.entry.map(&:resource).first
+  def show
+    reply = @client.search(FHIR::InsurancePlan,
+                           search: { parameters: { _id: params[:id] } })
+    bundle = reply.resource
+    fhir_insurnace_plan = bundle.entry.map(&:resource).first
 
-		@insurance_plan = InsurancePlan.new(fhir_insurnace_plan) unless fhir_insurnace_plan.nil?
-	end
+    @insurance_plan = InsurancePlan.new(fhir_insurnace_plan) unless fhir_insurnace_plan.nil?
+  end
 
   def query_params
     [

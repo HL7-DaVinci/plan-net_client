@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ################################################################################
 #
 # Application Controller
@@ -15,17 +17,17 @@ class ApplicationController < ActionController::Base
   end
 
   # Connect the FHIR client with the specified server and save the connection
-	# for future requests.
+  # for future requests.
 
-	def connect_to_server
-		if server_url.present?
-			@client = FHIR::Client.new(server_url)
-			@client.use_r4
+  def connect_to_server
+    if server_url.present?
+      @client = FHIR::Client.new(server_url)
+      @client.use_r4
       session[:server_url] = server_url
-		else
-			redirect_to root_path, flash: { error: "Please specify a plan network server" }
-		end
-	end
+    else
+      redirect_to root_path, flash: { error: 'Please specify a plan network server' }
+    end
+  end
 
   def update_bundle_links
     session[:next_bundle] = @bundle&.next_link&.url
@@ -34,44 +36,44 @@ class ApplicationController < ActionController::Base
     @previous_page_disabled = session[:previous_bundle].blank? ? 'disabled' : ''
   end
 
-	#-----------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
 
-	# Performs pagination on the resource list.
-	#
-	# Params:
-  # 	+page+:: which page to get
+  # Performs pagination on the resource list.
+  #
+  # Params:
+  #   +page+:: which page to get
 
-	def update_page(page)
-		case page
-		when 'previous'
-			@bundle = previous_bundle
-		when 'next'
-			@bundle = next_bundle
-		end
-	end
+  def update_page(page)
+    case page
+    when 'previous'
+      @bundle = previous_bundle
+    when 'next'
+      @bundle = next_bundle
+    end
+  end
 
-	#-----------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
 
-	# Retrieves the previous bundle page from the FHIR server.
+  # Retrieves the previous bundle page from the FHIR server.
 
-	def previous_bundle
-		url = session[:previous_bundle]
+  def previous_bundle
+    url = session[:previous_bundle]
 
-		if url.present?
-			@client.parse_reply(FHIR::Bundle, @client.default_format,
-									@client.raw_read_url(url))
-		end
-	end
+    if url.present?
+      @client.parse_reply(FHIR::Bundle, @client.default_format,
+                          @client.raw_read_url(url))
+    end
+  end
 
-	# Retrieves the next bundle page from the FHIR server.
+  # Retrieves the next bundle page from the FHIR server.
 
   def next_bundle
-		url = session[:next_bundle]
+    url = session[:next_bundle]
 
-		if url.present?
-			@client.parse_reply(FHIR::Bundle, @client.default_format,
-									        @client.raw_read_url(url))
-		end
+    if url.present?
+      @client.parse_reply(FHIR::Bundle, @client.default_format,
+                          @client.raw_read_url(url))
+    end
   end
 
   # Turns a query string such as "name=abc&id=123" into a hash like

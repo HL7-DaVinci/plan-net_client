@@ -1,0 +1,12 @@
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: 'indented'
+
+Style/WordArray:
+  Enabled: false
+
+Style/SymbolArray:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 120
+
