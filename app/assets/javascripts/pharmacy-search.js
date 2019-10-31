@@ -25,9 +25,9 @@ const updateNetworkList = function (event) {
   }
 };
 
-let searchParams = {};
+let pharmacyParams = {};
 const updateSearchParam = function(event, param) {
-  searchParams[param] = event.target.value;
+  pharmacyParams[param] = event.target.value;
 };
 
 const updateNetwork = function (event) {
@@ -47,7 +47,7 @@ const updateName = function (event) {
 };
 
 const submitPharmacySearch = function (_event) {
-  const params = Object.entries(searchParams)
+  const params = Object.entries(pharmacyParams)
         .filter(([key, value]) => value && value.length > 0)
         .map(([key, value]) => `${key}=${value}`)
         .join(`&`);

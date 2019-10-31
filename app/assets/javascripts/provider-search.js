@@ -26,9 +26,9 @@ const updateNetworkList = function (event) {
   }
 };
 
-let searchParams = {};
+let providerParams = {};
 const updateSearchParam = function(event, param) {
-  searchParams[param] = event.target.value;
+  providerParams[param] = event.target.value;
 };
 
 const updateNetwork = function (event) {
@@ -52,7 +52,7 @@ const updateName = function (event) {
 };
 
 const submitProviderSearch = function (_event) {
-  const params = Object.entries(searchParams)
+  const params = Object.entries(providerParams)
         .filter(([key, value]) => value && value.length > 0)
         .map(([key, value]) => `${key}=${value}`)
         .join(`&`);

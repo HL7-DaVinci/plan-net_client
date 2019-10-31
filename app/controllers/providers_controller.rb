@@ -14,13 +14,14 @@ class ProvidersController < ApplicationController
 
 	#-----------------------------------------------------------------------------
 
-  FHIR.logger.level = Logger::WARN
 	# GET /providers
 
 	def index
     @params = {}
     @nucc_codes = NUCC_CODES.sort_by { |code| code[:name] }
 	end
+
+  # GET /providers/networks
 
   def networks
     id = params[:payer_id]
@@ -39,6 +40,8 @@ class ProvidersController < ApplicationController
 
     render json: network_list
   end
+
+  # GET /providers/search
 
   def search
     if params[:page].present?
@@ -68,6 +71,8 @@ class ProvidersController < ApplicationController
              previousPage: @previous_page_disabled
            }
   end
+
+  private
 
   def providers
     practitioners

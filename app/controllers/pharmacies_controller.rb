@@ -20,6 +20,8 @@ class PharmaciesController < ApplicationController
     @params = {}
 	end
 
+  # GET /pharmacies/networks
+
   def networks
     id = params[:payer_id]
     network_list = @client.search(
@@ -37,6 +39,8 @@ class PharmaciesController < ApplicationController
 
     render json: network_list
   end
+
+  # GET /pharmacies/search
 
   def search
     if params[:page].present?
@@ -67,6 +71,8 @@ class PharmaciesController < ApplicationController
              previousPage: @previous_page_disabled
            }
   end
+
+  private
 
   def pharmacies
     locations
