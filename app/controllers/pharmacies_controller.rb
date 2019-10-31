@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ################################################################################
 #
 # Pharmacies Controller
@@ -9,16 +11,16 @@
 require 'json'
 
 class PharmaciesController < ApplicationController
-	before_action :connect_to_server
+  before_action :connect_to_server
   before_action :fetch_payers, only: [:index]
 
-	#-----------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
 
-	# GET /pharmacies
+  # GET /pharmacies
 
-	def index
+  def index
     @params = {}
-	end
+  end
 
   # GET /pharmacies/networks
 
@@ -27,9 +29,9 @@ class PharmaciesController < ApplicationController
     network_list = @client.search(
       FHIR::Organization,
       search: { parameters: {
-                  _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network',
-                  partof: "Organization/#{id}"
-                } }
+        _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network',
+        partof: "Organization/#{id}"
+      } }
     )&.resource&.entry&.map do |entry|
       {
         value: entry&.resource&.id,
@@ -44,7 +46,7 @@ class PharmaciesController < ApplicationController
 
   def search
     if params[:page].present?
-			update_page(params[:page])
+      update_page(params[:page])
     else
       base_params = {
         _revinclude: ['OrganizationAffiliation:location'],
@@ -66,10 +68,10 @@ class PharmaciesController < ApplicationController
     update_bundle_links
 
     render json: {
-             pharmacies: pharmacies,
-             nextPage: @next_page_disabled,
-             previousPage: @previous_page_disabled
-           }
+      pharmacies: pharmacies,
+      nextPage: @next_page_disabled,
+      previousPage: @previous_page_disabled
+    }
   end
 
   private
@@ -98,16 +100,16 @@ class PharmaciesController < ApplicationController
     @locations ||= @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::Location }.map(&:resource)
   end
 
-	def display_telecom(telecom)
-		return telecom.system + ": " + telecom.value
-	end
+  def display_telecom(telecom)
+    telecom.system + ': ' + telecom.value
+  end
 
   def display_address(address)
-    return address.line.join('<br>') + "<br>#{address.city}, #{address.state} #{address.postalCode}"
+    address.line.join('<br>') + "<br>#{address.city}, #{address.state} #{address.postalCode}"
   end
 
   def format_zip(zip)
-    if (zip.length > 5)
+    if zip.length > 5
       "#{zip[0..4]}-#{zip[5..-1]}"
     else
       zip
@@ -119,5 +121,5 @@ class PharmaciesController < ApplicationController
     zip: 'address-postalcode',
     city: 'address-city',
     name: 'name:contains'
-  }
+  }.freeze
 end

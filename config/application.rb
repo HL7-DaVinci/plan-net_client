@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require_relative 'boot'
 require 'rails/all'
 require 'openssl'
 
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
-	
+
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 

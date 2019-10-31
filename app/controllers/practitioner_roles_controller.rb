@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ################################################################################
 #
 # Practitioner Roles Controller
@@ -9,41 +11,40 @@
 require 'json'
 
 class PractitionerRolesController < ApplicationController
+  before_action :connect_to_server, only: [:index, :show]
 
-	before_action :connect_to_server, only: [ :index, :show ]
+  #-----------------------------------------------------------------------------
 
-	#-----------------------------------------------------------------------------
+  # GET /practitioner_roles
 
-	# GET /practitioner_roles
-
-	def index
-		if params[:page].present?
-			update_page(params[:page])
-		else
-			if params[:query_string].present?
+  def index
+    if params[:page].present?
+      update_page(params[:page])
+    else
+      if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string])
-				reply = @client.search(FHIR::PractitionerRole,
-											search: { parameters: parameters })
-			else
-				reply = @client.search(FHIR::PractitionerRole)
-			end
-			@bundle = reply.resource
-		end
+        reply = @client.search(FHIR::PractitionerRole,
+                               search: { parameters: parameters })
+      else
+        reply = @client.search(FHIR::PractitionerRole)
+      end
+      @bundle = reply.resource
+    end
 
     update_bundle_links
 
     @query_params = query_params
-		@practitioner_roles = @bundle.entry.map(&:resource)
-	end
+    @practitioner_roles = @bundle.entry.map(&:resource)
+  end
 
-	#-----------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
 
-	# GET /practitioner_roles/[id]
+  # GET /practitioner_roles/[id]
 
-	def show
-		reply = @client.search(FHIR::PractitionerRole,
-											search: { parameters: { id: params[:id] } })
-	end
+  def show
+    reply = @client.search(FHIR::PractitionerRole,
+                           search: { parameters: { id: params[:id] } })
+  end
 
   def query_params
     [

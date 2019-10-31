@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ################################################################################
 #
 # Location Helper
@@ -7,9 +9,7 @@
 ################################################################################
 
 module LocationHelper
-
-	def display_position(position)
-		sanitize([ position.latitude, position.longitude ].join(', ')) if position.present?
-	end
-
+  def display_position(position)
+    sanitize([position.latitude, position.longitude].join(', ')) if position.present?
+  end
 end

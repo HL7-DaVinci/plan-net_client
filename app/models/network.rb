@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ################################################################################
 #
 # Network Model
@@ -7,20 +9,18 @@
 ################################################################################
 
 class Network < Resource
+  include ActiveModel::Model
 
-	include ActiveModel::Model
+  attr_accessor :id, :meta, :implicit_rules, :language, :text, :identifier,
+                :active, :name, :telecoms, :addresses, :contacts
 
-	attr_accessor :id, :meta, :implicit_rules, :language, :text, :identifier, 
-									:active, :name, :telecoms, :addresses, :contacts
+  #-----------------------------------------------------------------------------
 
-	#-----------------------------------------------------------------------------
-
-	def initialize(network)
-		@id 						= network.id
-		@name						= network.name
-		@telecoms 			= network.telecom
-		@addresses 			= network.address
-		@contacts				= network.contact
-	end
-	
+  def initialize(network)
+    @id = network.id
+    @name = network.name
+    @telecoms = network.telecom
+    @addresses = network.address
+    @contacts = network.contact
+  end
 end

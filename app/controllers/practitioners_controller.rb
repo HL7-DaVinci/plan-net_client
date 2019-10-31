@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ################################################################################
 #
 # Practitioners Controller
@@ -9,48 +11,47 @@
 require 'json'
 
 class PractitionersController < ApplicationController
-
-	before_action :connect_to_server, only: [ :index, :show ]
+  before_action :connect_to_server, only: [:index, :show]
 
   # FHIR.logger.level = Logger::WARN
-	#-----------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
 
-	# GET /practitioners
+  # GET /practitioners
 
-	def index
-		if params[:page].present?
-			update_page(params[:page])
-		else
-			if params[:query_string].present?
+  def index
+    if params[:page].present?
+      update_page(params[:page])
+    else
+      if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string]).merge(_sort: :family)
-				reply = @client.search(FHIR::Practitioner,
-											search: { parameters: parameters })
-			else
-				reply = @client.search(FHIR::Practitioner,
-											search: { parameters: { _sort: :family } } )
-			end
-			@bundle = reply.resource
-		end
+        reply = @client.search(FHIR::Practitioner,
+                               search: { parameters: parameters })
+      else
+        reply = @client.search(FHIR::Practitioner,
+                               search: { parameters: { _sort: :family } })
+      end
+      @bundle = reply.resource
+    end
 
     update_bundle_links
 
     @query_params = query_params
-		@practitioners = @bundle.present? ? @bundle.entry.map(&:resource) : []
-		@params = params
-	end
+    @practitioners = @bundle.present? ? @bundle.entry.map(&:resource) : []
+    @params = params
+  end
 
-	#-----------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
 
-	# GET /practitioners/[id]
+  # GET /practitioners/[id]
 
-	def show
-		reply = @client.search(FHIR::Practitioner,
-											search: { parameters: { _id: params[:id] } })
-		bundle = reply.resource
-		fhir_practitioner = bundle.entry.map(&:resource).first
+  def show
+    reply = @client.search(FHIR::Practitioner,
+                           search: { parameters: { _id: params[:id] } })
+    bundle = reply.resource
+    fhir_practitioner = bundle.entry.map(&:resource).first
 
-		@practitioner = Practitioner.new(fhir_practitioner) unless fhir_practitioner.nil?
-	end
+    @practitioner = Practitioner.new(fhir_practitioner) unless fhir_practitioner.nil?
+  end
 
   def query_params
     [

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ################################################################################
 #
 # Welcome Controller
@@ -9,10 +11,7 @@
 require 'json'
 
 class WelcomeController < ApplicationController
+  # GET /
 
-	# GET /
-
-	def index
-	end
-
+  def index; end
 end
