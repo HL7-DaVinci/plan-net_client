@@ -1,15 +1,15 @@
 $(() => {
   if ($('#payer-select').length > 0) {
-    updateNetworkList({ target: { value: $('#payer-select').val() } });
-    updateZip({ target: { value: $('#zip-input').val() } });
-    updateCity({ target: { value: $('#city-input').val() } });
-    updateSpecialty({ target: { value: $('#specialty-select').val() } });
-    updateName({ target: { value: $('#name-input').val() } });
+    updateProviderNetworkList({ target: { value: $('#payer-select').val() } });
+    updateProviderZip({ target: { value: $('#zip-input').val() } });
+    updateProviderCity({ target: { value: $('#city-input').val() } });
+    updateProviderSpecialty({ target: { value: $('#specialty-select').val() } });
+    updateProviderName({ target: { value: $('#name-input').val() } });
   }
 });
 
-const updateNetworkList = function (event) {
-  updateSearchParam(event, 'network');
+const updateProviderNetworkList = function (event) {
+  updateProviderSearchParam(event, 'network');
 
   if(event.target.value === '') {
     $('#network-select').html('');
@@ -21,34 +21,34 @@ const updateNetworkList = function (event) {
               .map(network => `<option value="${network.value}">${network.name}</option>`)
               .join('\n');
         $('#network-select').html(htmlString);
-        updateNetwork({ target: { value: $('#network-select').val() } });
+        updateProviderNetwork({ target: { value: $('#network-select').val() } });
       });
   }
 };
 
 let providerParams = {};
-const updateSearchParam = function(event, param) {
+const updateProviderSearchParam = function(event, param) {
   providerParams[param] = event.target.value;
 };
 
-const updateNetwork = function (event) {
-  updateSearchParam(event, 'network');
+const updateProviderNetwork = function (event) {
+  updateProviderSearchParam(event, 'network');
 };
 
-const updateZip = function (event) {
-  updateSearchParam(event, 'zip');
+const updateProviderZip = function (event) {
+  updateProviderSearchParam(event, 'zip');
 };
 
-const updateCity= function (event) {
-  updateSearchParam(event, 'city');
+const updateProviderCity= function (event) {
+  updateProviderSearchParam(event, 'city');
 };
 
-const updateSpecialty = function (event) {
-  updateSearchParam(event, 'specialty');
+const updateProviderSpecialty = function (event) {
+  updateProviderSearchParam(event, 'specialty');
 };
 
-const updateName = function (event) {
-  updateSearchParam(event, 'name');
+const updateProviderName = function (event) {
+  updateProviderSearchParam(event, 'name');
 };
 
 const submitProviderSearch = function (_event) {
@@ -68,7 +68,7 @@ const fetchProviders = function (params) {
     .then(response => {
       const { providers, nextPage, previousPage } = response;
       updateProviders(providers);
-      updateNavigationButtons(nextPage, previousPage);
+      updateProviderNavigationButtons(nextPage, previousPage);
     });
 };
 
@@ -77,7 +77,7 @@ const updateProviders = function (providers) {
   $('#providers-table').html(rows);
 };
 
-const updateNavigationButtons = function (nextPage, previousPage) {
+const updateProviderNavigationButtons = function (nextPage, previousPage) {
   const hasNextPage = nextPage !== 'disabled';
   const hasPreviousPage = previousPage !== 'disabled';
 
@@ -91,10 +91,10 @@ const updateNavigationButtons = function (nextPage, previousPage) {
   } else {
     $('#previous-button').addClass('disabled');
   }
-  updateNavigationActions(hasNextPage, hasPreviousPage);
+  updateProviderNavigationActions(hasNextPage, hasPreviousPage);
 };
 
-const updateNavigationActions = function (hasNextPage, hasPreviousPage) {
+const updateProviderNavigationActions = function (hasNextPage, hasPreviousPage) {
   $('#next-button').off('click');
   $('#previous-button').off('click');
   if (hasNextPage) {
@@ -105,7 +105,7 @@ const updateNavigationActions = function (hasNextPage, hasPreviousPage) {
   }
 };
 
-const headerRow = `
+const providerHeaderRow = `
 <tr>
   <th>Name</th>
   <th>Phone/Fax</th>
@@ -120,7 +120,7 @@ const providerImageUrl = function (provider) {
 
 const providerRows = function (providers) {
   if (providers.length > 0) {
-    return headerRow + providers.map(provider => {
+    return providerHeaderRow + providers.map(provider => {
       return `
           <tr>
             <td>
@@ -143,4 +143,4 @@ const providerRows = function (providers) {
       </tr>
     `;
   }
-}
+};

@@ -1,14 +1,14 @@
 $(() => {
   if ($('#payer-select').length > 0) {
-    updateNetworkList({ target: { value: $('#payer-select').val() } });
-    updateZip({ target: { value: $('#zip-input').val() } });
-    updateCity({ target: { value: $('#city-input').val() } });
-    updateName({ target: { value: $('#name-input').val() } });
+    updatePharmacyNetworkList({ target: { value: $('#payer-select').val() } });
+    updatePharmacyZip({ target: { value: $('#zip-input').val() } });
+    updatePharmacyCity({ target: { value: $('#city-input').val() } });
+    updatePharmacyName({ target: { value: $('#name-input').val() } });
   }
 });
 
-const updateNetworkList = function (event) {
-  updateSearchParam(event, 'network');
+const updatePharmacyNetworkList = function (event) {
+  updatePharmacySearchParam(event, 'network');
 
   if(event.target.value === '') {
     $('#network-select').html('');
@@ -20,30 +20,30 @@ const updateNetworkList = function (event) {
               .map(network => `<option value="${network.value}">${network.name}</option>`)
               .join('\n');
         $('#network-select').html(htmlString);
-        updateNetwork({ target: { value: $('#network-select').val() } });
+        updatePharmacyNetwork({ target: { value: $('#network-select').val() } });
       });
   }
 };
 
 let pharmacyParams = {};
-const updateSearchParam = function(event, param) {
+const updatePharmacySearchParam = function(event, param) {
   pharmacyParams[param] = event.target.value;
 };
 
-const updateNetwork = function (event) {
-  updateSearchParam(event, 'network');
+const updatePharmacyNetwork = function (event) {
+  updatePharmacySearchParam(event, 'network');
 };
 
-const updateZip = function (event) {
-  updateSearchParam(event, 'zip');
+const updatePharmacyZip = function (event) {
+  updatePharmacySearchParam(event, 'zip');
 };
 
-const updateCity= function (event) {
-  updateSearchParam(event, 'city');
+const updatePharmacyCity= function (event) {
+  updatePharmacySearchParam(event, 'city');
 };
 
-const updateName = function (event) {
-  updateSearchParam(event, 'name');
+const updatePharmacyName = function (event) {
+  updatePharmacySearchParam(event, 'name');
 };
 
 const submitPharmacySearch = function (_event) {
@@ -63,7 +63,7 @@ const fetchPharmacies = function (params) {
     .then(response => {
       const { pharmacies, nextPage, previousPage } = response;
       updatePharmacies(pharmacies);
-      updateNavigationButtons(nextPage, previousPage);
+      updatePharmacyNavigationButtons(nextPage, previousPage);
     });
 };
 
@@ -72,7 +72,7 @@ const updatePharmacies = function (pharmacies) {
   $('#pharmacies-table').html(rows);
 };
 
-const updateNavigationButtons = function (nextPage, previousPage) {
+const updatePharmacyNavigationButtons = function (nextPage, previousPage) {
   const hasNextPage = nextPage !== 'disabled';
   const hasPreviousPage = previousPage !== 'disabled';
 
@@ -86,10 +86,10 @@ const updateNavigationButtons = function (nextPage, previousPage) {
   } else {
     $('#previous-button').addClass('disabled');
   }
-  updateNavigationActions(hasNextPage, hasPreviousPage);
+  updatePharmacyNavigationActions(hasNextPage, hasPreviousPage);
 };
 
-const updateNavigationActions = function (hasNextPage, hasPreviousPage) {
+const updatePharmacyNavigationActions = function (hasNextPage, hasPreviousPage) {
   $('#next-button').off('click');
   $('#previous-button').off('click');
   if (hasNextPage) {
@@ -100,7 +100,7 @@ const updateNavigationActions = function (hasNextPage, hasPreviousPage) {
   }
 };
 
-const headerRow = `
+const pharmacyHeaderRow = `
 <tr>
   <th>Name</th>
   <th>Phone/Fax</th>
@@ -110,7 +110,7 @@ const headerRow = `
 
 const pharmacyRows = function (pharmacies) {
   if (pharmacies.length > 0) {
-    return headerRow + pharmacies.map(pharmacy => {
+    return pharmacyHeaderRow + pharmacies.map(pharmacy => {
       return `
           <tr>
             <td>
@@ -130,4 +130,4 @@ const pharmacyRows = function (pharmacies) {
       </tr>
     `;
   }
-}
+};

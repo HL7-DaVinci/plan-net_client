@@ -2,7 +2,7 @@
   <div class='row'>
     <div class='col-3'>
       <label for="payer-select">Insurance Provider</label>
-      <select id="payer-select" class="custom-select" onchange="updateNetworkList(event)">
+      <select id="payer-select" class="custom-select" onchange="updatePharmacyNetworkList(event)">
         <option value=""></option>
         <% @payers.each do |param| %>
           <option value="<%= param[:value] %>"><%= param[:name] %></option>
@@ -10,16 +10,16 @@
       </select>
 
       <label for="network-select">Network</label>
-      <select id="network-select" class="custom-select" onchange="updateNetwork(event)"></select>
+      <select id="network-select" class="custom-select" onchange="updatePharmacyNetwork(event)"></select>
 
       <label for="zip-input">Zip Code</label>
-      <input id="zip-input" type="text" class="form-control bg-dark text-white" onkeyup="updateZip(event)">
+      <input id="zip-input" type="text" class="form-control bg-dark text-white" onkeyup="updatePharmacyZip(event)">
 
       <label for="city-input">City</label>
-      <input id="city-input" type="text" class="form-control bg-dark text-white" onkeyup="updateCity(event)">
+      <input id="city-input" type="text" class="form-control bg-dark text-white" onkeyup="updatePharmacyCity(event)">
 
       <label for="name-input">Name</label>
-      <input id="name-input" type="text" class="form-control bg-dark text-white" onkeyup="updateName(event)">
+      <input id="name-input" type="text" class="form-control bg-dark text-white" onkeyup="updatePharmacyName(event)">
 
       <button id="pharmacy-search-button", class="btn btn-outline-success" onclick="submitPharmacySearch(event)">
         Find
