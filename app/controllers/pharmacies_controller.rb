@@ -25,7 +25,7 @@ class PharmaciesController < ApplicationController
   # GET /pharmacies/networks
 
   def networks
-    id = params[:payer_id]
+        id = params[:payer_id]
     network_list = @client.search(
       FHIR::Organization,
       search: { parameters: {
@@ -58,7 +58,6 @@ class PharmaciesController < ApplicationController
           .each_with_object(base_params) do |(local_key, fhir_key), search_params|
             search_params[fhir_key] = params[local_key]
           end
-
       @bundle = @client.search(
         FHIR::Location,
         search: { parameters: query }

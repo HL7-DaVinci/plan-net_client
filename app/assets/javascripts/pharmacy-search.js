@@ -53,18 +53,19 @@ const submitPharmacySearch = function (_event) {
         .join(`&`);
 
   console.log(params);
-
   fetchPharmacies(params);
 };
 
 const fetchPharmacies = function (params) {
-  fetch(`/pharmacies/search.json?${params}`)
+ fetch(`/pharmacies/search.json?${params}`)
     .then(response => response.json())
-    .then(response => {
+    .then(response => 
+      {
       const { pharmacies, nextPage, previousPage } = response;
       updatePharmacies(pharmacies);
       updatePharmacyNavigationButtons(nextPage, previousPage);
-    });
+    }
+    );
 };
 
 const updatePharmacies = function (pharmacies) {

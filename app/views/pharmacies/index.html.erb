@@ -20,17 +20,17 @@
 
       <label for="name-input">Name</label>
       <input id="name-input" type="text" class="form-control bg-dark text-white" onkeyup="updatePharmacyName(event)">
-
-      <button id="pharmacy-search-button", class="btn btn-outline-success" onclick="submitPharmacySearch(event)">
-        Find
-      </button>
+      <button id="pharmacy-search-button", type="button" class="btn btn-default" onclick="submitPharmacySearch(event)">
+       <span class="glyphicon glyphicon-search" color="black"></span> Find 
+     </button>
     </div>
     <div class='col-9'>
       <div class='btn-group float-right mt-2' role='group'>
         <button id="previous-button" class="btn btn-outline-primary disabled">Previous</button>
         <button id="next-button" class="btn btn-outline-primary disabled">Next</button>
+
       </div>
-      <table id="pharmacies-table" class="table table-dark">
+      <table id="pharmacies-table" class="table table-bordered table-hover">
       </table>
     </div>
   </div>

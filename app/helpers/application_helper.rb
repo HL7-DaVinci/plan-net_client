@@ -85,6 +85,7 @@ module ApplicationHelper
   #-----------------------------------------------------------------------------
 
   def google_maps(address)
+    binding.pry
     'https://www.google.com/maps/search/' + html_escape(address.text)
   end
 
@@ -115,5 +116,15 @@ module ApplicationHelper
 
   def display_extension_list(list)
     sanitize(list.map { |extension| display_reference(extension.valueReference) }.join(', '))
+  end
+
+  def display_location_type(list)
+    if list.empty?
+      result = 'None'
+    else
+      result = list.map(&:text).join(', ')
+    end
+
+    sanitize(result)
   end
 end
