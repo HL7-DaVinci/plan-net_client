@@ -17,25 +17,40 @@ class LocationsController < ApplicationController
 
   # GET /locations
 
-  def index
-    if params[:page].present?
-      update_page(params[:page])
-    else
-      if params[:query_string].present?
-        parameters = query_hash_from_string(params[:query_string])
-        reply = @client.search(FHIR::Location,
-                               search: { parameters: parameters })
+    def index
+      if params[:page].present?
+        update_page(params[:page])
       else
-        reply = @client.search(FHIR::Location)
+        if params[:query_string].present?
+          parameters = query_hash_from_string(params[:query_string])
+    #     reply = @client.search(FHIR::Location,
+    #                         search: { parameters: parameters }) 
+          reply = @client.search(FHIR::Location,
+                                  search: {
+                                    parameters: parameters.merge(
+                                      _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
+                                    )
+                                  }
+                                )         
+        else
+    #      reply = @client.search(FHIR::Location)
+      reply = @client.search(FHIR::Location,
+      search: {
+        parameters: {
+          _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
+        }
+      }
+    )
+
+        end
+        @bundle = reply.resource
       end
-      @bundle = reply.resource
+
+      update_bundle_links
+
+      @query_params = query_params
+      @locations = @bundle.entry.map(&:resource)
     end
-
-    update_bundle_links
-
-    @query_params = query_params
-    @locations = @bundle.entry.map(&:resource)
-  end
 
   #-----------------------------------------------------------------------------
 

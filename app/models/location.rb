@@ -31,6 +31,7 @@ class Location < Resource
     @address = location.address
     @physical_type = location.physicalType
     @position = location.position
+    @binding.pry
     @managing_organization = location.managingOrganization
     @part_of = location.partOf
     @hours_of_operations = location.hoursOfOperation

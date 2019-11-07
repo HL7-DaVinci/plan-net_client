@@ -24,9 +24,23 @@ class EndpointsController < ApplicationController
       if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string])
         reply = @client.search(FHIR::Endpoint,
-                               search: { parameters: parameters })
+                                search: {
+                                  parameters: parameters.merge(
+                                    _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Endpoint'
+                                  )
+                                }
+                              )         
+
       else
-        reply = @client.search(FHIR::Endpoint)
+        reply = @client.search(
+          FHIR::Endpoint,
+          search: {
+            parameters: {
+              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Endpoint'
+            }
+          }
+        )
+  
       end
       @bundle = reply.resource
     end

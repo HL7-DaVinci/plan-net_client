@@ -50,7 +50,8 @@ class PharmaciesController < ApplicationController
     else
       base_params = {
         _revinclude: ['OrganizationAffiliation:location'],
-        type: 'OUTPHARM'
+        type: 'OUTPHARM',
+        _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
       }
       query =
         SEARCH_PARAMS

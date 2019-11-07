@@ -23,11 +23,24 @@ class OrganizationsController < ApplicationController
     else
       if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string])
-        reply = @client.search(FHIR::Organization,
-                               search: { parameters: parameters })
-      else
-        reply = @client.search(FHIR::Organization)
-      end
+      reply = @client.search(
+        FHIR::Organization,
+        search: {
+          parameters: parameters.merge(
+            _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-OrganizationAffiliation'
+          )
+        }
+      )
+    else
+      reply = @client.search(
+        FHIR::Organization,
+        search: {
+          parameters: {
+            _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-OrganizationAffiliation'
+          }
+        }
+      )
+    end
       @bundle = reply.resource
     end
 

@@ -2,36 +2,12 @@
   <section class='row'>
     <% unless @location.nil? %>
       <div class='col-12'>
-        <h2><%= sanitize(@location.name) %></h2>
+        <h2>Location: <%= sanitize(@location.name) %></h2>
       </div>
       <div class='col-8' id='map'>
-  <script type="text/javascript">
-      var baseMapLayer = new ol.layer.Tile({
-       source: new ol.source.OSM()
-      });
-      var map = new ol.Map({
-        target: 'map',
-        layers: [ baseMapLayer],
-        view: new ol.View({
-          center: ol.proj.fromLonLat([<%= @location.position.longitude %>, <%= @location.position.latitude %>]), 
-          zoom: 16 
-        })
-      });
-    var marker = new ol.Feature({
-        geometry: new ol.geom.Point(
-         ol.proj.fromLonLat([<%= @location.position.longitude %>, <%= @location.position.latitude %>])
-        )
-    });
-    var vectorSource = new ol.source.Vector({
-     features: [marker]
-    });
-    var markerVectorLayer = new ol.layer.Vector({
-      source: vectorSource,
-    });
-    map.addLayer(markerVectorLayer);
-</script>
+      <%= render partial: 'partials/map' , locals: { lat: @location.position.latitude , long: @location.position.longitude } %>
       </div>
-      <div class='col'>
+      <div class='col-4'>
         <table class='table table-dark'>
           <tr>
             <td>Name:</td>

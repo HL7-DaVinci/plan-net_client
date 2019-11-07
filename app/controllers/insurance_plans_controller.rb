@@ -15,18 +15,48 @@ class InsurancePlansController < ApplicationController
 
   #-----------------------------------------------------------------------------
 
-  # GET /insurance_plans
+  # GET /insurance_plans/networks
+  def plan_networks (id)
+    binding.pry 
+    @network_list = @client.search(
+  FHIR::Organization,
+  search: { parameters: {
+    _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network',
+    partof: "Organization/#{id}"
+  } }
+)&.resource&.entry&.map do |entry|
+  {
+    value: entry&.resource&.id,
+    name: entry&.resource&.name
+  }
+ end
 
-  def index
+end
+    # GET /insurance_plans
+    def index
     if params[:page].present?
       update_page(params[:page])
     else
       if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string])
-        reply = @client.search(FHIR::InsurancePlan,
-                               search: { parameters: parameters })
+        reply = @client.search(
+                                FHIR::InsurancePlan,
+                                search: {
+                                  parameters: parameters.merge(
+                                    _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-InsurancePlan'
+                                  )
+                                }
+                              )
       else
-        reply = @client.search(FHIR::InsurancePlan)
+        reply = @client.search(
+          FHIR::InsurancePlan,
+          search: {
+            parameters: {
+              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-InsurancePlan'
+            }
+          }
+        )
+
       end
       @bundle = reply.resource
     end
@@ -35,6 +65,7 @@ class InsurancePlansController < ApplicationController
 
     @query_params = query_params
     @insurance_plans = @bundle.entry.map(&:resource)
+
   end
 
   #-----------------------------------------------------------------------------
@@ -48,6 +79,9 @@ class InsurancePlansController < ApplicationController
     fhir_insurnace_plan = bundle.entry.map(&:resource).first
 
     @insurance_plan = InsurancePlan.new(fhir_insurnace_plan) unless fhir_insurnace_plan.nil?
+    binding.pry 
+    plan_networks (params[:id])
+    binding.pry 
   end
 
   def query_params

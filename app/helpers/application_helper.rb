@@ -85,7 +85,6 @@ module ApplicationHelper
   #-----------------------------------------------------------------------------
 
   def google_maps(address)
-    binding.pry
     'https://www.google.com/maps/search/' + html_escape(address.text)
   end
 
@@ -102,7 +101,7 @@ module ApplicationHelper
     if reference.present?
       components = reference.reference.split('/')
       sanitize(link_to(reference.display,
-                       [components.first.underscore.pluralize, '/', components.last].join))
+                       ["/",components.first.underscore.pluralize, '/', components.last].join))
     end
   end
 

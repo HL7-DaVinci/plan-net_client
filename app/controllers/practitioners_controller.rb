@@ -23,12 +23,24 @@ class PractitionersController < ApplicationController
       update_page(params[:page])
     else
       if params[:query_string].present?
-        parameters = query_hash_from_string(params[:query_string]).merge(_sort: :family)
-        reply = @client.search(FHIR::Practitioner,
-                               search: { parameters: parameters })
+        parameters = query_hash_from_string(params[:query_string])
+        reply = @client.search(
+          FHIR::Practitioner,
+          search: {
+            parameters: parameters.merge(
+              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Practitioner'
+            )
+          }
+        )
       else
-        reply = @client.search(FHIR::Practitioner,
-                               search: { parameters: { _sort: :family } })
+        reply = @client.search(
+          FHIR::Practitioner,
+          search: {
+            parameters: {
+              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Practitioner'
+            }
+          }
+        )
       end
       @bundle = reply.resource
     end

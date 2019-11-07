@@ -1,16 +1,26 @@
 
 <script type="text/javascript">
-      var map = new ol.Map({
-        target: 'map',
-        layers: [
-          new ol.layer.Tile({
-            source: new ol.source.OSM()
-          })
-        ],
-        view: new ol.View({
-          center: ol.proj.fromLonLat([-72.54956, 41.809116]),
-          zoom: 20
-        })
-      });
-    </script>
+var baseMapLayer = new ol.layer.Tile({
+ source: new ol.source.OSM()
+});
+var map = new ol.Map({
+  target: 'map',
+  layers: [ baseMapLayer],
+  view: new ol.View({
+	center: ol.proj.fromLonLat([ <%= long %>,  <%= lat %> ]), 
+	zoom: 15 
+  })
+});
+var marker = new ol.Feature({
+  geometry: new ol.geom.Point(
+   ol.proj.fromLonLat( [<%= long %>,  <%= lat %> ])
+  )
+});
+var vectorSource = new ol.source.Vector({
+features: [marker]
+});
+var markerVectorLayer = new ol.layer.Vector({
+source: vectorSource,
+});
+map.addLayer(markerVectorLayer);
 </script>

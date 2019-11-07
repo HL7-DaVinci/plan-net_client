@@ -31,20 +31,16 @@
 				<th scope='col'>Owned By</th>
 				<th scope='col'>Administered By</th>
 				<th scope='col'>Coverage Areas</th>
-				<th scope='col'>Contacts</th>
-				<th scope='col'>Endpoints</th>
-				<th scope='col'>Networks</th>
+				<th scope='col'>Type</th>
 			</tr>
 			<% @insurance_plans.each do |fhir_insurance_plan| %>
 				<% insurance_plan = InsurancePlan.new(fhir_insurance_plan) %>
 				<tr>
 					<td><%= link_to sanitize(insurance_plan.name), insurance_plan_path(insurance_plan.id) %></td>
-					<td><%= sanitize(insurance_plan.owned_by.display) %></td>
-					<td><%= sanitize(insurance_plan.administered_by.display) %></td>
+					<td><%= display_reference(insurance_plan.owned_by)  %></td>
+					<td><%= display_reference(insurance_plan.administered_by) %></td>
 					<td><%= sanitize(insurance_plan.coverage_areas.map(&:display).join(', ')) %></td>
-					<td><%= display_list(insurance_plan.contacts) %></td>
-					<td><%= display_list(insurance_plan.endpoints) %></td>
-					<td><%= display_list(insurance_plan.networks) %></td>
+					<td><%= insurance_plan.type.map(&:text).join(',') %></td>
 				</tr>
 			<% end %>
 		</table>
