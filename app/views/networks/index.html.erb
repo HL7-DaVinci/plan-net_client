@@ -1,7 +1,7 @@
 <section class='container'>
   <section class='row col-12'>
     <div class='col-12'>
-      <h3 class='float-left text-white'>Networks</h3>
+      <h3 class='float-left text-black'>Networks</h3>
       <%= render 'partials/pagination', resource: :networks %>
     </div>
     <div class='col-12 search'>
@@ -28,6 +28,7 @@
     <table class='table table-dark'>
       <tr>
         <th scope='col'>Name</th>
+        <th type='col'>Type</th>
         <th scope='col'>Phone/Fax</th>
         <th scope='col'>Locations</th>
         <th scope='col'>Contacts</th>
@@ -36,6 +37,7 @@
         <% network = Organization.new(fhir_network) %>
         <tr>
           <td><%= link_to sanitize(network.name), network_path(network.id) %></td>
+          <td><%=network.type.map(&:text).join(',') %></td>
           <td>
             <% network.telecoms.each do |telecom| %>
               <%= display_telecom(telecom) %><br />

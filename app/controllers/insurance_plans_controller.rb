@@ -16,8 +16,8 @@ class InsurancePlansController < ApplicationController
   #-----------------------------------------------------------------------------
 
   # GET /insurance_plans/networks
+  # The current test data doesn't link insurance plans to networks as of 11/8...probably need to rectify that, or fake it by linkages.
   def plan_networks (id)
-    binding.pry 
     @network_list = @client.search(
   FHIR::Organization,
   search: { parameters: {
@@ -79,9 +79,7 @@ end
     fhir_insurnace_plan = bundle.entry.map(&:resource).first
 
     @insurance_plan = InsurancePlan.new(fhir_insurnace_plan) unless fhir_insurnace_plan.nil?
-    binding.pry 
    # plan_networks (params[:id])
-    binding.pry 
   end
 
   def query_params

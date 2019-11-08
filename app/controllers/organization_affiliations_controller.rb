@@ -51,7 +51,6 @@ class OrganizationAffiliationsController < ApplicationController
       @bundle = reply.resource
     end
     
-
     update_bundle_links
 
     @query_params = query_params

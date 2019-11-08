@@ -49,7 +49,7 @@
           <td><%= sanitize(location.description) %></td>
           <td><%= sanitize(location.operational_status) %></td>
           <td><%= sanitize(location.mode) %></td>
-          <td><%= sanitize(location.type.join(', ')) %></td>
+          <td><%= display_location_type(location.type) %></td> 
           <td>
             <% location.telecoms.each do |telecom| %>
               <%= display_telecom(telecom) %><br />

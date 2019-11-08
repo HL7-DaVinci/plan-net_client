@@ -44,7 +44,8 @@ module ApplicationHelper
   #-----------------------------------------------------------------------------
 
   def display_identifier(identifier)
-    sanitize([identifier.type.text, identifier.value, identifier.assigner.display].join(', '))
+    sanitize("#{identifier.assigner.display}: ( #{identifier.type.text}, #{identifier.value})")
+#    sanitize([identifier.type.text, identifier.value, identifier.assigner.display].join(', '))
   end
 
   #-----------------------------------------------------------------------------
@@ -97,18 +98,29 @@ module ApplicationHelper
 
   #-----------------------------------------------------------------------------
 
-  def display_reference(reference)
+  def controller_type (reference)
+
+  end
+  
+  def display_reference(reference, use_controller: "default")
     if reference.present?
       components = reference.reference.split('/')
+      if use_controller.eql?("default")
+        controller = components.first.underscore.pluralize
+      else
+        controller = use_controller
+      end
+
       sanitize(link_to(reference.display,
-                       ["/",components.first.underscore.pluralize, '/', components.last].join))
+                       ["/",controller, '/', components.last].join))
     end
   end
 
   #-----------------------------------------------------------------------------
-
-  def display_reference_list(list)
-    sanitize(list.map { |element| display_reference(element) }.join(', '))
+  # use_controller allows us to display networks using the network controller/view, rather than the organization controller/view.
+  # a network is-a organization, but their display needs may be distinct.
+  def display_reference_list(list,use_controller: "default")
+    sanitize(list.map { |element| display_reference(element,use_controller:use_controller) }.join(', '))
   end
 
   #-----------------------------------------------------------------------------

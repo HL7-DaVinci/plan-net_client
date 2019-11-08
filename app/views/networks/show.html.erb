@@ -4,9 +4,9 @@
       <div class='col-12'>
         <h2>Network: <%= sanitize(@network.name) %></h2>
       </div>
-      <div class='col-6' id='map'>
-      </div>
-      <div class='col-6'>
+      <!–– <div class='col-6' id='map' ––>
+      <!–– </div ––>
+      <div class='col-12'>
         <table class='table table-dark'>
                 <tr>
             <td>Contact:</td>
@@ -36,8 +36,7 @@
               <% end %>
             </td>
           </tr>
-          partOf, ownedBy, type 
-                <tr>
+          <tr>
           <td>Part of:</td>
           <td><%= display_reference(@network.partOf ) %></td>
         </tr>

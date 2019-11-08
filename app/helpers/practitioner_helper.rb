@@ -23,7 +23,7 @@ module PractitionerHelper
 
   def display_period(period)
     period.present? ?
-            sanitize('Effective ' + period.start + ' to ' + period.end) : 'Not available'
+            sanitize('Effective ' + period.start + ' to ' + period.end) : ''
   end
 
   #-----------------------------------------------------------------------------
@@ -35,10 +35,11 @@ module PractitionerHelper
   #-----------------------------------------------------------------------------
 
   def display_photo(photo, gender, options)
+      options [:class] = "img-fluid"
     result = if photo.present?
                image_tag(photo, options)
              else
-               image_tag(gender == 'female' ? 'woman.svg' : 'man-user.svg', options)
+               image_tag( gender == 'female' ? 'woman.svg' : 'man-user.svg', options)
              end
 
     result

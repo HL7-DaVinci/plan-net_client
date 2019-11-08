@@ -1,7 +1,7 @@
 <section class='container'>
   <section class='row col-12'>
     <div class='col-12'>
-      <h3 class='float-left text-white'>Healthcare Services</h3>
+      <h3 class='float-left text-black'>Healthcare Services</h3>
       <%= render 'partials/pagination', resource: :healthcare_services %>
     </div>
     <div class='col-12 search'>
@@ -56,10 +56,10 @@
             <% end %>
           </td>
           <td><%= display_coding_list(healthcare_service.type) %></td>
-          <td><%= sanitize(healthcare_service.provided_by.display) %></td>
+          <td><%= display_reference( healthcare_service.provided_by)  %></td>
           <td><%= display_list(healthcare_service.categories) %></td>
           <td><%= display_coding_list(healthcare_service.specialties) %></td>
-          <td><%= display_list(healthcare_service.locations) %></td>
+          <td><%= display_reference_list(healthcare_service.locations) %></td>
           <td>
             <% healthcare_service.telecoms.each do |telecom| %>
               <%= display_telecom(telecom) %><br />

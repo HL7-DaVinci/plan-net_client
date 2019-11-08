@@ -30,6 +30,5 @@ class InsurancePlan < Resource
     @contacts = insurance_plan.contact
     @endpoints = insurance_plan.endpoint
     @networks = insurance_plan.network
-    binding.pry
   end
 end

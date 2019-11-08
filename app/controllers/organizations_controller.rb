@@ -27,7 +27,7 @@ class OrganizationsController < ApplicationController
         FHIR::Organization,
         search: {
           parameters: parameters.merge(
-            _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-OrganizationAffiliation'
+            _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Organization'
           )
         }
       )
@@ -36,7 +36,7 @@ class OrganizationsController < ApplicationController
         FHIR::Organization,
         search: {
           parameters: {
-            _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-OrganizationAffiliation'
+            _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Organization'
           }
         }
       )
