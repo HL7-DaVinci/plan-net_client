@@ -4,9 +4,11 @@
       <div class='col-12'>
         <h2>Location: <%= sanitize(@location.name) %></h2>
       </div>
-      <div class='col-8' id='map'>
-      <%= render partial: 'partials/map' , locals: { lat: @location.position.latitude , long: @location.position.longitude } %>
-      </div>
+       <div class="col-md-8" style='border: 1px solid red '>
+          <div id="map">
+           <%= render partial: 'partials/mapleaflet' , locals: { lat: @location.position.latitude , long: @location.position.longitude } %>
+           </div>
+        </div>
       <div class='col-4'>
         <table class='table table-dark'>
           <tr>

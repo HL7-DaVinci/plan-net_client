@@ -80,7 +80,7 @@ end
 
     @insurance_plan = InsurancePlan.new(fhir_insurnace_plan) unless fhir_insurnace_plan.nil?
     binding.pry 
-    plan_networks (params[:id])
+   # plan_networks (params[:id])
     binding.pry 
   end
 
