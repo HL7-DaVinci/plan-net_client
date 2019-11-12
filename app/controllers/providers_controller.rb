@@ -10,6 +10,8 @@
 
 require 'json'
 
+
+
 class ProvidersController < ApplicationController
   before_action :connect_to_server
   before_action :fetch_payers, only: [:index]
@@ -80,6 +82,7 @@ class ProvidersController < ApplicationController
     practitioners
       .map do |practitioner|
         roles = practitioner_roles(practitioner.id)
+        photo = Practitioner.new(practitioner).photo
         practitioner_locations = role_locations(roles.flat_map(&:location).map(&:reference))
         {
           id: practitioner.id,
@@ -87,7 +90,8 @@ class ProvidersController < ApplicationController
           gender: practitioner.gender,
           specialty: practitioner.qualification.map(&:code).map(&:text).compact.uniq,
           telecom: roles.flat_map(&:telecom).map { |telecom| display_telecom(telecom) },
-          address: practitioner_locations.flat_map(&:address).map { |address| display_address(address) }
+          address: practitioner_locations.flat_map(&:address).map { |address| display_address(address)},
+          photo: photo
         }
       end
   end
@@ -123,7 +127,11 @@ class ProvidersController < ApplicationController
   end
 
   def display_address(address)
-    address.line.join('<br>') + "<br>#{address.city}, #{address.state} #{format_zip(address.postalCode)}"
+    "<a href = \"" + "https://www.google.com/maps/search/" + html_escape(address.text) +
+     "\" >" +
+    address.line.join('<br>') + 
+    "<br>#{address.city}, #{address.state} #{format_zip(address.postalCode)}" + 
+    "</a>"
   end
 
   def format_zip(zip)

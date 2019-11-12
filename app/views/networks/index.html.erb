@@ -1,20 +1,20 @@
 <section class='container'>
   <section class='row col-12'>
     <div class='col-12'>
-      <h3 class='float-left text-black'>Networks</h3>
+      <h3 class='float-left text-red'>Networks</h3>
       <%= render 'partials/pagination', resource: :networks %>
     </div>
     <div class='col-12 search'>
       <div class="accordion" id="accordionExample">
         <div class="card">
-          <div class="card-header bg-dark text-white" id="headingOne">
+          <div class="card-header text-white" id="headingOne">
             <h2 class="mb-0">
               <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                 Search
               </button>
             </h2>
           </div>
-          <div id="collapseOne" class="collapse bg-dark text-white" aria-labelledby="headingOne" data-parent="#accordionExample">
+          <div id="collapseOne" class="collapse text-white" aria-labelledby="headingOne" data-parent="#accordionExample">
             <div class="card-body">
               <%= render 'partials/search_form',
                          query_params: @query_params,
@@ -25,7 +25,7 @@
         </div>
       </div>
     </div>
-    <table class='table table-dark'>
+    <table class='table '>
       <tr>
         <th scope='col'>Name</th>
         <th type='col'>Type</th>

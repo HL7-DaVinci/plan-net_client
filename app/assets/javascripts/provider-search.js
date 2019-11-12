@@ -115,14 +115,15 @@ const providerHeaderRow = `
 `;
 
 const providerImageUrl = function (provider) {
-  return provider.gender === 'male' ? '/assets/man-user.svg' : '/assets/woman.svg';
+     return provider.photo
+  // return provider.gender === 'male' ? '/assets/man-user.svg' : '/assets/woman.svg';
 };
 
 const providerRows = function (providers) {
   if (providers.length > 0) {
     return providerHeaderRow + providers.map(provider => {
       return `
-          <tr>
+          <tr>  
             <td>
               <a href="/practitioners/${provider.id}">
                 <img class="list-photo" src="${providerImageUrl(provider)}">
@@ -131,7 +132,7 @@ const providerRows = function (providers) {
               </a>
             </td>
             <td>${provider.telecom.join('<br>')}</td>
-            <td>${provider.address[0]}</td>
+            <td><a href="${provider.gaddress}">${provider.address[0]} </a></td>
             <td>${provider.specialty.join('<br>')}</td>
           </tr>
         `;

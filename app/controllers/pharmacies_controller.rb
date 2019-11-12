@@ -104,9 +104,6 @@ class PharmaciesController < ApplicationController
     telecom.system + ': ' + telecom.value
   end
 
-  def display_address(address)
-    address.line.join('<br>') + "<br>#{address.city}, #{address.state} #{address.postalCode}"
-  end
 
   def format_zip(zip)
     if zip.length > 5

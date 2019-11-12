@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+require "erb"
 ################################################################################
 #
 # Application Controller
@@ -9,6 +9,8 @@
 ################################################################################
 
 class ApplicationController < ActionController::Base
+
+  include ERB::Util
   FHIR.logger.level = Logger::WARN
 
   # Get the FHIR server url
@@ -95,5 +97,13 @@ class ApplicationController < ActionController::Base
         name: entry&.resource&.name
       }
     end
+  end
+
+  def display_address(address)
+    "<a href = \"" + "https://www.google.com/maps/search/" + html_escape(address.text) +
+     "\" >" +
+    address.line.join('<br>') + 
+    "<br>#{address.city}, #{address.state} #{format_zip(address.postalCode)}" + 
+    "</a>"
   end
 end
