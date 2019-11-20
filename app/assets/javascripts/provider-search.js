@@ -39,6 +39,10 @@ const updateProviderZip = function (event) {
   updateProviderSearchParam(event, 'zip');
 };
 
+const updateProviderRadius = function (event) {
+  updateProviderSearchParam(event, 'radius');
+};
+
 const updateProviderCity= function (event) {
   updateProviderSearchParam(event, 'city');
 };

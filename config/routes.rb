@@ -21,4 +21,5 @@ Rails.application.routes.draw do
 
   get '/pharmacies/networks', to: 'pharmacies#networks'
   get '/pharmacies/search', to: 'pharmacies#search'
+
 end

@@ -122,6 +122,9 @@ GEM
       activesupport (>= 4.2.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
+    httparty (0.17.1)
+      mime-types (~> 3.0)
+      multi_xml (>= 0.5.2)
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
     io-like (0.3.0)
@@ -297,6 +300,7 @@ DEPENDENCIES
   chromedriver-helper
   coffee-rails (~> 4.2)
   fhir_client
+  httparty (>= 0.17.1)
   jbuilder (~> 2.5)
   jquery-rails
   leaflet-awesome-markers-rails (~> 2.0)

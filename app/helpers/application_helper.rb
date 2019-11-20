@@ -7,6 +7,7 @@
 # Copyright (c) 2019 The MITRE Corporation.  All rights reserved.
 #
 ################################################################################
+require 'httparty'
 
 module ApplicationHelper
   # Determines the CSS class of the flash message for display from the
@@ -138,4 +139,7 @@ module ApplicationHelper
 
     sanitize(result)
   end
+
+
+
 end

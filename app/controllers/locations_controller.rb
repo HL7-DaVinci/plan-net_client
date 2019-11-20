@@ -23,11 +23,13 @@ class LocationsController < ApplicationController
       else
         if params[:query_string].present?
           parameters = query_hash_from_string(params[:query_string])
+          initparams = parameters 
+          modifiedparams = zip_plus_radius_to_near(initparams) if parameters 
     #     reply = @client.search(FHIR::Location,
     #                         search: { parameters: parameters }) 
           reply = @client.search(FHIR::Location,
                                   search: {
-                                    parameters: parameters.merge(
+                                    parameters: modifiedparams.merge(
                                       _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
                                     )
                                   }
@@ -124,8 +126,8 @@ class LocationsController < ApplicationController
         value: 'new-patient-network'
       },
       {
-        name: 'Near',
-        value: 'near'
+        name: 'Radius (in miles from center of zipcode)',
+        value: 'radius'
       },
       {
         name: 'New Patient',
@@ -177,4 +179,42 @@ class LocationsController < ApplicationController
       }
     ]
   end
+
+# This version is different than the one in the other two controllers, since it uses "address-postalcode" instead of "zip" and it uses "zip" and not :zip
+  def zip_plus_radius_to_near(params)
+    #  Convert zipcode + radius to  lat/long+radius in lat|long|radius|units format
+    if params["address-postalcode"].present?   # delete zip and radius params and replace with near
+      radius = 25
+      zip = params["address-postalcode"]
+      params.delete("address-postalcode")
+      if params["radius"].present?
+        radius = params["radius"]
+        params.delete("radius")
+      end
+      # get coordinate
+      coords = get_zip_coords(zip)
+      near = "#{coords["lat"]}|#{coords["lng"]}|#{radius}|mi"
+      params[:near]=near 
+    end
+    params
+  end
+
+    # Geolocation from MapQuest... 
+    # <<< probably should put Key in CONSTANT and put it somewhere more rational than inline >>>>
+def get_zip_coords(zipcode)
+  response = HTTParty.get(
+    'http://open.mapquestapi.com/geocoding/v1/address',
+    query: {
+      key: 'A4F1XOyCcaGmSpgy2bLfQVD5MdJezF0S',
+      postalCode: zipcode,
+      country: 'USA',
+      thumbMaps: false
+    }
+  )
+
+  # coords = response.deep_symbolize_keys&.dig(:results)&.first&.dig(:locations).first&.dig(:latLng)
+  coords = response["results"].first["locations"].first["latLng"]
+
+end
+
 end

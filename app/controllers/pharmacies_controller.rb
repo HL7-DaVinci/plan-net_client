@@ -53,18 +53,19 @@ class PharmaciesController < ApplicationController
         type: 'OUTPHARM',
         _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
       }
-      query =
+      initparams = params 
+      modifiedparams = zip_plus_radius_to_near(initparams) if initparams 
+       query =
         SEARCH_PARAMS
-          .select { |key, _value| params[key].present? }
+          .select { |key, _value| modifiedparams[key].present? }
           .each_with_object(base_params) do |(local_key, fhir_key), search_params|
-            search_params[fhir_key] = params[local_key]
+            search_params[fhir_key] = modifiedparams[local_key]
           end
       @bundle = @client.search(
         FHIR::Location,
         search: { parameters: query }
       ).resource
     end
-
     update_bundle_links
 
     render json: {
@@ -113,10 +114,49 @@ class PharmaciesController < ApplicationController
     end
   end
 
+  
   SEARCH_PARAMS = {
     network: '_has:OrganizationAffiliation:location:network',
-    zip: 'address-postalcode',
+    near: 'near',
     city: 'address-city',
     name: 'name:contains'
   }.freeze
+
+
+  def zip_plus_radius_to_near(params)
+    #  Convert zipcode + radius to  lat/long+radius in lat|long|radius|units format
+    if params[:zip].present?   # delete zip and radius params and replace with near
+      radius = 25
+      zip = params[:zip]
+      params.delete(:zip)
+      if params[:radius].present?
+        radius = params[:radius]
+        params.delete(:radius)
+      end
+      # get coordinate
+      coords = get_zip_coords(zip)
+      near = "#{coords["lat"]}|#{coords["lng"]}|#{radius}|mi"
+      params[:near]=near 
+    end
+    params
+  end
+
+    # Geolocation from MapQuest... 
+    # <<< probably should put Key in CONSTANT and put it somewhere more rational than inline >>>>
+def get_zip_coords(zipcode)
+  response = HTTParty.get(
+    'http://open.mapquestapi.com/geocoding/v1/address',
+    query: {
+      key: 'A4F1XOyCcaGmSpgy2bLfQVD5MdJezF0S',
+      postalCode: zipcode,
+      country: 'USA',
+      thumbMaps: false
+    }
+  )
+
+  # coords = response.deep_symbolize_keys&.dig(:results)&.first&.dig(:locations).first&.dig(:latLng)
+  coords = response["results"].first["locations"].first["latLng"]
+
+end
+
 end

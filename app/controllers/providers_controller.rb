@@ -54,13 +54,14 @@ class ProvidersController < ApplicationController
       base_params = {
         _include: ['PractitionerRole:practitioner', 'PractitionerRole:location']
       }
+      initparams = params 
+      modifiedparams = zip_plus_radius_to_near(initparams) if initparams 
       query =
         SEARCH_PARAMS
-          .select { |key, _value| params[key].present? }
+          .select { |key, _value| modifiedparams[key].present? }
           .each_with_object(base_params) do |(local_key, fhir_key), search_params|
-          search_params[fhir_key] = params[local_key]
+          search_params[fhir_key] = modifiedparams[local_key]
         end
-
       @bundle = @client.search(
         FHIR::PractitionerRole,
         search: { parameters: query }
@@ -142,9 +143,47 @@ class ProvidersController < ApplicationController
     end
   end
 
+
+  def zip_plus_radius_to_near(params)
+    #  Convert zipcode + radius to  lat/long+radius in lat|long|radius|units format
+    if params[:zip].present?   # delete zip and radius params and replace with near
+      radius = 25
+      zip = params[:zip]
+      params.delete(:zip)
+      if params[:radius].present?
+        radius = params[:radius]
+        params.delete(:radius)
+      end
+      # get coordinate
+      coords = get_zip_coords(zip)
+      near = "#{coords["lat"]}|#{coords["lng"]}|#{radius}|mi"
+      params[:near]=near 
+    end
+    params
+  end
+
+    # Geolocation from MapQuest... 
+    # <<< probably should put Key in CONSTANT and put it somewhere more rational than inline >>>>
+def get_zip_coords(zipcode)
+  response = HTTParty.get(
+    'http://open.mapquestapi.com/geocoding/v1/address',
+    query: {
+      key: 'A4F1XOyCcaGmSpgy2bLfQVD5MdJezF0S',
+      postalCode: zipcode,
+      country: 'USA',
+      thumbMaps: false
+    }
+  )
+
+  # coords = response.deep_symbolize_keys&.dig(:results)&.first&.dig(:locations).first&.dig(:latLng)
+  coords = response["results"].first["locations"].first["latLng"]
+
+end
+
+
   SEARCH_PARAMS = {
     network: 'network',
-    zip: 'location.address-postalcode',
+    near: 'location.near',
     city: 'location.address-city',
     specialty: 'practitioner.qualification-code',
     name: 'practitioner.name'

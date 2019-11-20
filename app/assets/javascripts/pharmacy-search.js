@@ -2,6 +2,7 @@ $(() => {
   if ($('#payer-select').length > 0) {
     updatePharmacyNetworkList({ target: { value: $('#payer-select').val() } });
     updatePharmacyZip({ target: { value: $('#zip-input').val() } });
+    updatePharmacyZip({ target: { value: $('#radius-input').val() } });
     updatePharmacyCity({ target: { value: $('#city-input').val() } });
     updatePharmacyName({ target: { value: $('#name-input').val() } });
   }
@@ -26,6 +27,7 @@ const updatePharmacyNetworkList = function (event) {
 };
 
 let pharmacyParams = {};
+
 const updatePharmacySearchParam = function(event, param) {
   pharmacyParams[param] = event.target.value;
 };
@@ -36,6 +38,9 @@ const updatePharmacyNetwork = function (event) {
 
 const updatePharmacyZip = function (event) {
   updatePharmacySearchParam(event, 'zip');
+};
+const updatePharmacyRadius = function (event) {
+  updatePharmacySearchParam(event, 'radius');
 };
 
 const updatePharmacyCity= function (event) {
