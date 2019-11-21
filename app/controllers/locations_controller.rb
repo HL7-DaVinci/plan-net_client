@@ -199,22 +199,4 @@ class LocationsController < ApplicationController
     params
   end
 
-    # Geolocation from MapQuest... 
-    # <<< probably should put Key in CONSTANT and put it somewhere more rational than inline >>>>
-def get_zip_coords(zipcode)
-  response = HTTParty.get(
-    'http://open.mapquestapi.com/geocoding/v1/address',
-    query: {
-      key: 'A4F1XOyCcaGmSpgy2bLfQVD5MdJezF0S',
-      postalCode: zipcode,
-      country: 'USA',
-      thumbMaps: false
-    }
-  )
-
-  # coords = response.deep_symbolize_keys&.dig(:results)&.first&.dig(:locations).first&.dig(:latLng)
-  coords = response["results"].first["locations"].first["latLng"]
-
-end
-
 end

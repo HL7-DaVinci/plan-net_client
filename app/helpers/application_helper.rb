@@ -30,116 +30,129 @@ module ApplicationHelper
 
   #-----------------------------------------------------------------------------
 
-  def display_human_name(name)
-    result = [name.prefix.join(', '), name.given.join(' '), name.family].join(' ')
-    result += ', ' + name.suffix.join(', ') if name.suffix.present?
-    sanitize(result)
-  end
+ 
+def display_human_name(name)
+  result = [name.prefix.join(', '), name.given.join(' '), name.family].join(' ')
+  result += ', ' + name.suffix.join(', ') if name.suffix.present?
+  sanitize(result)
+end
 
-  #-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 
-  def display_telecom(telecom)
-    sanitize(telecom.system + ': ' + number_to_phone(telecom.value, area_code: true))
-  end
+def display_telecom(telecom)
+  sanitize(telecom.system + ': ' + number_to_phone(telecom.value, area_code: true))
+end
 
-  #-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 
-  def display_identifier(identifier)
-    sanitize("#{identifier.assigner.display}: ( #{identifier.type.text}, #{identifier.value})")
+def display_identifier(identifier)
+  sanitize("#{identifier.assigner.display}: ( #{identifier.type.text}, #{identifier.value})")
 #    sanitize([identifier.type.text, identifier.value, identifier.assigner.display].join(', '))
-  end
+end
 
-  #-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 
-  # Concatenates a list of display elements.
+# Concatenates a list of display elements.
 
-  def display_list(list)
-    sanitize(list.empty? ? 'None' : list.map(&:display).join(', '))
-  end
+def display_list(list)
+  sanitize(list.empty? ? 'None' : list.map(&:display).join(', '))
+end
 
-  #-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 
-  # Concatenates a list of code elements.
+# Concatenates a list of code elements.
 
-  def display_code_list(list)
-    sanitize(list.empty? ? 'None' : list.map(&:code).join(', '))
-  end
+def display_code_list(list)
+  sanitize(list.empty? ? 'None' : list.map(&:code).join(', '))
+end
 
-  #-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 
-  # Concatenates a list of coding display elements.
+# Concatenates a list of coding display elements.
 
-  def display_coding_list(list)
-    if list.empty?
-      result = 'None'
-    else
-      result = []
-      list.map(&:coding).each do |coding|
-        result << coding.map(&:display)
-      end
-
-      result = result.join(', ')
+def display_coding_list(list)
+  if list.empty?
+    result = 'None'
+  else
+    result = []
+    list.map(&:coding).each do |coding|
+      result << coding.map(&:display)
     end
 
-    sanitize(result)
+    result = result.join(', ')
   end
 
-  #-----------------------------------------------------------------------------
+  sanitize(result)
+end
 
-  def google_maps(address)
-    'https://www.google.com/maps/search/' + html_escape(address.text)
+#-----------------------------------------------------------------------------
+
+def google_maps(address)
+  'https://www.google.com/maps/search/' + html_escape(address.text)
+end
+
+#-----------------------------------------------------------------------------
+
+def display_postal_code(postal_code)
+  sanitize(postal_code.match(/^\d{9}$/) ?
+      postal_code.strip.sub(/([A-Z0-9]+)([A-Z0-9]{4})/, '\1-\2') : postal_code)
+end
+
+#-----------------------------------------------------------------------------
+
+def controller_type (reference)
+
+end
+
+def display_reference(reference, use_controller: "default")
+  if reference.present?
+    components = reference.reference.split('/')
+    if use_controller.eql?("default")
+      controller = components.first.underscore.pluralize
+    else
+      controller = use_controller
+    end
+
+    sanitize(link_to(reference.display,
+                     ["/",controller, '/', components.last].join))
+  end
+end
+
+#-----------------------------------------------------------------------------
+# use_controller allows us to display networks using the network controller/view, rather than the organization controller/view.
+# a network is-a organization, but their display needs may be distinct.
+def display_reference_list(list,use_controller: "default")
+  sanitize(list.map { |element| display_reference(element,use_controller:use_controller) }.join(', '))
+end
+
+#-----------------------------------------------------------------------------
+
+def display_extension_list(list)
+  sanitize(list.map { |extension| display_reference(extension.valueReference) }.join(', '))
+end
+
+def display_location_type(list)
+  if list.empty?
+    result = 'None'
+  else
+    result = list.map(&:text).join(', ')
   end
 
-  #-----------------------------------------------------------------------------
+  sanitize(result)
+end
 
-  def display_postal_code(postal_code)
-    sanitize(postal_code.match(/^\d{9}$/) ?
-        postal_code.strip.sub(/([A-Z0-9]+)([A-Z0-9]{4})/, '\1-\2') : postal_code)
-  end
-
-  #-----------------------------------------------------------------------------
-
-  def controller_type (reference)
-
-  end
   
-  def display_reference(reference, use_controller: "default")
-    if reference.present?
-      components = reference.reference.split('/')
-      if use_controller.eql?("default")
-        controller = components.first.underscore.pluralize
-      else
-        controller = use_controller
-      end
 
-      sanitize(link_to(reference.display,
-                       ["/",controller, '/', components.last].join))
-    end
-  end
 
-  #-----------------------------------------------------------------------------
-  # use_controller allows us to display networks using the network controller/view, rather than the organization controller/view.
-  # a network is-a organization, but their display needs may be distinct.
-  def display_reference_list(list,use_controller: "default")
-    sanitize(list.map { |element| display_reference(element,use_controller:use_controller) }.join(', '))
-  end
-
-  #-----------------------------------------------------------------------------
-
-  def display_extension_list(list)
-    sanitize(list.map { |extension| display_reference(extension.valueReference) }.join(', '))
-  end
-
-  def display_location_type(list)
-    if list.empty?
-      result = 'None'
+  def format_zip(zip)
+    if zip.length > 5
+      "#{zip[0..4]}-#{zip[5..-1]}"
     else
-      result = list.map(&:text).join(', ')
+      zip
     end
-
-    sanitize(result)
   end
 
 
+  
 
 end

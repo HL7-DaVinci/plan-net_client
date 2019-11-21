@@ -13,6 +13,7 @@ require 'json'
 
 
 class ProvidersController < ApplicationController
+  
   before_action :connect_to_server
   before_action :fetch_payers, only: [:index]
 
@@ -117,69 +118,7 @@ class ProvidersController < ApplicationController
     @roles ||= @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::PractitionerRole }.map(&:resource)
   end
 
-  def display_human_name(name)
-    result = [name.prefix.join(', '), name.given.join(' '), name.family].join(' ')
-    result += ', ' + name.suffix.join(', ') if name.suffix.present?
-    result
-  end
-
-  def display_telecom(telecom)
-    telecom.system + ': ' + telecom.value
-  end
-
-  def display_address(address)
-    "<a href = \"" + "https://www.google.com/maps/search/" + html_escape(address.text) +
-     "\" >" +
-    address.line.join('<br>') + 
-    "<br>#{address.city}, #{address.state} #{format_zip(address.postalCode)}" + 
-    "</a>"
-  end
-
-  def format_zip(zip)
-    if zip.length > 5
-      "#{zip[0..4]}-#{zip[5..-1]}"
-    else
-      zip
-    end
-  end
-
-
-  def zip_plus_radius_to_near(params)
-    #  Convert zipcode + radius to  lat/long+radius in lat|long|radius|units format
-    if params[:zip].present?   # delete zip and radius params and replace with near
-      radius = 25
-      zip = params[:zip]
-      params.delete(:zip)
-      if params[:radius].present?
-        radius = params[:radius]
-        params.delete(:radius)
-      end
-      # get coordinate
-      coords = get_zip_coords(zip)
-      near = "#{coords["lat"]}|#{coords["lng"]}|#{radius}|mi"
-      params[:near]=near 
-    end
-    params
-  end
-
-    # Geolocation from MapQuest... 
-    # <<< probably should put Key in CONSTANT and put it somewhere more rational than inline >>>>
-def get_zip_coords(zipcode)
-  response = HTTParty.get(
-    'http://open.mapquestapi.com/geocoding/v1/address',
-    query: {
-      key: 'A4F1XOyCcaGmSpgy2bLfQVD5MdJezF0S',
-      postalCode: zipcode,
-      country: 'USA',
-      thumbMaps: false
-    }
-  )
-
-  # coords = response.deep_symbolize_keys&.dig(:results)&.first&.dig(:locations).first&.dig(:latLng)
-  coords = response["results"].first["locations"].first["latLng"]
-
-end
-
+  
 
   SEARCH_PARAMS = {
     network: 'network',

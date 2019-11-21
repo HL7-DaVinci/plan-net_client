@@ -11,7 +11,7 @@ require "erb"
 class ApplicationController < ActionController::Base
 
   include ERB::Util
-  FHIR.logger.level = Logger::WARN
+  FHIR.logger.level = Logger::DEBUG
 
   # Get the FHIR server url
   def server_url
@@ -25,10 +25,13 @@ class ApplicationController < ActionController::Base
     if server_url.present?
       @client = FHIR::Client.new(server_url)
       @client.use_r4
-      session[:server_url] = server_url
-    else
-      redirect_to root_path, flash: { error: 'Please specify a plan network server' }
-    end
+      cookies[:server_url] = server_url
+      session[:server_url] = server_url      
+     end
+   rescue => exception
+       err = "Connection failed: Ensure provided url points to a valid FHIR server"
+       redirect_to root_path, flash: { error: err }
+ 
   end
 
   def update_bundle_links
@@ -97,13 +100,76 @@ class ApplicationController < ActionController::Base
         name: entry&.resource&.name
       }
     end
+  rescue => exception
+    binding.pry 
+    redirect_to root_path, flash: { error: 'Please specify a plan network server' }
+
+  end
+  def zip_plus_radius_to_near(params)
+    #  Convert zipcode + radius to  lat/long+radius in lat|long|radius|units format
+    if params[:zip].present?   # delete zip and radius params and replace with near
+      radius = 25
+      zip = params[:zip]
+      params.delete(:zip)
+      if params[:radius].present?
+        radius = params[:radius]
+        params.delete(:radius)
+      end
+      # get coordinate
+      coords = get_zip_coords(zip)
+      near = "#{coords["lat"]}|#{coords["lng"]}|#{radius}|mi"
+      params[:near]=near 
+    end
+    params
   end
 
-  def display_address(address)
-    "<a href = \"" + "https://www.google.com/maps/search/" + html_escape(address.text) +
-     "\" >" +
-    address.line.join('<br>') + 
-    "<br>#{address.city}, #{address.state} #{format_zip(address.postalCode)}" + 
-    "</a>"
+    # Geolocation from MapQuest... 
+    # <<< probably should put Key in CONSTANT and put it somewhere more rational than inline >>>>
+def get_zip_coords(zipcode)
+  response = HTTParty.get(
+    'http://open.mapquestapi.com/geocoding/v1/address',
+    query: {
+      key: 'A4F1XOyCcaGmSpgy2bLfQVD5MdJezF0S',
+      postalCode: zipcode,
+      country: 'USA',
+      thumbMaps: false
+    }
+  )
+
+  # coords = response.deep_symbolize_keys&.dig(:results)&.first&.dig(:locations).first&.dig(:latLng)
+  coords = response["results"].first["locations"].first["latLng"]
+
+end
+
+
+def display_human_name(name)
+  result = [name.prefix.join(', '), name.given.join(' '), name.family].join(' ')
+  result += ', ' + name.suffix.join(', ') if name.suffix.present?
+  result
+end
+
+def display_telecom(telecom)
+  telecom.system + ': ' + telecom.value
+end
+
+
+def display_address(address)
+  "<a href = \"" + "https://www.google.com/maps/search/" + html_escape(address.text) +
+   "\" >" +
+  address.line.join('<br>') + 
+  "<br>#{address.city}, #{address.state} #{format_zip(address.postalCode)}" + 
+  "</a>"
+end
+
+
+
+def format_zip(zip)
+  if zip.length > 5
+    "#{zip[0..4]}-#{zip[5..-1]}"
+  else
+    zip
   end
 end
+
+
+ end
