@@ -23,12 +23,28 @@ class HealthcareServicesController < ApplicationController
     else
       if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string])
-        reply = @client.search(FHIR::HealthcareService,
-                               search: { parameters: parameters })
+         reply = @client.search(
+                                FHIR::HealthcareService,
+                                search: {
+                                  parameters: parameters.merge(
+                                    _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-HealthcareService'
+                                  )
+                                }
+                              )
+                      
       else
-        reply = @client.search(FHIR::HealthcareService)
+        reply = @client.search(
+          FHIR::HealthcareService,
+          search: {
+            parameters: {
+              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-HealthcareService'
+            }
+          }
+        )
+
       end
       @bundle = reply.resource
+      @search = @bundle.link.first.url
     end
 
     update_bundle_links
@@ -42,7 +58,7 @@ class HealthcareServicesController < ApplicationController
   # GET /healthcare_services/[id]
 
   def show
-    reply = @client.search(FHIR::Organization,
+    reply = @client.search(FHIR::HealthcareService,
                            search: { parameters: { _id: params[:id] } })
     bundle = reply.resource
     fhir_healthcare_service = bundle.entry.map(&:resource).first

@@ -11,7 +11,10 @@
 require 'json'
 
 class WelcomeController < ApplicationController
+
   # GET /
 
-  def index; end
+  def index
+    connect_to_server 
+  end
 end

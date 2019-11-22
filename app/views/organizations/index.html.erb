@@ -1,8 +1,8 @@
 <section class='container'>
   <section class='row col-12'>
     <div class='col-12'>
-      <h3 class='float-left text-white'>Organizations</h3>
-      <%= render 'partials/pagination', resource: :organizations %>
+      <h3 class='float-left text-black'>Organizations</h3>
+      <%= render 'partials/pagination', resource: :organizations, header: true%>
     </div>
     <div class='col-12 search'>
       <div class="accordion" id="accordionExample">
@@ -28,6 +28,7 @@
     <table class='table table-dark'>
       <tr>
         <th scope='col'>Name</th>
+        <th scope='col'>Type</th>
         <th scope='col'>Phone/Fax</th>
         <th scope='col'>Locations</th>
         <th scope='col'>Contacts</th>
@@ -36,6 +37,8 @@
         <% organization = Organization.new(fhir_organization) %>
         <tr>
           <td><%= link_to sanitize(organization.name), organization_path(organization.id) %></td>
+          <td><%= organization.type.map(&:text).join(',') %>
+          </td>
           <td>
             <% organization.telecoms.each do |telecom| %>
               <%= display_telecom(telecom) %><br />
@@ -61,7 +64,7 @@
       <% end %>
     </table>
     <div class='col-12'>
-      <%= render 'partials/pagination', resource: :organizations %>
+      <%= render 'partials/pagination', resource: :organizations, header: false %>
     </div>
   </section>
 

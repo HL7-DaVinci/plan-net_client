@@ -25,7 +25,7 @@ class PharmaciesController < ApplicationController
   # GET /pharmacies/networks
 
   def networks
-    id = params[:payer_id]
+        id = params[:payer_id]
     network_list = @client.search(
       FHIR::Organization,
       search: { parameters: {
@@ -50,32 +50,34 @@ class PharmaciesController < ApplicationController
     else
       base_params = {
         _revinclude: ['OrganizationAffiliation:location'],
-        type: 'OUTPHARM'
+        type: 'OUTPHARM',
+        _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
       }
-      query =
+      initparams = params 
+      modifiedparams = zip_plus_radius_to_near(initparams) if initparams 
+       query =
         SEARCH_PARAMS
-          .select { |key, _value| params[key].present? }
+          .select { |key, _value| modifiedparams[key].present? }
           .each_with_object(base_params) do |(local_key, fhir_key), search_params|
-            search_params[fhir_key] = params[local_key]
+            search_params[fhir_key] = modifiedparams[local_key]
           end
-
       @bundle = @client.search(
         FHIR::Location,
         search: { parameters: query }
       ).resource
     end
-
     update_bundle_links
-
     render json: {
       pharmacies: pharmacies,
       nextPage: @next_page_disabled,
-      previousPage: @previous_page_disabled
+      previousPage: @previous_page_disabled,
+      searchParams: preparequerytext(query)
     }
   end
 
   private
-
+  
+ 
   def pharmacies
     locations
       .map do |location|
@@ -104,9 +106,6 @@ class PharmaciesController < ApplicationController
     telecom.system + ': ' + telecom.value
   end
 
-  def display_address(address)
-    address.line.join('<br>') + "<br>#{address.city}, #{address.state} #{address.postalCode}"
-  end
 
   def format_zip(zip)
     if zip.length > 5
@@ -116,10 +115,14 @@ class PharmaciesController < ApplicationController
     end
   end
 
+  
   SEARCH_PARAMS = {
     network: '_has:OrganizationAffiliation:location:network',
-    zip: 'address-postalcode',
+    near: 'near',
     city: 'address-city',
     name: 'name:contains'
   }.freeze
+
+
+ 
 end

@@ -2,7 +2,7 @@
   <section class='row col-12'>
     <div class='col-12'>
       <h3 class='float-left text-white'>Organization Affiliations</h3>
-      <%= render 'partials/pagination', resource: :organization_affiliations %>
+      <%= render 'partials/pagination', resource: :organization_affiliations , header: true%>
     </div>
     <div class='col-12 search'>
       <div class="accordion" id="accordionExample">
@@ -25,11 +25,12 @@
         </div>
       </div>
     </div>
-    <table class='table table-dark'>
+    <table class='table table-dark table-bordered table-striped'>
       <tr>
-        <th scope='col'>Networks</th>
-        <th scope='col'>Identifiers</th>
+        <th scope='col' style="width: 10%"> ID</th>
         <th scope='col'>Organization</th>
+        <th scope='col'>Networks</th>
+        <th scope='col'>Identifiers</th>  
         <th scope='col'>Participating Organization</th>
         <th scope='col'>Codes</th>
         <th scope='col'>Specialties</th>
@@ -41,8 +42,13 @@
       <% @organization_affiliations.each do |fhir_organization_affiliation| %>
         <% organization_affiliation = OrganizationAffiliation.new(fhir_organization_affiliation) %>
         <tr>
-          <td>
-            <%= display_extension_list(organization_affiliation.networks) %>
+       <td>
+       <a href="#" data-toggle="tooltip" title= "<%= organization_affiliation.id %>" >  <%= organization_affiliation.id.split('-').last %> </td> </a>
+              <td><%= display_reference(organization_affiliation.organization) %>
+              </td>
+       <td>
+
+            <%= display_reference_list(organization_affiliation.networks,use_controller:"networks") %>
           </td>
           <td>
             <% organization_affiliation.identifiers.each do |identifier| %>
@@ -50,11 +56,10 @@
               <%= display_period(identifier.period) %><br />
             <% end %>
           </td>
-          <td><%= display_reference(organization_affiliation.organization) %></td>
           <td><%= display_reference(organization_affiliation.participating_organization) %></td>
           <td><%= display_coding_list(organization_affiliation.codes) %></td>
           <td><%= display_list(organization_affiliation.specialties) %></td>
-          <td><%= display_list(organization_affiliation.locations) %></td>
+          <td><%= display_reference_list(organization_affiliation.locations) %></td>
           <td><%= display_reference_list(organization_affiliation.healthcare_services) %></td>
           <td><%= display_list(organization_affiliation.telecoms) %></td>
           <td><%= display_list(organization_affiliation.endpoints) %></td>
@@ -62,7 +67,7 @@
       <% end %>
     </table>
     <div class='col-12'>
-      <%= render 'partials/pagination', resource: :organization_affiliations %>
+      <%= render 'partials/pagination', resource: :organization_affiliations, header: false %>
     </div>
   </section>
 

@@ -2,35 +2,13 @@
   <section class='row'>
     <% unless @network.nil? %>
       <div class='col-12'>
-        <h2><%= sanitize(@network.name) %></h2>
+        <h2>Network: <%= sanitize(@network.name) %></h2>
       </div>
-      <div class='col-6' id='map'>
-      </div>
-      <div class='col-6'>
+      <!–– <div class='col-6' id='map' ––>
+      <!–– </div ––>
+      <div class='col-12'>
         <table class='table table-dark'>
-          <tr>
-            <td>Phone/Fax:</td>
-            <td>
-              <% @network.telecoms.each do |telecom| %>
-                <%= display_telecom(telecom) %><br />
-              <% end %>
-            </td>
-          </tr>
-          <tr>
-            <td>Locations:</td>
-            <td>
-              <% @network.addresses.each do |address| %>
-                <% address.line.each do |line| %>
-                  <%= sanitize(line) %><br />
-                <% end %>
-                <%= sanitize(address.city) %>, 
-                <%= sanitize(address.state) %> 
-                <%= display_postal_code(address.postalCode) %><br />
-                <br />
-              <% end %>
-            </td>
-          </tr>
-          <tr>
+                <tr>
             <td>Contact:</td>
             <td>
               <% @network.contacts.each do |contact| %>
@@ -38,11 +16,40 @@
               <% end %>
             </td>
           </tr>
+            <tr>
+            <td>Phone/Fax:</td>
+            <td>
+              <% @network.contacts.each do |contact| %>
+                <% contact.telecom.each do |telecom |%>
+                       <%= display_telecom(telecom) %><br />
+               <% end %>
+              <% end %>
+            </td>
+          </tr>
+
+           <tr>
+            <td>Locations:</td>
+            <td>
+              <% @network.addresses.each do |address| %>
+              <%= render partial: 'partials/address',  locals: { address: address } %>
+                <br />
+              <% end %>
+            </td>
+          </tr>
+          <tr>
+          <td>Part of:</td>
+          <td><%= display_reference(@network.partOf ) %></td>
+        </tr>
+            <tr>
+          <td>Type:</td>
+          <td><%= @network.type.map(&:text).join(',') %></td>
+        </tr>
+
         </table>
       </div>
     <% else %>
       Not available
     <% end %>
-    <%= render 'partials/map' %>
+
   </section>
 </section>

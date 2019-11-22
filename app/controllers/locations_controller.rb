@@ -17,25 +17,43 @@ class LocationsController < ApplicationController
 
   # GET /locations
 
-  def index
-    if params[:page].present?
-      update_page(params[:page])
-    else
-      if params[:query_string].present?
-        parameters = query_hash_from_string(params[:query_string])
-        reply = @client.search(FHIR::Location,
-                               search: { parameters: parameters })
+    def index
+      if params[:page].present?
+        update_page(params[:page])
       else
-        reply = @client.search(FHIR::Location)
+        if params[:query_string].present?
+          parameters = query_hash_from_string(params[:query_string])
+          initparams = parameters 
+          modifiedparams = zip_plus_radius_to_near(initparams) if parameters 
+    #     reply = @client.search(FHIR::Location,
+    #                         search: { parameters: parameters }) 
+          reply = @client.search(FHIR::Location,
+                                  search: {
+                                    parameters: modifiedparams.merge(
+                                      _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
+                                    )
+                                  }
+                                )         
+        else
+    #      reply = @client.search(FHIR::Location)
+      reply = @client.search(FHIR::Location,
+      search: {
+        parameters: {
+          _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
+        }
+      }
+    )
+
+        end
+        @bundle = reply.resource
+        @search = @bundle.link.first.url
       end
-      @bundle = reply.resource
+
+      update_bundle_links
+
+      @query_params = query_params
+      @locations = @bundle.entry.map(&:resource)
     end
-
-    update_bundle_links
-
-    @query_params = query_params
-    @locations = @bundle.entry.map(&:resource)
-  end
 
   #-----------------------------------------------------------------------------
 
@@ -56,6 +74,9 @@ class LocationsController < ApplicationController
         name: 'ID',
         value: '_id'
       },
+      { name: 'Name',
+        value: 'name:contains'
+      },
       {
         name: 'Accessibility',
         value: 'accessibility'
@@ -64,8 +85,9 @@ class LocationsController < ApplicationController
         name: 'Address',
         value: 'address'
       },
-      {
-        name: 'Available Days',
+ 
+     {
+        name: 'Available Days (mon,tues...sun)',
         value: 'available-days'
       },
       {
@@ -89,7 +111,7 @@ class LocationsController < ApplicationController
         value: 'address-country'
       },
       {
-        name: 'endpoint',
+        name: 'Endpoint (identifier)',
         value: 'Endpoint'
       },
       {
@@ -97,20 +119,20 @@ class LocationsController < ApplicationController
         value: 'identifier'
       },
       {
-        name: 'Intermediary',
+        name: 'Intermediary (identifier)',
         value: 'via-intermediary'
       },
       {
-        name: 'Identifier Assigner',
+        name: 'Identifier Assigner (identifier)',
         value: 'identifier-assigner'
       },
       {
-        name: 'New Patient Network',
+        name: 'New Patient Network (identifier)',
         value: 'new-patient-network'
       },
       {
-        name: 'Near',
-        value: 'near'
+        name: 'Radius (in miles from center of zipcode)',
+        value: 'radius'
       },
       {
         name: 'New Patient',
@@ -121,11 +143,11 @@ class LocationsController < ApplicationController
         value: 'operational-status'
       },
       {
-        name: 'Organization',
+        name: 'Organization (identifier)',
         value: 'organization'
       },
       {
-        name: 'Part of',
+        name: 'Part of (identifier)',
         value: 'partof'
       },
       {
@@ -153,7 +175,7 @@ class LocationsController < ApplicationController
         value: 'telecom-available-start-time'
       },
       {
-        name: 'Type',
+        name: 'Type (try OUTPHARM)',
         value: 'type'
       },
       {
@@ -162,4 +184,24 @@ class LocationsController < ApplicationController
       }
     ]
   end
+
+# This version is different than the one in the other two controllers, since it uses "address-postalcode" instead of "zip" and it uses "zip" and not :zip
+  def zip_plus_radius_to_near(params)
+    #  Convert zipcode + radius to  lat/long+radius in lat|long|radius|units format
+    if params["address-postalcode"].present?   # delete zip and radius params and replace with near
+      radius = 25
+      zip = params["address-postalcode"]
+      params.delete("address-postalcode")
+      if params["radius"].present?
+        radius = params["radius"]
+        params.delete("radius")
+      end
+      # get coordinate
+      coords = get_zip_coords(zip)
+      near = "#{coords["lat"]}|#{coords["lng"]}|#{radius}|mi"
+      params[:near]=near 
+    end
+    params
+  end
+
 end

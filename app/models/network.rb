@@ -12,7 +12,7 @@ class Network < Resource
   include ActiveModel::Model
 
   attr_accessor :id, :meta, :implicit_rules, :language, :text, :identifier,
-                :active, :name, :telecoms, :addresses, :contacts
+                :active, :name, :telecoms, :addresses, :contacts, :partOf, :ownedBy , :type
 
   #-----------------------------------------------------------------------------
 
@@ -22,5 +22,8 @@ class Network < Resource
     @telecoms = network.telecom
     @addresses = network.address
     @contacts = network.contact
+    @partOf = network.partOf 
+    @type = network.type 
+    # @ownedBy = network.ownedBy  -- broken
   end
 end

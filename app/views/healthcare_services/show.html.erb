@@ -1,5 +1,6 @@
 <section class='container'>
   <section class='row col-12'>
+  <h2>HealthcareService:</h2>
     <% unless @healthcare_service.nil? %>
       <h2><%= sanitize(@healthcare_service.name) %></h2>
 
@@ -14,7 +15,7 @@
         </tr>
         <tr>
           <td>Provided by:</td>
-          <td><%= sanitize(@healthcare_service.provided_by.display) %></td>
+          <td><%= display_reference( @healthcare_service.provided_by) %></td>
         </tr>
         <tr>
           <td>Categories:</td>
@@ -26,7 +27,7 @@
         </tr>
         <tr>
           <td>Locations:</td> 
-          <td><%= display_list(@healthcare_service.locations) %></td>
+          <td><%= display_reference_list(@healthcare_service.locations) %></td>
         </tr>
         <tr>
           <td>Phone/Fax:</td>

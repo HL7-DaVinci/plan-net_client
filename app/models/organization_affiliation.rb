@@ -20,7 +20,6 @@ class OrganizationAffiliation < Resource
 
   def initialize(organization_affiliation)
     @id = organization_affiliation.id
-    @networks = organization_affiliation.extension
     @identifiers = organization_affiliation.identifier
     @organization = organization_affiliation.organization
     @participating_organization = organization_affiliation.participatingOrganization
@@ -30,5 +29,6 @@ class OrganizationAffiliation < Resource
     @healthcare_services = organization_affiliation.healthcareService
     @telecoms = organization_affiliation.telecom
     @endpoints = organization_affiliation.endpoint
+    @networks = organization_affiliation.network
   end
 end

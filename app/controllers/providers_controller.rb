@@ -10,7 +10,10 @@
 
 require 'json'
 
+
+
 class ProvidersController < ApplicationController
+  
   before_action :connect_to_server
   before_action :fetch_payers, only: [:index]
 
@@ -52,13 +55,14 @@ class ProvidersController < ApplicationController
       base_params = {
         _include: ['PractitionerRole:practitioner', 'PractitionerRole:location']
       }
+      initparams = params 
+      modifiedparams = zip_plus_radius_to_near(initparams) if initparams 
       query =
         SEARCH_PARAMS
-          .select { |key, _value| params[key].present? }
+          .select { |key, _value| modifiedparams[key].present? }
           .each_with_object(base_params) do |(local_key, fhir_key), search_params|
-          search_params[fhir_key] = params[local_key]
+          search_params[fhir_key] = modifiedparams[local_key]
         end
-
       @bundle = @client.search(
         FHIR::PractitionerRole,
         search: { parameters: query }
@@ -70,7 +74,8 @@ class ProvidersController < ApplicationController
     render json: {
       providers: providers,
       nextPage: @next_page_disabled,
-      previousPage: @previous_page_disabled
+      previousPage: @previous_page_disabled,
+      searchParams: preparequerytext(query)
     }
   end
 
@@ -80,6 +85,7 @@ class ProvidersController < ApplicationController
     practitioners
       .map do |practitioner|
         roles = practitioner_roles(practitioner.id)
+        photo = Practitioner.new(practitioner).photo
         practitioner_locations = role_locations(roles.flat_map(&:location).map(&:reference))
         {
           id: practitioner.id,
@@ -87,7 +93,8 @@ class ProvidersController < ApplicationController
           gender: practitioner.gender,
           specialty: practitioner.qualification.map(&:code).map(&:text).compact.uniq,
           telecom: roles.flat_map(&:telecom).map { |telecom| display_telecom(telecom) },
-          address: practitioner_locations.flat_map(&:address).map { |address| display_address(address) }
+          address: practitioner_locations.flat_map(&:address).map { |address| display_address(address)},
+          photo: photo
         }
       end
   end
@@ -112,31 +119,11 @@ class ProvidersController < ApplicationController
     @roles ||= @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::PractitionerRole }.map(&:resource)
   end
 
-  def display_human_name(name)
-    result = [name.prefix.join(', '), name.given.join(' '), name.family].join(' ')
-    result += ', ' + name.suffix.join(', ') if name.suffix.present?
-    result
-  end
-
-  def display_telecom(telecom)
-    telecom.system + ': ' + telecom.value
-  end
-
-  def display_address(address)
-    address.line.join('<br>') + "<br>#{address.city}, #{address.state} #{format_zip(address.postalCode)}"
-  end
-
-  def format_zip(zip)
-    if zip.length > 5
-      "#{zip[0..4]}-#{zip[5..-1]}"
-    else
-      zip
-    end
-  end
+  
 
   SEARCH_PARAMS = {
     network: 'network',
-    zip: 'location.address-postalcode',
+    near: 'location.near',
     city: 'location.address-city',
     specialty: 'practitioner.qualification-code',
     name: 'practitioner.name'

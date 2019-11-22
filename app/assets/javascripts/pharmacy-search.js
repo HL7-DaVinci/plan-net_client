@@ -2,6 +2,7 @@ $(() => {
   if ($('#payer-select').length > 0) {
     updatePharmacyNetworkList({ target: { value: $('#payer-select').val() } });
     updatePharmacyZip({ target: { value: $('#zip-input').val() } });
+    updatePharmacyZip({ target: { value: $('#radius-input').val() } });
     updatePharmacyCity({ target: { value: $('#city-input').val() } });
     updatePharmacyName({ target: { value: $('#name-input').val() } });
   }
@@ -26,6 +27,7 @@ const updatePharmacyNetworkList = function (event) {
 };
 
 let pharmacyParams = {};
+
 const updatePharmacySearchParam = function(event, param) {
   pharmacyParams[param] = event.target.value;
 };
@@ -35,7 +37,10 @@ const updatePharmacyNetwork = function (event) {
 };
 
 const updatePharmacyZip = function (event) {
-  updatePharmacySearchParam(event, 'zip');
+    updatePharmacySearchParam(event, 'zip');
+};
+const updatePharmacyRadius = function (event) {
+  updatePharmacySearchParam(event, 'radius');
 };
 
 const updatePharmacyCity= function (event) {
@@ -53,19 +58,22 @@ const submitPharmacySearch = function (_event) {
         .join(`&`);
 
   console.log(params);
-
   fetchPharmacies(params);
 };
 
 const fetchPharmacies = function (params) {
-  fetch(`/pharmacies/search.json?${params}`)
+ fetch(`/pharmacies/search.json?${params}`)
     .then(response => response.json())
-    .then(response => {
-      const { pharmacies, nextPage, previousPage } = response;
+    .then(response => 
+      {
+      const { pharmacies, nextPage, previousPage, searchParams } = response;
       updatePharmacies(pharmacies);
       updatePharmacyNavigationButtons(nextPage, previousPage);
-    });
+      updatePharmacyQuery(searchParams);
+    }
+    );
 };
+
 
 const updatePharmacies = function (pharmacies) {
   const rows = pharmacyRows(pharmacies);
@@ -108,6 +116,9 @@ const pharmacyHeaderRow = `
 </tr>
 `;
 
+
+
+
 const pharmacyRows = function (pharmacies) {
   if (pharmacies.length > 0) {
     return pharmacyHeaderRow + pharmacies.map(pharmacy => {
@@ -131,3 +142,21 @@ const pharmacyRows = function (pharmacies) {
     `;
   }
 };
+
+const updatePharmacyQuery = function (query){
+  row = pharmacyQuery(query);
+  $('#pharmacy-query-table').html(row)
+};
+
+const pharmacyQuery = function (query) {
+  if(query.length > 0){
+   return `
+   <tr>
+     <td>
+      ${query}
+     </td>
+   </tr>
+   `;
+  }
+ };
+ 

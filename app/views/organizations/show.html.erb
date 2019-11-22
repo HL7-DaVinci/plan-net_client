@@ -2,9 +2,11 @@
   <section class='row'>
     <% unless @organization.nil? %>
       <div class='col-12'>
-        <h2><%= sanitize(@organization.name) %></h2>
+        <h2>Organization: <%= sanitize(@organization.name) %></h2>
       </div>
+      
       <div class='col-6' id='map'>
+       <%= render partial: 'partials/mapleaflet', locals: { lat: @organization.geolocation[0][:latitude] , long: @organization.geolocation[0][:longitude] }  if @organization.geolocation[0] %>
       </div>
       <div class='col-6'>
         <table class='table table-dark'>
@@ -16,6 +18,13 @@
               <% end %>
             </td>
           </tr>
+          <tr>
+            <td>Type:</td>
+            <td>
+              <%= @organization.type.map(&:text).join(',') %>
+            </td>
+          </tr>
+          <tr>
           <tr>
             <td>Locations:</td>
             <td>
@@ -31,6 +40,16 @@
             </td>
           </tr>
           <tr>
+            <td>GeoLocations:</td>
+            <td>
+              <% @organization.geolocation.each do |geoloc| %>
+               ( <%= geoloc[:longitude].to_s %> , <%= geoloc[:latitude].to_s %> )
+               <br />
+              <% end %>
+            </td>
+          </tr>
+
+          <tr>
             <td>Contact:</td>
             <td>
               <% @organization.contacts.each do |contact| %>
@@ -43,7 +62,7 @@
     <% else %>
       Not available
     <% end %>
-    <%= render 'partials/map' %>
+
   </section>
 </section>
 

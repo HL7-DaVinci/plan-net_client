@@ -5,7 +5,7 @@
         Practitioners
         <%= ("named '" + sanitize(@params[:name]) + "'") unless @params[:name].nil? %>
       </h3>
-      <%= render 'partials/pagination', resource: :practitioners %>
+      <%= render 'partials/pagination', resource: :practitioners, header: true %>
     </div>
     <div class='col-12 search'>
       <div class="accordion" id="accordionExample">
@@ -68,7 +68,7 @@
       <% end %>
     </table>
     <div class='col-12'>
-      <%= render 'partials/pagination', resource: :practitioners %>
+      <%= render 'partials/pagination', resource: :practitioners ,header: false %>
     </div>
   </section>
 

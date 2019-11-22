@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+ 		 <!--  Leaflet's CSS -->
+          <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
+          <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+     integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+     crossorigin=""/>
+   <!-- Make sure you put this AFTER Leaflet's CSS -->
+   <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+     integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+     crossorigin="">
+     </script>
+     <style>
+        #map    { height: 300px;
+                  width: 50%  }
+	</style>
+
+   
+  <title>OpenLayers example</title>
+  </head>
+  <body>
+    <h2>My Zip to Lat Long</h2>
+    <div id="map" class="map"></div>
+    <script type="text/javascript">
+    var url = "https://davinci-plan-net-ri.logicahealth.org/fhir/Location?near=42|-71|15|mi"
+    fetch(url)
+    .then(response => response.json())
+    .then(response => 
+      {
+        document.write("hello")
+       debugger
+    }
+    );
+    </script>
+  </body>
+</html>

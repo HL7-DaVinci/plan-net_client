@@ -1,9 +1,16 @@
 <section class='container'>
+	<% if @client %>
+		<p class="text-success m-auto client-connected" style='text-align: center'>
+			Connected to <%= cookies[:server_url] -%>
+		</p>
+	<%else%>
+		<p class="text-danger m-auto" style='text-align: center'>No Connection Established</p>
+	<% end %>
+
 	<section class='row col-12'>
-		<%= form_tag providers_path, method: 'get', class: 'form-inline', id: 'server-form' do %>
+		<%= form_tag root_path, method: 'get', class: 'form-inline', id: 'server-form' do %>
 			<div class='form-group col-md-10'>
-				<%= text_field_tag :server_url, cookies[:server_url], class: 'form-control',
-							placeholder: 'http://your-plan-network-server.org' %>
+				<%= text_field_tag :server_url, cookies[:server_url], class: 'form-control' %>
 			</div>
 
 			<%= button_tag class: 'btn btn-primary col-md-2', id: 'server-url' do %>

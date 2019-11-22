@@ -23,14 +23,27 @@ class PractitionersController < ApplicationController
       update_page(params[:page])
     else
       if params[:query_string].present?
-        parameters = query_hash_from_string(params[:query_string]).merge(_sort: :family)
-        reply = @client.search(FHIR::Practitioner,
-                               search: { parameters: parameters })
+        parameters = query_hash_from_string(params[:query_string])
+        reply = @client.search(
+          FHIR::Practitioner,
+          search: {
+            parameters: parameters.merge(
+              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Practitioner'
+            )
+          }
+        )
       else
-        reply = @client.search(FHIR::Practitioner,
-                               search: { parameters: { _sort: :family } })
+        reply = @client.search(
+          FHIR::Practitioner,
+          search: {
+            parameters: {
+              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Practitioner'
+            }
+          }
+        )
       end
       @bundle = reply.resource
+      @search = @bundle.link.first.url
     end
 
     update_bundle_links
@@ -49,7 +62,6 @@ class PractitionersController < ApplicationController
                            search: { parameters: { _id: params[:id] } })
     bundle = reply.resource
     fhir_practitioner = bundle.entry.map(&:resource).first
-
     @practitioner = Practitioner.new(fhir_practitioner) unless fhir_practitioner.nil?
   end
 
@@ -61,11 +73,11 @@ class PractitionersController < ApplicationController
       },
       {
         name: 'Family name',
-        value: 'family'
+        value: 'family:contains'
       },
       {
         name: 'Given name',
-        value: 'given'
+        value: 'given:contains'
       },
       {
         name: 'Identfier Assigner',
@@ -77,7 +89,7 @@ class PractitionersController < ApplicationController
       },
       {
         name: 'Name',
-        value: 'name'
+        value: 'name:contains'
       },
       {
         name: 'Phonetic',
