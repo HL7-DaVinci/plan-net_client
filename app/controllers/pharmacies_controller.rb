@@ -67,7 +67,6 @@ class PharmaciesController < ApplicationController
       ).resource
     end
     update_bundle_links
-    binding.pry 
     render json: {
       pharmacies: pharmacies,
       nextPage: @next_page_disabled,
@@ -78,13 +77,7 @@ class PharmaciesController < ApplicationController
 
   private
   
-  def preparequerytext(query)
-    a = []
-    query.each do |key,value| a <<  "#{key}=#{value}"  end
-    binding.pry 
-    a.join('&')
-  end
-
+ 
   def pharmacies
     locations
       .map do |location|

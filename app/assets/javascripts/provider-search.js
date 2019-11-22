@@ -71,7 +71,6 @@ const fetchProviders = function (params) {
     .then(response => response.json())
     .then(response => {
       const { providers, nextPage, previousPage, searchParams } = response;
-      debugger
       updateProviders(providers);
       updateProviderNavigationButtons(nextPage, previousPage);
       updateProviderQuery(searchParams);

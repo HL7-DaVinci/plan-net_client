@@ -74,6 +74,9 @@ class LocationsController < ApplicationController
         name: 'ID',
         value: '_id'
       },
+      { name: 'Name',
+        value: 'name:contains'
+      },
       {
         name: 'Accessibility',
         value: 'accessibility'
@@ -82,8 +85,9 @@ class LocationsController < ApplicationController
         name: 'Address',
         value: 'address'
       },
-      {
-        name: 'Available Days',
+ 
+     {
+        name: 'Available Days (mon,tues...sun)',
         value: 'available-days'
       },
       {
@@ -107,7 +111,7 @@ class LocationsController < ApplicationController
         value: 'address-country'
       },
       {
-        name: 'endpoint',
+        name: 'Endpoint (identifier)',
         value: 'Endpoint'
       },
       {
@@ -115,15 +119,15 @@ class LocationsController < ApplicationController
         value: 'identifier'
       },
       {
-        name: 'Intermediary',
+        name: 'Intermediary (identifier)',
         value: 'via-intermediary'
       },
       {
-        name: 'Identifier Assigner',
+        name: 'Identifier Assigner (identifier)',
         value: 'identifier-assigner'
       },
       {
-        name: 'New Patient Network',
+        name: 'New Patient Network (identifier)',
         value: 'new-patient-network'
       },
       {
@@ -139,11 +143,11 @@ class LocationsController < ApplicationController
         value: 'operational-status'
       },
       {
-        name: 'Organization',
+        name: 'Organization (identifier)',
         value: 'organization'
       },
       {
-        name: 'Part of',
+        name: 'Part of (identifier)',
         value: 'partof'
       },
       {
@@ -171,7 +175,7 @@ class LocationsController < ApplicationController
         value: 'telecom-available-start-time'
       },
       {
-        name: 'Type',
+        name: 'Type (try OUTPHARM)',
         value: 'type'
       },
       {

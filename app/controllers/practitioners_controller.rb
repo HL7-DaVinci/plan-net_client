@@ -73,11 +73,11 @@ class PractitionersController < ApplicationController
       },
       {
         name: 'Family name',
-        value: 'family'
+        value: 'family:contains'
       },
       {
         name: 'Given name',
-        value: 'given'
+        value: 'given:contains'
       },
       {
         name: 'Identfier Assigner',
@@ -89,7 +89,7 @@ class PractitionersController < ApplicationController
       },
       {
         name: 'Name',
-        value: 'name'
+        value: 'name:contains'
       },
       {
         name: 'Phonetic',

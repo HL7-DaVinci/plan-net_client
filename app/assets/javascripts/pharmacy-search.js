@@ -67,7 +67,6 @@ const fetchPharmacies = function (params) {
     .then(response => 
       {
       const { pharmacies, nextPage, previousPage, searchParams } = response;
-      debugger
       updatePharmacies(pharmacies);
       updatePharmacyNavigationButtons(nextPage, previousPage);
       updatePharmacyQuery(searchParams);
