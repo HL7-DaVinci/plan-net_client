@@ -37,7 +37,7 @@ const updatePharmacyNetwork = function (event) {
 };
 
 const updatePharmacyZip = function (event) {
-  updatePharmacySearchParam(event, 'zip');
+    updatePharmacySearchParam(event, 'zip');
 };
 const updatePharmacyRadius = function (event) {
   updatePharmacySearchParam(event, 'radius');

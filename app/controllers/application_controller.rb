@@ -126,9 +126,11 @@ class ApplicationController < ActionController::Base
       end
       # get coordinate
       coords = ApplicationController::get_zip_coords(zip)
-      near = "#{coords.first}|#{coords.second}|#{radius}|mi"
-      @near = near 
-      params[:near]=near 
+      if coords
+        near = "#{coords.first}|#{coords.second}|#{radius}|mi"
+        @near = near 
+        params[:near]=near 
+      end
     end
     params
   end

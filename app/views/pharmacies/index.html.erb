@@ -14,11 +14,10 @@
       <select id="network-select" class="custom-select" onchange="updatePharmacyNetwork(event)"></select>
 
        <label for="zip-input">Zip Code</label>
-      <input id="zip-input" type="text" class="form-control bg-dark text-white" placeholder="06040" onkeyup="updatePharmacyZip(event)">
+      <input id="zip-input" type="text" class="form-control bg-dark text-white" placeholder="06040" maxlength=5 onkeyup="updatePharmacyZip(event)">
 
      <label for="radius-input">Radius in Miles</label>
       <input id="radius-input" type="text" class="form-control bg-dark text-white" placeholder="25 (default)" onkeyup="updatePharmacyRadius(event)">
-
       <label for="city-input">City</label>
       <input id="city-input" type="text" class="form-control bg-dark text-white" placeholder="Cambridge" onkeyup="updatePharmacyCity(event)">
       
