@@ -74,7 +74,8 @@ class ProvidersController < ApplicationController
     render json: {
       providers: providers,
       nextPage: @next_page_disabled,
-      previousPage: @previous_page_disabled
+      previousPage: @previous_page_disabled,
+      searchParams: preparequerytext(query)
     }
   end
 

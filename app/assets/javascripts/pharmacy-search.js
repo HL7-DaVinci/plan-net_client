@@ -66,12 +66,15 @@ const fetchPharmacies = function (params) {
     .then(response => response.json())
     .then(response => 
       {
-      const { pharmacies, nextPage, previousPage } = response;
+      const { pharmacies, nextPage, previousPage, searchParams } = response;
+      debugger
       updatePharmacies(pharmacies);
       updatePharmacyNavigationButtons(nextPage, previousPage);
+      updatePharmacyQuery(searchParams);
     }
     );
 };
+
 
 const updatePharmacies = function (pharmacies) {
   const rows = pharmacyRows(pharmacies);
@@ -114,6 +117,9 @@ const pharmacyHeaderRow = `
 </tr>
 `;
 
+
+
+
 const pharmacyRows = function (pharmacies) {
   if (pharmacies.length > 0) {
     return pharmacyHeaderRow + pharmacies.map(pharmacy => {
@@ -137,3 +143,21 @@ const pharmacyRows = function (pharmacies) {
     `;
   }
 };
+
+const updatePharmacyQuery = function (query){
+  row = pharmacyQuery(query);
+  $('#pharmacy-query-table').html(row)
+};
+
+const pharmacyQuery = function (query) {
+  if(query.length > 0){
+   return `
+   <tr>
+     <td>
+      ${query}
+     </td>
+   </tr>
+   `;
+  }
+ };
+ 

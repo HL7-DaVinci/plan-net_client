@@ -67,15 +67,23 @@ class PharmaciesController < ApplicationController
       ).resource
     end
     update_bundle_links
-
+    binding.pry 
     render json: {
       pharmacies: pharmacies,
       nextPage: @next_page_disabled,
-      previousPage: @previous_page_disabled
+      previousPage: @previous_page_disabled,
+      searchParams: preparequerytext(query)
     }
   end
 
   private
+  
+  def preparequerytext(query)
+    a = []
+    query.each do |key,value| a <<  "#{key}=#{value}"  end
+    binding.pry 
+    a.join('&')
+  end
 
   def pharmacies
     locations
@@ -123,40 +131,5 @@ class PharmaciesController < ApplicationController
   }.freeze
 
 
-  def zip_plus_radius_to_near(params)
-    #  Convert zipcode + radius to  lat/long+radius in lat|long|radius|units format
-    if params[:zip].present?   # delete zip and radius params and replace with near
-      radius = 25
-      zip = params[:zip]
-      params.delete(:zip)
-      if params[:radius].present?
-        radius = params[:radius]
-        params.delete(:radius)
-      end
-      # get coordinate
-      coords = get_zip_coords(zip)
-      near = "#{coords["lat"]}|#{coords["lng"]}|#{radius}|mi"
-      params[:near]=near 
-    end
-    params
-  end
-
-    # Geolocation from MapQuest... 
-    # <<< probably should put Key in CONSTANT and put it somewhere more rational than inline >>>>
-def get_zip_coords(zipcode)
-  response = HTTParty.get(
-    'http://open.mapquestapi.com/geocoding/v1/address',
-    query: {
-      key: 'A4F1XOyCcaGmSpgy2bLfQVD5MdJezF0S',
-      postalCode: zipcode,
-      country: 'USA',
-      thumbMaps: false
-    }
-  )
-
-  # coords = response.deep_symbolize_keys&.dig(:results)&.first&.dig(:locations).first&.dig(:latLng)
-  coords = response["results"].first["locations"].first["latLng"]
-
-end
-
+ 
 end

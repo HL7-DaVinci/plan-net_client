@@ -44,6 +44,7 @@ class HealthcareServicesController < ApplicationController
 
       end
       @bundle = reply.resource
+      @search = @bundle.link.first.url
     end
 
     update_bundle_links

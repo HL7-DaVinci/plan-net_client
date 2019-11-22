@@ -70,9 +70,11 @@ const fetchProviders = function (params) {
   fetch(`/providers/search.json?${params}`)
     .then(response => response.json())
     .then(response => {
-      const { providers, nextPage, previousPage } = response;
+      const { providers, nextPage, previousPage, searchParams } = response;
+      debugger
       updateProviders(providers);
       updateProviderNavigationButtons(nextPage, previousPage);
+      updateProviderQuery(searchParams);
     });
 };
 
@@ -120,7 +122,6 @@ const providerHeaderRow = `
 
 const providerImageUrl = function (provider) {
      return provider.photo
-  // return provider.gender === 'male' ? '/assets/man-user.svg' : '/assets/woman.svg';
 };
 
 const providerRows = function (providers) {
@@ -130,7 +131,7 @@ const providerRows = function (providers) {
           <tr>  
             <td>
               <a href="/practitioners/${provider.id}">
-                <img class="list-photo" src="${providerImageUrl(provider)}">
+                <img class="list-photo" src="/assets/${providerImageUrl(provider)}">
                 <br>
                 ${provider.name}
               </a>
@@ -149,3 +150,20 @@ const providerRows = function (providers) {
     `;
   }
 };
+const updateProviderQuery = function (query){
+  row = providerQuery(query);
+  $('#provider-query-table').html(row)
+};
+
+const providerQuery = function (query) {
+  if(query.length > 0){
+   return `
+   <tr>
+     <td>
+      ${query}
+     </td>
+   </tr>
+   `;
+  }
+ };
+ 

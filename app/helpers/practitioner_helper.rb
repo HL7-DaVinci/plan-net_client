@@ -36,12 +36,6 @@ module PractitionerHelper
 
   def display_photo(photo, gender, options)
       options [:class] = "img-fluid"
-    result = if photo.present?
-               image_tag(photo, options)
-             else
-               image_tag( gender == 'female' ? 'woman.svg' : 'man-user.svg', options)
-             end
-
-    result
+      image_tag(photo, options)
   end
 end

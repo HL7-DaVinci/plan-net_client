@@ -2,7 +2,7 @@
 	<section class='row col-12'>
 		<div class='col-12'>
 			<h3 class='float-left text-black'>Insurance Plans</h3>
-      <%= render 'partials/pagination', resource: :insurance_plans %>
+      <%= render 'partials/pagination', resource: :insurance_plans, header: true %>
 		</div>
     <div class='col-12 search'>
       <div class="accordion" id="accordionExample">
@@ -45,7 +45,7 @@
 			<% end %>
 		</table>
 		<div class='col-12'>
-      <%= render 'partials/pagination', resource: :insurance_plans %>
+      <%= render 'partials/pagination', resource: :insurance_plans, header: false %>
 		</div>
 	</section>
 </section>

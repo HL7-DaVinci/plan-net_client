@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require "erb"
+
 ################################################################################
 #
 # Application Controller
@@ -12,6 +13,14 @@ class ApplicationController < ActionController::Base
 
   include ERB::Util
   FHIR.logger.level = Logger::DEBUG
+
+  @@usziptocoord = {}
+
+  def self.get_zip_coords(zipcode)
+    @@usziptocoord.size > 0 || @@usziptocoord= JSON.parse( File.read('./app/controllers/usziptocoord.json'))
+    @@usziptocoord[zipcode]
+  end
+  
 
   # Get the FHIR server url
   def server_url
@@ -116,16 +125,17 @@ class ApplicationController < ActionController::Base
         params.delete(:radius)
       end
       # get coordinate
-      coords = get_zip_coords(zip)
-      near = "#{coords["lat"]}|#{coords["lng"]}|#{radius}|mi"
+      coords = ApplicationController::get_zip_coords(zip)
+      near = "#{coords.first}|#{coords.second}|#{radius}|mi"
+      @near = near 
       params[:near]=near 
     end
     params
   end
 
-    # Geolocation from MapQuest... 
+    # Geolocation from MapQuest... obsoleted by USZIPTOCOORDS constant file
     # <<< probably should put Key in CONSTANT and put it somewhere more rational than inline >>>>
-def get_zip_coords(zipcode)
+def get_zip_coords_from_mapquest(zipcode)
   response = HTTParty.get(
     'http://open.mapquestapi.com/geocoding/v1/address',
     query: {
@@ -161,6 +171,11 @@ def display_address(address)
   "</a>"
 end
 
+def preparequerytext(query)
+  a = []
+  query.each do |key,value| a <<  "#{key}=#{value}"  end
+  a.join('&')
+end
 
 
 def format_zip(zip)
@@ -170,6 +185,8 @@ def format_zip(zip)
     zip
   end
 end
+
+
 
 
  end
