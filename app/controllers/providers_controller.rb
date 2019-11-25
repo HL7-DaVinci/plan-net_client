@@ -68,7 +68,6 @@ class ProvidersController < ApplicationController
         search: { parameters: query }
       ).resource
     end
-
     update_bundle_links
 
     render json: {
