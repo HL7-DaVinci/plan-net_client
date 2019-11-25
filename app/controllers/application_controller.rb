@@ -110,7 +110,6 @@ class ApplicationController < ActionController::Base
       }
     end
   rescue => exception
-    binding.pry 
     redirect_to root_path, flash: { error: 'Please specify a plan network server' }
 
   end
@@ -175,7 +174,15 @@ end
 
 def preparequerytext(query)
   a = []
-  query.each do |key,value| a <<  "#{key}=#{value}"  end
+  query.each do |key,value| 
+    if value.class==Array 
+      value.map do  |entry| 
+        a << "#{key}=#{entry}"  
+      end
+    else
+      a <<  "#{key}=#{value}"  
+    end
+  end
   a.join('&')
 end
 
