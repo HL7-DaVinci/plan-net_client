@@ -71,7 +71,7 @@ class PharmaciesController < ApplicationController
       pharmacies: pharmacies,
       nextPage: @next_page_disabled,
       previousPage: @previous_page_disabled,
-      searchParams: preparequerytext(query)
+      searchParams: preparequerytext(query,"Location")
     }
   end
 

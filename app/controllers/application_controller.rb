@@ -172,7 +172,7 @@ def display_address(address)
   "</a>"
 end
 
-def preparequerytext(query)
+def preparequerytext(query,klass)
   a = []
   query.each do |key,value| 
     if value.class==Array 
@@ -183,7 +183,7 @@ def preparequerytext(query)
       a <<  "#{key}=#{value}"  
     end
   end
-  a.join('&')
+  "#{server_url}/#{klass}?" + a.join('&')
 end
 
 

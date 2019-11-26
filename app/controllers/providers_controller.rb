@@ -53,7 +53,8 @@ class ProvidersController < ApplicationController
       update_page(params[:page])
     else
       base_params = {
-        _include: ['PractitionerRole:practitioner', 'PractitionerRole:location']
+        _include: ['PractitionerRole:practitioner', 'PractitionerRole:location'],
+        _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-PractitionerRole'
       }
       initparams = params 
       modifiedparams = zip_plus_radius_to_near(initparams) if initparams 
@@ -74,7 +75,7 @@ class ProvidersController < ApplicationController
       providers: providers,
       nextPage: @next_page_disabled,
       previousPage: @previous_page_disabled,
-      searchParams: preparequerytext(query)
+      searchParams: preparequerytext(query,"PractitionerRole")
     }
   end
 
