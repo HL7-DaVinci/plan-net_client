@@ -10,21 +10,24 @@ $(() => {
 
 const updateProviderNetworkList = function (event) {
   updateProviderSearchParam(event, 'network');
-
   if(event.target.value === '') {
     $('#plan-select').html('');
   } else {
-    fetch(`/providers/networks.json?_id=${event.target.value}`)
+    networksByPlan = JSON.parse(event.target.getAttribute("data-networksByPlan"))
+    /*fetch(`/providers/networks.json?_id=${event.target.value}`)
       .then(response => response.json())
       .then(networks => {
         const htmlString = networks
               .map(network => `<option value="${network.value}">${network.name}</option>`)
               .join('\n');
+      */
+     htmlString = networksByPlan[event.target.value]
+          .map(network => `<option value="${network.reference}">${network.display}</option>`).join('\n');
         $('#network-select').html(htmlString);
         updateProviderNetwork({ target: { value: $('#network-select').val() } });
-      });
-  }
+      }
 };
+
 
 const updateProviderNetworkList_old = function (event) {
   updateProviderSearchParam(event, 'network');
@@ -32,12 +35,13 @@ const updateProviderNetworkList_old = function (event) {
   if(event.target.value === '') {
     $('#network-select').html('');
   } else {
-    fetch(`/providers/networks.json?payer_id=${event.target.value}`)
+     fetch(`/providers/networks.json?payer_id=${event.target.value}`)
       .then(response => response.json())
       .then(networks => {
         const htmlString = networks
               .map(network => `<option value="${network.value}">${network.name}</option>`)
               .join('\n');
+
         $('#network-select').html(htmlString);
         updateProviderNetwork({ target: { value: $('#network-select').val() } });
       });

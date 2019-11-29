@@ -3,7 +3,7 @@
   <div class='row'>
     <div class='col-3'>
       <label for="plan-select">Insurance Plan</label>
-      <select id="plan-select" class="custom-select" onchange="updateProviderNetworkList(event)">
+      <select id="plan-select" class="custom-select"  data-networksByPlan="<%=@networks_by_plan.to_json %>" onchange="updateProviderNetworkList(event)">
         <option value=""></option>
 
         <% @plans.each do |param| %>
