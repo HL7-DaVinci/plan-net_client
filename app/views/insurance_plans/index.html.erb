@@ -32,6 +32,7 @@
 				<th scope='col'>Administered By</th>
 				<th scope='col'>Coverage Areas</th>
 				<th scope='col'>Type</th>
+				<th scope='col'>Networks</th>
 			</tr>
 			<% @insurance_plans.each do |fhir_insurance_plan| %>
 				<% insurance_plan = InsurancePlan.new(fhir_insurance_plan) %>
@@ -41,6 +42,11 @@
 					<td><%= display_reference(insurance_plan.administered_by) %></td>
 					<td><%= sanitize(insurance_plan.coverage_areas.map(&:display).join(', ')) %></td>
 					<td><%= insurance_plan.type.map(&:text).join(',') %></td>
+					<td><% insurance_plan.networks.each do |network| %>
+						<%= display_reference(network) %>
+						<br>
+					<% end %>
+					</td>
 				</tr>
 			<% end %>
 		</table>

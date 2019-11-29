@@ -5,19 +5,19 @@
 		</p>
 		<table class="table table-dark md-12">
 		<tr>
-		<td><%= @endpoints %> Endpoints </td>
-		<td><%=@healthCareServices%> Healthcare Services </td>
-		<td><%=@insurancePlans%> Insurance Plans</td>
+		<td><%= @endpoints %>  <%= link_to "Endpoints", endpoints_path%></td>
+		<td><%=@healthCareServices%>  <%= link_to "Healthcare Services", healthcare_services_path%> </td>
+		<td><%=@insurancePlans%>  <%= link_to "Insurance Plans", insurance_plans_path%></td>
 		</tr>
 		<tr>
-		<td><%=@locations%> Locations</td>
-	 	<td><%=@networks%> Networks</td>
-		<td><%=@organizations%> Organizations</td>
+		<td><%=@locations%>  <%= link_to "Locations", locations_path%></td>
+	 	<td><%=@networks%>  <%= link_to "Networks", networks_path%></td>
+		<td><%=@organizations%> <%= link_to "Organizations", organizations_path%></td>
 		</tr>			
 		<tr>
-		<td><%=@organizationAffiliations%> Organization Affiliations</td>
-		<td><%=@practitioners%> Practitioners</td>
-		<td><%=@practitionerRoles%> PractitionerRoles</td>
+		<td><%=@organizationAffiliations%>  <%= link_to "Organization Affiliations", organization_affiliations_path%></td>
+		<td><%=@practitioners%>  <%= link_to "Practitioners", practitioners_path%></td>
+		<td><%=@practitionerRoles%>  <%= link_to "PractitionerRoles", practitioner_roles_path%></td>
 		</tr>			
 		</table>
 	<%else%>
