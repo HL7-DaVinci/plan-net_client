@@ -113,6 +113,49 @@ class ApplicationController < ActionController::Base
     redirect_to root_path, flash: { error: 'Please specify a plan network server' }
 
   end
+
+  # Fetch all plans, and remember their resources, names, and networks
+  def fetch_plans (id = nil)
+    @plans = []
+    parameters = {}
+    @networks_by_plan = {}
+    parameters[:_profile] = 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-InsurancePlan' 
+    if(id)
+      parameters[:_id] = id
+    end
+
+    @client.search(
+      FHIR::InsurancePlan,
+      search: { parameters: parameters }
+    )&.resource&.entry&.map do |entry|
+      @plans << {
+        value: entry&.resource&.id,
+        name: entry&.resource&.name
+      }
+      @networks_by_plan [ entry&.resource&.id] = entry&.resource&.network
+    end
+   @plans
+  rescue => exception
+    redirect_to root_path, flash: { error: 'Please specify a plan network server' }
+
+  end
+
+# GET /providers/networks or /pharmacies/networks -- perhaps this should be in the networks controller?
+
+def networks
+  id = params[:_id]
+  fetch_plans(id)
+  networks = @networks_by_plan[id]
+  network_list = networks.map do |entry|
+    {
+      value: entry.reference,
+      name: entry.display
+    }
+  end
+  render json: network_list
+end
+
+
   def zip_plus_radius_to_near(params)
     #  Convert zipcode + radius to  lat/long+radius in lat|long|radius|units format
     if params[:zip].present?   # delete zip and radius params and replace with near

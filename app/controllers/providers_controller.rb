@@ -10,12 +10,9 @@
 
 require 'json'
 
-
-
 class ProvidersController < ApplicationController
-  
   before_action :connect_to_server
-  before_action :fetch_payers, only: [:index]
+  before_action :fetch_plans, only: [:index]
 
   #-----------------------------------------------------------------------------
 
@@ -29,20 +26,15 @@ class ProvidersController < ApplicationController
   # GET /providers/networks
 
   def networks
-    id = params[:payer_id]
-    network_list = @client.search(
-      FHIR::Organization,
-      search: { parameters: {
-        _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network',
-        partof: "Organization/#{id}"
-      } }
-    )&.resource&.entry&.map do |entry|
+    id = params[:_id]
+    fetch_plans(id)
+    networks = @networks_by_plan[id]
+    network_list = networks.map do |entry|
       {
-        value: entry&.resource&.id,
-        name: entry&.resource&.name
+        value: entry.reference,
+        name: entry.display
       }
     end
-
     render json: network_list
   end
 
@@ -56,8 +48,8 @@ class ProvidersController < ApplicationController
         _include: ['PractitionerRole:practitioner', 'PractitionerRole:location'],
         _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-PractitionerRole'
       }
-      initparams = params 
-      modifiedparams = zip_plus_radius_to_near(initparams) if initparams 
+      initparams = params
+      modifiedparams = zip_plus_radius_to_near(initparams) if initparams
       query =
         SEARCH_PARAMS
           .select { |key, _value| modifiedparams[key].present? }
@@ -75,7 +67,7 @@ class ProvidersController < ApplicationController
       providers: providers,
       nextPage: @next_page_disabled,
       previousPage: @previous_page_disabled,
-      searchParams: preparequerytext(query,"PractitionerRole")
+      searchParams: preparequerytext(query, 'PractitionerRole')
     }
   end
 
@@ -93,7 +85,7 @@ class ProvidersController < ApplicationController
           gender: practitioner.gender,
           specialty: practitioner.qualification.map(&:code).map(&:text).compact.uniq,
           telecom: roles.flat_map(&:telecom).map { |telecom| display_telecom(telecom) },
-          address: practitioner_locations.flat_map(&:address).map { |address| display_address(address)},
+          address: practitioner_locations.flat_map(&:address).map { |address| display_address(address) },
           photo: photo
         }
       end
@@ -118,8 +110,6 @@ class ProvidersController < ApplicationController
   def roles
     @roles ||= @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::PractitionerRole }.map(&:resource)
   end
-
-  
 
   SEARCH_PARAMS = {
     network: 'network',

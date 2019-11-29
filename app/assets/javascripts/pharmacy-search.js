@@ -12,9 +12,9 @@ const updatePharmacyNetworkList = function (event) {
   updatePharmacySearchParam(event, 'network');
 
   if(event.target.value === '') {
-    $('#network-select').html('');
+    $('#plan-select').html('');
   } else {
-    fetch(`/pharmacies/networks.json?payer_id=${event.target.value}`)
+    fetch(`/pharmacies/networks.json?_id=${event.target.value}`)
       .then(response => response.json())
       .then(networks => {
         const htmlString = networks
