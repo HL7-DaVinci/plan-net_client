@@ -105,7 +105,7 @@ class NetworksController < ApplicationController
       },
       {
         name: 'Name',
-        value: 'name'
+        value: 'name:contains'
       },
       {
         name: 'Part Of',

@@ -135,7 +135,7 @@ end
       },
       {
         name: 'Name',
-        value: 'name'
+        value: 'name:contains'
       },
       {
         name: 'Network',

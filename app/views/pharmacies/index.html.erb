@@ -2,17 +2,19 @@
   <h3 class='row text-white'>Search Pharmacies</h3>
   <div class='row'>
     <div class='col-3'>
-      <label for="payer-select">Insurance Provider</label>
-      <select id="payer-select" class="custom-select" onchange="updatePharmacyNetworkList(event)">
+      <label for="plan-select">Insurance Plan</label>
+      <select id="plan-select" class="custom-select" data-networksByPlan="<%=@networks_by_plan.to_json %>" onchange="updatePharmacyNetworkList(event)">
         <option value=""></option>
-        <% @payers.each do |param| %>
+
+        <% @plans.each do |param| %>
           <option value="<%= param[:value] %>"><%= param[:name] %></option>
         <% end %>
       </select>
 
       <label for="network-select">Network</label>
       <select id="network-select" class="custom-select" onchange="updatePharmacyNetwork(event)"></select>
-
+        <option value=""></option>
+      </select>
        <label for="zip-input">Zip Code</label>
       <input id="zip-input" type="text" class="form-control bg-dark text-white" placeholder="06040" maxlength=5 onkeyup="updatePharmacyZip(event)">
 

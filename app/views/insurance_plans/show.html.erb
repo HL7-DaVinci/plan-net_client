@@ -19,6 +19,15 @@
           <td>Type:</td>
           <td><%= @insurance_plan.type.map(&:text).join(',') %></td>
         </tr>
+        <tr>
+          <td>Networks:</td>
+					<td><% @insurance_plan.networks.each do |network| %>
+						<%= display_reference(network) %>
+						<br>
+					<% end %>
+					</td>
+        </tr>
+
        </table>
     <% else %>
       Not available

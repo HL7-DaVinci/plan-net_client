@@ -12,17 +12,13 @@ const updatePharmacyNetworkList = function (event) {
   updatePharmacySearchParam(event, 'network');
 
   if(event.target.value === '') {
-    $('#network-select').html('');
+    $('#plan-select').html('');
   } else {
-    fetch(`/pharmacies/networks.json?payer_id=${event.target.value}`)
-      .then(response => response.json())
-      .then(networks => {
-        const htmlString = networks
-              .map(network => `<option value="${network.value}">${network.name}</option>`)
-              .join('\n');
+    networksByPlan = JSON.parse(event.target.getAttribute("data-networksByPlan"))
+    htmlString = networksByPlan[event.target.value]
+        .map(network => `<option value="${network.reference}">${network.display}</option>`).join('\n');
         $('#network-select').html(htmlString);
         updatePharmacyNetwork({ target: { value: $('#network-select').val() } });
-      });
   }
 };
 

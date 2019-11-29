@@ -12,7 +12,7 @@ require 'json'
 
 class PharmaciesController < ApplicationController
   before_action :connect_to_server
-  before_action :fetch_payers, only: [:index]
+  before_action :fetch_plans, only: [:index]
 
   #-----------------------------------------------------------------------------
 
@@ -22,25 +22,7 @@ class PharmaciesController < ApplicationController
     @params = {}
   end
 
-  # GET /pharmacies/networks
-
-  def networks
-        id = params[:payer_id]
-    network_list = @client.search(
-      FHIR::Organization,
-      search: { parameters: {
-        _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network',
-        partof: "Organization/#{id}"
-      } }
-    )&.resource&.entry&.map do |entry|
-      {
-        value: entry&.resource&.id,
-        name: entry&.resource&.name
-      }
-    end
-
-    render json: network_list
-  end
+  
 
   # GET /pharmacies/search
 
@@ -71,7 +53,7 @@ class PharmaciesController < ApplicationController
       pharmacies: pharmacies,
       nextPage: @next_page_disabled,
       previousPage: @previous_page_disabled,
-      searchParams: preparequerytext(query)
+      searchParams: preparequerytext(query,"Location")
     }
   end
 

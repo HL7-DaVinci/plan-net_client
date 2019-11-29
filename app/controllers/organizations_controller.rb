@@ -108,7 +108,7 @@ class OrganizationsController < ApplicationController
       },
       {
         name: 'Name',
-        value: 'name'
+        value: 'name:contains'
       },
       {
         name: 'Part of',
