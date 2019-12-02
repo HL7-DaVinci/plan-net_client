@@ -134,7 +134,7 @@ class ApplicationController < ActionController::Base
       }
       @networks_by_plan [ entry&.resource&.id] = entry&.resource&.network
     end
-   @plans
+   @plans.sort_by! { |hsh| hsh[:name] }
   rescue => exception
     redirect_to root_path, flash: { error: 'Please specify a plan network server' }
 
