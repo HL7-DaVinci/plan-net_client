@@ -32,9 +32,11 @@
                 <% address.line.each do |line| %>
                   <%= sanitize(line) %><br />
                 <% end %>
+                <% if address.city || address.state || (address.postalCode && address.postalCode != "00000") %>
                 <%= sanitize(address.city) %>, 
                 <%= sanitize(address.state) %> 
                 <%= display_postal_code(address.postalCode) %><br />
+                <% end %>
                 <br />
               <% end %>
             </td>
