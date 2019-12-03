@@ -14,14 +14,7 @@ const updateProviderNetworkList = function (event) {
     $('#plan-select').html('');
   } else {
     networksByPlan = JSON.parse(event.target.getAttribute("data-networksByPlan"))
-    /*fetch(`/providers/networks.json?_id=${event.target.value}`)
-      .then(response => response.json())
-      .then(networks => {
-        const htmlString = networks
-              .map(network => `<option value="${network.value}">${network.name}</option>`)
-              .join('\n');
-      */
-     htmlString = networksByPlan[event.target.value]
+      htmlString = networksByPlan[event.target.value]
           .map(network => `<option value="${network.reference}">${network.display}</option>`).join('\n');
         $('#network-select').html(htmlString);
         updateProviderNetwork({ target: { value: $('#network-select').val() } });
