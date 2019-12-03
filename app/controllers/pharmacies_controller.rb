@@ -9,6 +9,7 @@
 ################################################################################
 
 require 'json'
+require 'uri'
 
 class PharmaciesController < ApplicationController
   before_action :connect_to_server
@@ -47,13 +48,15 @@ class PharmaciesController < ApplicationController
         FHIR::Location,
         search: { parameters: query }
       ).resource
+      @search = URI.decode (@bundle.link.select { |l| l.relation === "self"}.first.url)
     end
     update_bundle_links
     render json: {
       pharmacies: pharmacies,
       nextPage: @next_page_disabled,
       previousPage: @previous_page_disabled,
-      searchParams: preparequerytext(query,"Location")
+  #    searchParams: preparequerytext(query,"Location")
+      searchParams: @search 
     }
   end
 
