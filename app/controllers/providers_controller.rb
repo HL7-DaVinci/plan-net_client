@@ -9,6 +9,7 @@
 ################################################################################
 
 require 'json'
+require 'uri'
 
 class ProvidersController < ApplicationController
   before_action :connect_to_server
@@ -60,6 +61,7 @@ class ProvidersController < ApplicationController
         FHIR::PractitionerRole,
         search: { parameters: query }
       ).resource
+      @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url)
     end
     update_bundle_links
 
@@ -67,7 +69,8 @@ class ProvidersController < ApplicationController
       providers: providers,
       nextPage: @next_page_disabled,
       previousPage: @previous_page_disabled,
-      searchParams: preparequerytext(query, 'PractitionerRole')
+      # searchParams: preparequerytext(query, 'PractitionerRole')
+        searchParams: @search 
     }
   end
 

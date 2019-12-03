@@ -43,7 +43,7 @@ class PractitionersController < ApplicationController
         )
       end
       @bundle = reply.resource
-      @search = @bundle.link.first.url
+      @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url)
     end
 
     update_bundle_links
