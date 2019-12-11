@@ -34,6 +34,7 @@ class ApplicationController < ActionController::Base
     if server_url.present?
       @client = FHIR::Client.new(server_url)
       @client.use_r4
+      @client.additional_headers = { 'Accept-Encoding' => 'identity' }  # 
       cookies[:server_url] = server_url
       session[:server_url] = server_url      
      end
