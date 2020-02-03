@@ -61,8 +61,9 @@ class ProvidersController < ApplicationController
         FHIR::PractitionerRole,
         search: { parameters: query }
       ).resource
-      @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url)
-    end
+      @search = "<Search String in Returned Bundle is empty>"
+      @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
+   end
     update_bundle_links
 
     render json: {

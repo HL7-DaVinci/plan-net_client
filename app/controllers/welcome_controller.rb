@@ -21,35 +21,63 @@ class WelcomeController < ApplicationController
 
   def get_resource_counts
     begin
-			profile = 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Endpoint'
-			search = { parameters: { _profile: profile, _summary: "count" } }
-      @endpoints = @client.search(FHIR::Endpoint, search: search ).resource.total
+      @endpoints = 0
+      @healthCareServices = 0
+      @insurancePlans = 0
+      @locations = 0
+      @networks = 0
+      @organizations = 0
+      @organizationAffiliations = 0
+      @practitioners = 0
+      @practitionerRoles = 0
+  
+		 	profile = 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Endpoint'
+      search = { parameters: { _profile: profile, _summary: "count" } }
+      results = @client.search(FHIR::Endpoint, search: search )
+      @endpoints = results.resource.total  unless results.resource == nil
+  
       profile = 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-HealthcareService'
-			search = { parameters: { _profile: profile, _summary: "count" } }
-      @healthCareServices = @client.search(FHIR::HealthcareService, search: search ).resource.total
+      search = { parameters: { _profile: profile, _summary: "count" } }
+      results = @client.search(FHIR::HealthcareService, search: search )
+      @healthCareServices = results.resource.total unless results.resource == nil
+  
       profile = 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-InsurancePlan'
-			search = { parameters: { _profile: profile, _summary: "count" } }
-      @insurancePlans = @client.search(FHIR::InsurancePlan, search: search ).resource.total
+      search = { parameters: { _profile: profile, _summary: "count" } }
+      results = @client.search(FHIR::InsurancePlan, search: search )
+      @insurancePlans = results.resource.total unless results.resource == nil
+   
       profile = 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Organization'
-			search = { parameters: { _profile: profile, _summary: "count" } }
-      @networks = @client.search(FHIR::Organization, search: search ).resource.total
+      search = { parameters: { _profile: profile, _summary: "count" } }
+      results = @client.search(FHIR::Organization, search: search ) 
+      @networks = results.resource.total unless results.resource == nil
+  
       profile = 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Organization'
-			search = { parameters: { _profile: profile, _summary: "count" } }
-      @organizations = @client.search(FHIR::Organization, search: search ).resource.total
+      search = { parameters: { _profile: profile, _summary: "count" } }
+      results = @client.search(FHIR::Organization, search: search )
+      @organizations = results.resource.total unless results.resource == nil
+   
       profile = 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-OrganizationAffiliation'
-			search = { parameters: { _profile: profile, _summary: "count" } }
-      @organizationAffiliations = @client.search(FHIR::OrganizationAffiliation, search: search ).resource.total
+      search = { parameters: { _profile: profile, _summary: "count" } }
+      results = @client.search(FHIR::OrganizationAffiliation, search: search )
+      @organizationAffiliations = results.resource.total unless results.resource == nil
+    
       profile = 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Practitioner'
-			search = { parameters: { _profile: profile, _summary: "count" } }
-      @practitioners = @client.search(FHIR::Practitioner, search: search ).resource.total
+      search = { parameters: { _profile: profile, _summary: "count" } }
+      results = @client.search(FHIR::Practitioner, search: search )
+      @practitioners = results.resource.total unless results.resource == nil
+    
       profile = 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-PractitionerRole'
-			search = { parameters: { _profile: profile, _summary: "count" } }
-      @practitionerRoles = @client.search(FHIR::PractitionerRole, search: search ).resource.total
+      search = { parameters: { _profile: profile, _summary: "count" } }
+      results = @client.search(FHIR::PractitionerRole, search: search )
+      @practitionerRoles = results.resource.total unless results.resource == nil
+   
       profile = 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
-			search = { parameters: { _profile: profile, _summary: "count" } }
-      @locations = @client.search(FHIR::Location, search: search ).resource.total     
-
-		rescue => exception
+      search = { parameters: { _profile: profile, _summary: "count" } }
+      results = @client.search(FHIR::Location, search: search )    
+      @locations = results.resource.total unless results.resource == nil
+  
+    rescue => exception
+ 
       @endpoints = 0
       @healthCareServices = 0
       @insurancePlans = 0
