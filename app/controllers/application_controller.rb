@@ -35,6 +35,7 @@ class ApplicationController < ActionController::Base
       @client = FHIR::Client.new(server_url)
       @client.use_r4
       @client.additional_headers = { 'Accept-Encoding' => 'identity' }  # 
+      @client.set_basic_auth("fhiruser","change-password")
       cookies[:server_url] = server_url
       session[:server_url] = server_url      
      end
