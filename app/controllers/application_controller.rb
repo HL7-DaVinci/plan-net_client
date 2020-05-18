@@ -160,18 +160,20 @@ end
 
   def zip_plus_radius_to_near(params)
     #  Convert zipcode + radius to  lat/long+radius in lat|long|radius|units format
+    # discovered that documentation is thin regarding how to specify units, but is clear
+    # about units in km...so we will ask the user in terms of miles, and covert to km by multiplying by 1.6
     if params[:zip].present?   # delete zip and radius params and replace with near
-      radius = 25
+      radius = 25 * 1.6   # 25 miles in km
       zip = params[:zip]
       params.delete(:zip)
       if params[:radius].present?
-        radius = params[:radius]
+        radius = params[:radius].to_i * 1.6 # convert to km
         params.delete(:radius)
       end
       # get coordinate
       coords = ApplicationController::get_zip_coords(zip)
       if coords
-        near = "#{coords.first}|#{coords.second}|#{radius}|mi"
+        near = "#{coords.first}|#{coords.second}|#{radius}|km"
         @near = near 
         params[:near]=near 
       end
