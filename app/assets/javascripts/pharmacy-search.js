@@ -105,11 +105,11 @@ const updatePharmacyNavigationActions = function (hasNextPage, hasPreviousPage) 
 };
 
 const pharmacyHeaderRow = `
-<tr>
-  <th>Name</th>
-  <th>Phone/Fax</th>
-  <th>Address</th>
-</tr>
+  <tr>
+    <th>Name</th>
+    <th>Phone/Fax</th>
+    <th>Address</th>
+  </tr>
 `;
 
 

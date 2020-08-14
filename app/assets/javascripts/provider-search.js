@@ -126,12 +126,12 @@ const updateProviderNavigationActions = function (hasNextPage, hasPreviousPage) 
 };
 
 const providerHeaderRow = `
-<tr>
-  <th>Name</th>
-  <th>Phone/Fax</th>
-  <th>Address</th>
-  <th>Specialties</th>
-</tr>
+  <tr>
+    <th>Name</th>
+    <th>Phone/Fax</th>
+    <th>Address</th>
+    <th>Specialties</th>
+  </tr>
 `;
 
 const providerImageUrl = function (provider) {
@@ -142,19 +142,19 @@ const providerRows = function (providers) {
   if (providers.length > 0) {
     return providerHeaderRow + providers.map(provider => {
       return `
-          <tr>  
-            <td>
-              <a href="/practitioners/${provider.id}">
-                <img class="list-photo" src="/assets/${providerImageUrl(provider)}">
-                <br>
-                ${provider.name}
-              </a>
-            </td>
-            <td>${provider.telecom.join('<br>')}</td>
-            <td><a href="${provider.gaddress}">${provider.address[0]} </a></td>
-            <td>${provider.specialty.join('<br>')}</td>
-          </tr>
-        `;
+        <tr>  
+          <td>
+            <a href="/practitioners/${provider.id}">
+              <img class="list-photo" src="/assets/${providerImageUrl(provider)}">
+              <br>
+              ${provider.name}
+            </a>
+          </td>
+          <td>${provider.telecom.join('<br>')}</td>
+          <td><a href="${provider.gaddress}">${provider.address[0]} </a></td>
+          <td>${provider.specialty.join('<br>')}</td>
+        </tr>
+      `;
     }).join('');
   } else {
     return `
@@ -164,6 +164,7 @@ const providerRows = function (providers) {
     `;
   }
 };
+
 const updateProviderQuery = function (query){
   content = providerQuery(query);
   $('#provider-query').html(content)
