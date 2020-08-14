@@ -14,18 +14,14 @@ class ApplicationController < ActionController::Base
   include ERB::Util
   FHIR.logger.level = Logger::DEBUG
 
-  @@usziptocoord = {}
-
-  def self.get_zip_coords(zipcode)
-    @@usziptocoord.size > 0 || @@usziptocoord= JSON.parse( File.read('./app/controllers/usziptocoord.json'))
-    @@usziptocoord[zipcode]
-  end
-  
+  #-----------------------------------------------------------------------------
 
   # Get the FHIR server url
   def server_url
     params[:server_url] || session[:server_url]
   end
+
+  #-----------------------------------------------------------------------------
 
   # Connect the FHIR client with the specified server and save the connection
   # for future requests.
@@ -38,12 +34,14 @@ class ApplicationController < ActionController::Base
       @client.set_basic_auth("fhiruser","change-password")
       cookies[:server_url] = server_url
       session[:server_url] = server_url      
-     end
-   rescue => exception
+    end
+
+    rescue => exception
        err = "Connection failed: Ensure provided url points to a valid FHIR server"
        redirect_to root_path, flash: { error: err }
- 
   end
+
+  #-----------------------------------------------------------------------------
 
   def update_bundle_links
     session[:next_bundle] = @bundle&.next_link&.url
@@ -81,6 +79,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  #-----------------------------------------------------------------------------
+
   # Retrieves the next bundle page from the FHIR server.
 
   def next_bundle
@@ -92,6 +92,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  #-----------------------------------------------------------------------------
+
   # Turns a query string such as "name=abc&id=123" into a hash like
   # { 'name' => 'abc', 'id' => '123' }
   def query_hash_from_string(query_string)
@@ -100,6 +102,8 @@ class ApplicationController < ActionController::Base
       hash[key] = value
     end
   end
+
+  #-----------------------------------------------------------------------------
 
   def fetch_payers
     @payers = @client.search(
@@ -115,6 +119,8 @@ class ApplicationController < ActionController::Base
     redirect_to root_path, flash: { error: 'Please specify a plan network server' }
 
   end
+
+  #-----------------------------------------------------------------------------
 
   # Fetch all plans, and remember their resources, names, and networks
   def fetch_plans (id = nil)
@@ -142,107 +148,88 @@ class ApplicationController < ActionController::Base
 
   end
 
-# GET /providers/networks or /pharmacies/networks -- perhaps this should be in the networks controller?
+  #-----------------------------------------------------------------------------
 
-def networks
-  id = params[:_id]
-  fetch_plans(id)
-  networks = @networks_by_plan[id]
-  network_list = networks.map do |entry|
-    {
-      value: entry.reference,
-      name: entry.display
-    }
+  # GET /providers/networks or /pharmacies/networks -- perhaps this should be in the networks controller?
+
+  def networks
+    id = params[:_id]
+    fetch_plans(id)
+    networks = @networks_by_plan[id]
+    network_list = networks.map do |entry|
+      {
+        value: entry.reference,
+        name: entry.display
+      }
+    end
+    render json: network_list
   end
-  render json: network_list
-end
 
+  #-----------------------------------------------------------------------------
 
-  def zip_plus_radius_to_near(params)
-    #  Convert zipcode + radius to  lat/long+radius in lat|long|radius|units format
-    # discovered that documentation is thin regarding how to specify units, but is clear
-    # about units in km...so we will ask the user in terms of miles, and covert to km by multiplying by 1.6
-    if params[:zip].present?   # delete zip and radius params and replace with near
-      radius = 25 * 1.6   # 25 miles in km
+  def zip_plus_radius_to_address(params)
+    #  Convert zipcode + radius to  address='zipcode list'
+    if params[:zip].present?   # delete zip and radius params and replace with address
       zip = params[:zip]
       params.delete(:zip)
       if params[:radius].present?
-        radius = params[:radius].to_i * 1.6 # convert to km
+        radius = params[:radius].to_i
         params.delete(:radius)
       end
-      # get coordinate
-      coords = ApplicationController::get_zip_coords(zip)
-      if coords
-        near = "#{coords.first}|#{coords.second}|#{radius}|km"
-        @near = near 
-        params[:near]=near 
-      end
+
+      params[:address] = Zipcode.zipcodes_within(radius, zip).join(',')
     end
     params
   end
 
-    # Geolocation from MapQuest... obsoleted by USZIPTOCOORDS constant file
-    # <<< probably should put Key in CONSTANT and put it somewhere more rational than inline >>>>
-def get_zip_coords_from_mapquest(zipcode)
-  response = HTTParty.get(
-    'http://open.mapquestapi.com/geocoding/v1/address',
-    query: {
-      key: 'A4F1XOyCcaGmSpgy2bLfQVD5MdJezF0S',
-      postalCode: zipcode,
-      country: 'USA',
-      thumbMaps: false
-    }
-  )
+  #-----------------------------------------------------------------------------
 
-  # coords = response.deep_symbolize_keys&.dig(:results)&.first&.dig(:locations).first&.dig(:latLng)
-  coords = response["results"].first["locations"].first["latLng"]
+  def display_human_name(name)
+    result = [name.prefix.join(', '), name.given.join(' '), name.family].join(' ')
+    result += ', ' + name.suffix.join(', ') if name.suffix.present?
+    result
+  end
 
-end
+  #-----------------------------------------------------------------------------
 
+  def display_telecom(telecom)
+    telecom.system + ': ' + telecom.value
+  end
 
-def display_human_name(name)
-  result = [name.prefix.join(', '), name.given.join(' '), name.family].join(' ')
-  result += ', ' + name.suffix.join(', ') if name.suffix.present?
-  result
-end
+  #-----------------------------------------------------------------------------
 
-def display_telecom(telecom)
-  telecom.system + ': ' + telecom.value
-end
+  def display_address(address)
+    "<a href = \"" + "https://www.google.com/maps/search/" + html_escape(address.text) +
+     "\" >" +
+    address.line.join('<br>') + 
+    "<br>#{address.city}, #{address.state} #{format_zip(address.postalCode)}" + 
+    "</a>"
+  end
 
+  #-----------------------------------------------------------------------------
 
-def display_address(address)
-  "<a href = \"" + "https://www.google.com/maps/search/" + html_escape(address.text) +
-   "\" >" +
-  address.line.join('<br>') + 
-  "<br>#{address.city}, #{address.state} #{format_zip(address.postalCode)}" + 
-  "</a>"
-end
-
-def preparequerytext(query,klass)
-  a = []
-  query.each do |key,value| 
-    if value.class==Array 
-      value.map do  |entry| 
-        a << "#{key}=#{entry}"  
+  def preparequerytext(query,klass)
+    a = []
+    query.each do |key,value| 
+      if value.class==Array 
+        value.map do  |entry| 
+          a << "#{key}=#{entry}"  
+        end
+      else
+        a <<  "#{key}=#{value}"  
       end
+    end
+    "#{server_url}/#{klass}?" + a.join('&')
+  end
+
+  #-----------------------------------------------------------------------------
+
+  def format_zip(zip)
+    if zip.length > 5
+      "#{zip[0..4]}-#{zip[5..-1]}"
     else
-      a <<  "#{key}=#{value}"  
+      zip
     end
   end
-  "#{server_url}/#{klass}?" + a.join('&')
+
 end
-
-
-def format_zip(zip)
-  if zip.length > 5
-    "#{zip[0..4]}-#{zip[5..-1]}"
-  else
-    zip
-  end
-end
-
-
-
-
- end

@@ -49,8 +49,8 @@ class ProvidersController < ApplicationController
         _include: ['PractitionerRole:practitioner', 'PractitionerRole:location'],
         _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-PractitionerRole'
       }
-      initparams = params
-      modifiedparams = zip_plus_radius_to_near(initparams) if initparams
+      query_params = params
+      modifiedparams = zip_plus_radius_to_address(query_params) if query_params
       query =
         SEARCH_PARAMS
           .select { |key, _value| modifiedparams[key].present? }
@@ -117,7 +117,7 @@ class ProvidersController < ApplicationController
 
   SEARCH_PARAMS = {
     network: 'network',
-    near: 'location.near',
+    address: 'location.address',
     city: 'location.address-city',
     specialty: 'practitioner.qualification-code',
     name: 'practitioner.name'

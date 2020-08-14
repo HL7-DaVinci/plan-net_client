@@ -165,19 +165,18 @@ const providerRows = function (providers) {
   }
 };
 const updateProviderQuery = function (query){
-  row = providerQuery(query);
-  $('#provider-query-table').html(row)
+  content = providerQuery(query);
+  $('#provider-query').html(content)
 };
 
 const providerQuery = function (query) {
   if(query.length > 0){
-   return `
-   <tr>
-     <td>
-      ${query}
-     </td>
-   </tr>
-   `;
+    return `
+      <p>Query to server</p>
+      <p class="query">
+        ${query}
+      </p>
+    `;
   }
- };
+};
  

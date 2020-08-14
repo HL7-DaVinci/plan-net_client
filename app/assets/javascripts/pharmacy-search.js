@@ -140,19 +140,18 @@ const pharmacyRows = function (pharmacies) {
 };
 
 const updatePharmacyQuery = function (query){
-  row = pharmacyQuery(query);
-  $('#pharmacy-query-table').html(row)
+  content = pharmacyQuery(query);
+  $('#pharmacy-query').html(content)
 };
 
 const pharmacyQuery = function (query) {
   if(query.length > 0){
-   return `
-   <tr>
-     <td>
-      ${query}
-     </td>
-   </tr>
-   `;
+    return `
+      <p>Query to server</p>
+      <p class="query">
+        ${query}
+      </p>
+    `;
   }
- };
+};
  

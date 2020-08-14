@@ -155,22 +155,34 @@ form > .row {
   margin-right: 50px;
 }
 
-
 img.olTileImage {
 	max-width: none;
 }
+
 img-fluid {
 	max-width: 100%; 
 	height: auto
 } 
+
 #map {
-position: relative;
-border: 1px solid black;
-border-radius: 8px;
-height: 400px;  /* or as desired */
-width: 100%;  /* This means "100% of the width of its container", the .col-md-8 */
+  position: relative;
+  border: 1px solid black;
+  border-radius: 8px;
+  height: 400px;  /* or as desired */
+  width: 100%;  /* This means "100% of the width of its container", the .col-md-8 */
 }
+
+#provider-query {
+  word-wrap: break-word !important;
+}
+
+.query {
+  border-color: #454d55; 
+  background-color: #343a40; 
+  padding: 10px;
+}
+
 th {
-text-align: center;
+  text-align: center;
 }
 

@@ -11,6 +11,7 @@
 require 'json'
 
 class LocationsController < ApplicationController
+
   before_action :connect_to_server, only: [:index, :show]
 
   #-----------------------------------------------------------------------------
@@ -22,11 +23,8 @@ class LocationsController < ApplicationController
         update_page(params[:page])
       else
         if params[:query_string].present?
-          parameters = query_hash_from_string(params[:query_string])
-          initparams = parameters 
-          modifiedparams = zip_plus_radius_to_near(initparams) if parameters 
-    #     reply = @client.search(FHIR::Location,
-    #                         search: { parameters: parameters }) 
+          query_params = query_hash_from_string(params[:query_string])
+          modifiedparams = zip_plus_radius_to_address(query_params) if query_params 
           reply = @client.search(FHIR::Location,
                                   search: {
                                     parameters: modifiedparams.merge(
@@ -35,20 +33,19 @@ class LocationsController < ApplicationController
                                   }
                                 )         
         else
-    #      reply = @client.search(FHIR::Location)
-      reply = @client.search(FHIR::Location,
-      search: {
-        parameters: {
-          _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
-        }
-      }
-    )
-
+          reply = @client.search(FHIR::Location,
+                                  search: {
+                                    parameters: {
+                                      _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
+                                    }
+                                  }
+                                )
         end
+
         @bundle = reply.resource
         @search = "<Search String in Returned Bundle is empty>"
         @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
-         end
+      end
 
       update_bundle_links
 
@@ -186,7 +183,7 @@ class LocationsController < ApplicationController
     ]
   end
 
-# This version is different than the one in the other two controllers, since it uses "address-postalcode" instead of "zip" and it uses "zip" and not :zip
+  # This version is different than the one in the other two controllers, since it uses "address-postalcode" instead of "zip" and it uses "zip" and not :zip
   def zip_plus_radius_to_near(params)
     #  Convert zipcode + radius to  lat/long+radius in lat|long|radius|units format
     if params["address-postalcode"].present?   # delete zip and radius params and replace with near

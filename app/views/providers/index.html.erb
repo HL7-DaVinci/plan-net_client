@@ -18,8 +18,8 @@
 
       <label for="zip-input">Zip Code</label>
       <input id="zip-input" type="text" class="form-control bg-dark text-white" placeholder="06040" onkeyup="updateProviderZip(event)">
-     <label for="radius-input">Radius in Miles</label>
-      <input id="radius-input" type="text" class="form-control bg-dark text-white" placeholder="25 (default)" onkeyup="updateProviderRadius(event)">
+      <label for="radius-input">Radius in Miles</label>
+      <input id="radius-input" type="text" class="form-control bg-dark text-white" placeholder="10 (default)" onkeyup="updateProviderRadius(event)">
       <label for="city-input">City</label>
       <input id="city-input" type="text" class="form-control bg-dark text-white" placeholder="Cambridge" onkeyup="updateProviderCity(event)">
 
@@ -39,9 +39,9 @@
       </button>
     </div>
     <div class='col-9'>
+      <div id="provider-query">
+      </div>
       <div class='btn-group float-right mt-2' role='group'>
-         <table id="provider-query-table" class="table table-dark">
-        </table>
         <button id="previous-button" class="btn btn-outline-primary disabled">Previous</button>
         <button id="next-button" class="btn btn-outline-primary disabled">Next</button>
       </div>

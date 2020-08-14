@@ -36,14 +36,13 @@ class PharmaciesController < ApplicationController
         type: 'OUTPHARM',
         _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
       }
-      initparams = params 
-      modifiedparams = zip_plus_radius_to_near(initparams) if initparams 
-       query =
-        SEARCH_PARAMS
-          .select { |key, _value| modifiedparams[key].present? }
-          .each_with_object(base_params) do |(local_key, fhir_key), search_params|
-            search_params[fhir_key] = modifiedparams[local_key]
-          end
+      query_params = params 
+      modifiedparams = zip_plus_radius_to_address(query_params) if query_params 
+      query = SEARCH_PARAMS
+                .select { |key, _value| modifiedparams[key].present? }
+                .each_with_object(base_params) do |(local_key, fhir_key), search_params|
+                  search_params[fhir_key] = modifiedparams[local_key]
+                end
       @bundle = @client.search(
         FHIR::Location,
         search: { parameters: query }
@@ -104,7 +103,7 @@ class PharmaciesController < ApplicationController
   
   SEARCH_PARAMS = {
     network: '_has:OrganizationAffiliation:location:network',
-    near: 'near',
+    address: 'address',
     city: 'address-city',
     name: 'name:contains'
   }.freeze

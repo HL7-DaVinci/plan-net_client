@@ -26,15 +26,18 @@ gem 'bootsnap', '>= 1.1.0', require: false # Reduces boot times through caching;
 gem 'bootstrap', '~> 4.3.1'     # Integrates Bootstrap HTML, CSS, and JavaScript framework
 gem 'fhir_client'               # Handles FHIR client requests
 gem 'jquery-rails'              # Automate using jQuery with Rails
-gem 'leaflet-awesome-markers-rails', # Custom markers for Leaflet
-    '~> 2.0'
-gem 'leaflet-rails' # Handles Leaflet-based maps
+gem 'leaflet-awesome-markers-rails', '~> 2.0'  
+                                # Custom markers for Leaflet
+    
+gem 'leaflet-rails'             # Handles Leaflet-based maps
+gem 'pg'                        # Use Postgres
+gem 'geokit-rails'              # Provides geolocation-based searches
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw] # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'pry'
   gem 'rubocop'
-  gem 'sqlite3' # Use sqlite3 as the database for Active Record
+  gem 'seed_dump'
 end
 
 group :development do
@@ -43,10 +46,6 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'web-console', '>= 3.3.0'       # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   # gem 'capistrano-rails'            # Use Capistrano for deployment
-end
-
-group :production do
-  gem 'pg'
 end
 
 group :test do
