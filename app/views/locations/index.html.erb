@@ -2,7 +2,8 @@
   <section class='row col-12'>
     <div class='col-12'>
       <h3 class='float-left text-white'>Locations</h3>
-      <%= render 'partials/pagination', resource: :locations, header: true %>
+      <%= render 'partials/query' %>
+      <%= render 'partials/pagination', resource: :locations %>
     </div>
     <div class='col-12 search'>
       <div class="accordion" id="accordionExample">

@@ -3,7 +3,8 @@
     <div class='col-12'>
       <h3 class='float-left text-white'>Endpoints</h3>
       <%  header = true %>
-      <%= render 'partials/pagination', resource: :endpoints, header: true %>
+      <%= render 'partials/query' %>
+      <%= render 'partials/pagination', resource: :endpoints %>
     </div>
     <div class='col-12 search'>
       <div class="accordion" id="accordionExample">

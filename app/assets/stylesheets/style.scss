@@ -185,6 +185,11 @@ img-fluid {
   border-color: #454d55; 
   background-color: #343a40; 
   padding: 10px;
+  word-wrap: break-word !important;
+}
+
+div.query {
+  margin-left: 0px;
 }
 
 th {

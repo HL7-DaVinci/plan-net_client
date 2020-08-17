@@ -1,7 +1,4 @@
 <div class='btn-group float-right mt-2' role='group'>
-  <% if header %>
-  <h5> <%= @search %></h4>
-  <%  end %>
   <%= link_to('Previous',
     polymorphic_path(resource, page: 'previous'),
     class: "btn btn-outline-primary #{@previous_page_disabled}")

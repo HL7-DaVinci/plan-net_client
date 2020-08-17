@@ -2,12 +2,13 @@
   <section class='row col-12'>
     <div class='col-12'>
       <h3 class='float-left text-red'>Networks</h3>
-      <%= render 'partials/pagination', resource: :networks, header: true  %>
+      <%= render 'partials/query' %>
+      <%= render 'partials/pagination', resource: :networks %>
     </div>
     <div class='col-12 search'>
       <div class="accordion" id="accordionExample">
         <div class="card">
-          <div class="card-header text-white" id="headingOne">
+          <div class="card-header bg-dark text-white" id="headingOne">
             <h2 class="mb-0">
               <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                 Search
