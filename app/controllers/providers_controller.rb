@@ -90,7 +90,7 @@ class ProvidersController < ApplicationController
           specialty: practitioner.qualification.map(&:code).map(&:text).compact.uniq,
           telecom: roles.flat_map(&:telecom).map { |telecom| display_telecom(telecom) },
           address: practitioner_locations.flat_map(&:address).map { |address| display_address(address) },
-          photo: photo
+          photo: ActionController::Base.helpers.asset_path(photo)
         }
       end
   end
