@@ -28,10 +28,10 @@ class Practitioner < Resource
     @qualifications = practitioner.qualification
     @communications = practitioner.communication
     if gender.eql?("female")
-        @photo = "female-doctor-icon-9.jpg"
+        @photo = asset_path("female-doctor-icon-9.jpg")
         @phototitle = "Female Doctor Icon #279694"
     else
-         @photo = "doctor-icon-png-1.jpg"
+         @photo = asset_path("doctor-icon-png-1.jpg")
          @phototitle = "Doctor Icon Png #418309"
     end
 
