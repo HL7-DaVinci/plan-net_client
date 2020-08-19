@@ -11,6 +11,7 @@
 require 'json'
 
 class NetworksController < ApplicationController
+  
   before_action :connect_to_server, only: [:index, :show]
 
   #-----------------------------------------------------------------------------
@@ -41,6 +42,7 @@ class NetworksController < ApplicationController
           }
         )
       end
+      
       @bundle = reply.resource
       @search = "<Search String in Returned Bundle is empty>"
       @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
@@ -48,7 +50,7 @@ class NetworksController < ApplicationController
 
     update_bundle_links
 
-    @query_params = query_params
+    @query_params = Network.query_params
     @networks = @bundle.entry.map(&:resource)
   end
 
@@ -66,64 +68,4 @@ class NetworksController < ApplicationController
     @network = Network.new(fhir_network) unless fhir_network.nil?
   end
 
-  def query_params
-    [
-      {
-        name: 'Active',
-        value: 'active'
-      },
-      {
-        name: 'Address',
-        value: 'address'
-      },
-      {
-        name: 'City',
-        value: 'address-city'
-      },
-      {
-        name: 'Country',
-        value: 'address-country'
-      },
-      {
-        name: 'Coverage Area',
-        value: 'coverage-area'
-      },
-      {
-        name: 'Endpoint',
-        value: 'endpoint'
-      },
-      {
-        name: 'ID',
-        value: '_id'
-      },
-      {
-        name: 'Identifier',
-        value: 'identifier'
-      },
-      {
-        name: 'Identifier Assigner',
-        value: 'identifier-assigner'
-      },
-      {
-        name: 'Name',
-        value: 'name:contains'
-      },
-      {
-        name: 'Part Of',
-        value: 'partof'
-      },
-      {
-        name: 'Postal Code',
-        value: 'address-postalcode'
-      },
-      {
-        name: 'State',
-        value: 'address-state'
-      },
-      {
-        name: 'Type',
-        value: 'type'
-      }
-    ]
-  end
 end

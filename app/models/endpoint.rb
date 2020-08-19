@@ -47,4 +47,60 @@ class Endpoint < Resource
 
     server.search(FHIR::Endpoint, search: { parameters: parameters })
   end
+
+  #-----------------------------------------------------------------------------
+
+  def self.query_params
+    [
+      {
+        name: 'Connection Type',
+        value: 'connection-type'
+      },
+      {
+        name: 'ID',
+        value: '_id'
+      },
+      {
+        name: 'Identifier',
+        value: 'identifier'
+      },
+      {
+        name: 'Identifier Assigner',
+        value: 'identifier-assigner'
+      },
+      {
+        name: 'Intermediary',
+        value: 'via-intermediary'
+      },
+      {
+        name: 'MIME Type',
+        value: 'mime-type'
+      },
+      {
+        name: 'Name',
+        value: 'name'
+      },
+      {
+        name: 'Organization',
+        value: 'organization'
+      },
+      {
+        name: 'Payload Type',
+        value: 'payload-type'
+      },
+      {
+        name: 'Status',
+        value: 'status'
+      },
+      {
+        name: 'Use Case Standard',
+        value: 'usecase-standard'
+      },
+      {
+        name: 'Use Case Type',
+        value: 'usecase-type'
+      }
+    ]
+  end
+
 end

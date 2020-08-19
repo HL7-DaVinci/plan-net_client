@@ -12,6 +12,7 @@ require 'json'
 require 'uri'
 
 class PharmaciesController < ApplicationController
+
   before_action :connect_to_server
   before_action :fetch_plans, only: [:index]
 
@@ -23,7 +24,7 @@ class PharmaciesController < ApplicationController
     @params = {}
   end
 
-  
+  #-----------------------------------------------------------------------------
 
   # GET /pharmacies/search
 
@@ -55,42 +56,51 @@ class PharmaciesController < ApplicationController
       pharmacies: pharmacies,
       nextPage: @next_page_disabled,
       previousPage: @previous_page_disabled,
-  #    searchParams: preparequerytext(query,"Location")
+  #    searchParams: prepare_query_text(query,"Location")
       searchParams: @search 
     }
   end
 
+  #-----------------------------------------------------------------------------
   private
-  
+  #-----------------------------------------------------------------------------  
  
   def pharmacies
-    locations
-      .map do |location|
-        {
-          id: location.id,
-          name: location.name,
-          telecom: location.telecom.map { |telecom| display_telecom(telecom) },
-          address: display_address(location.address)
-        }
-      end
+    locations.map do |location|
+      {
+        id: location.id,
+        name: location.name,
+        telecom: location.telecom.map { |telecom| display_telecom(telecom) },
+        address: display_address(location.address)
+      }
+    end
   end
+
+  #-----------------------------------------------------------------------------
 
   def org_affiliations
     @org_affiliations ||= @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::OrganizationAffiliation }.map(&:resource)
   end
 
+  #-----------------------------------------------------------------------------
+
   def org_for_location(location_id)
     org_affiliations.find { |org_aff| org_aff.locations.any? { |location| location.reference.end_with? location_id } }
   end
+
+  #-----------------------------------------------------------------------------
 
   def locations
     @locations ||= @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::Location }.map(&:resource)
   end
 
+  #-----------------------------------------------------------------------------
+
   def display_telecom(telecom)
     telecom.system + ': ' + telecom.value
   end
 
+  #-----------------------------------------------------------------------------
 
   def format_zip(zip)
     if zip.length > 5
@@ -100,7 +110,8 @@ class PharmaciesController < ApplicationController
     end
   end
 
-  
+  #-----------------------------------------------------------------------------
+
   SEARCH_PARAMS = {
     network: '_has:OrganizationAffiliation:location:network',
     address: 'address',
@@ -108,6 +119,4 @@ class PharmaciesController < ApplicationController
     name: 'name:contains'
   }.freeze
 
-
- 
 end

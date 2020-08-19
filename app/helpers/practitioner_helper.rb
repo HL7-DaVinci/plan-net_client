@@ -9,6 +9,7 @@
 ################################################################################
 
 module PractitionerHelper
+
   def display_qualification(qualification)
     sanitize(qualification.identifier)
   end
@@ -38,4 +39,5 @@ module PractitionerHelper
       options [:class] = "img-fluid"
       image_tag(photo, options)
   end
+  
 end

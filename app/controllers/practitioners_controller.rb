@@ -11,6 +11,7 @@
 require 'json'
 
 class PractitionersController < ApplicationController
+
   before_action :connect_to_server, only: [:index, :show]
 
   # FHIR.logger.level = Logger::WARN
@@ -42,14 +43,15 @@ class PractitionersController < ApplicationController
           }
         )
       end
+
       @bundle = reply.resource
-       @search = "<Search String in Returned Bundle is empty>"
+      @search = "<Search String in Returned Bundle is empty>"
       @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
     end
 
     update_bundle_links
 
-    @query_params = query_params
+    @query_params = Practitioner.query_params
     @practitioners = @bundle.present? ? @bundle.entry.map(&:resource) : []
     @params = params
   end
@@ -66,60 +68,4 @@ class PractitionersController < ApplicationController
     @practitioner = Practitioner.new(fhir_practitioner) unless fhir_practitioner.nil?
   end
 
-  def query_params
-    [
-      {
-        name: 'Endpoint',
-        value: 'endpoint'
-      },
-      {
-        name: 'Family name',
-        value: 'family:contains'
-      },
-      {
-        name: 'Given name',
-        value: 'given:contains'
-      },
-      {
-        name: 'Identfier Assigner',
-        value: 'identifier-assigner'
-      },
-      {
-        name: 'Identifier',
-        value: 'identifier'
-      },
-      {
-        name: 'Name',
-        value: 'name:contains'
-      },
-      {
-        name: 'Phonetic',
-        value: 'phonetic'
-      },
-      {
-        name: 'Qualification Code',
-        value: 'qualification-code'
-      },
-      {
-        name: 'Qualification Issuer',
-        value: 'qualification-issuer'
-      },
-      {
-        name: 'Qualification Period',
-        value: 'qualification-period'
-      },
-      {
-        name: 'Qualification Status',
-        value: 'qualification-status'
-      },
-      {
-        name: 'Qualification Where Valid Code',
-        value: 'qualification-wherevalid-code'
-      },
-      {
-        name: 'Qualification Where Valid Location',
-        value: 'qualification-wherevalid-location'
-      }
-    ]
-  end
 end

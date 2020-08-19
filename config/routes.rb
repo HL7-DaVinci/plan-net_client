@@ -5,21 +5,24 @@ Rails.application.routes.draw do
   root 'welcome#index'
 
   resources :endpoints,                 only: [:index, :show]
-  resources :healthcare_services,       only: [:index, :show]
-  resources :insurance_plans, only: [:index, :show]
+  resources :insurance_plans,           only: [:index, :show]
   resources :locations,                 only: [:index, :show]
   resources :networks,                  only: [:index, :show]
-  resources :organizations, only: [:index, :show]
+  resources :organizations,             only: [:index, :show]
   resources :organization_affiliations, only: [:index, :show]
-  resources :practitioners, only: [:index, :show]
+  resources :practitioners,             only: [:index, :show]
   resources :practitioner_roles,        only: [:index, :show]
   resources :providers,                 only: [:index]
-  resources :pharmacies, only: [:index]
+  resources :pharmacies,                only: [:index]
+  resources :healthcare_services,       only: [:index]
 
   get '/providers/networks', to: 'providers#networks'
   get '/providers/search', to: 'providers#search'
 
   get '/pharmacies/networks', to: 'pharmacies#networks'
   get '/pharmacies/search', to: 'pharmacies#search'
+
+  get '/healthcare_services/networks', to: 'healthcare_services#networks'
+  get '/healthcare_services/search', to: 'healthcare_services#search'
 
 end

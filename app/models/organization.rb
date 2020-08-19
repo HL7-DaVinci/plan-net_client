@@ -9,6 +9,7 @@
 ################################################################################
 
 class Organization < Resource
+  
   include ActiveModel::Model
 
   attr_accessor :id, :meta, :implicit_rules, :language, :text, :identifier,
@@ -26,6 +27,106 @@ class Organization < Resource
     parse_address(organization)
 
   end
+
+  #-----------------------------------------------------------------------------
+
+  def self.query_params
+    [
+      {
+        name: 'Active',
+        value: 'active'
+      },
+      {
+        name: 'Address',
+        value: 'address'
+      },
+      {
+        name: 'City',
+        value: 'address-city'
+      },
+      {
+        name: 'Country',
+        value: 'address-country'
+      },
+      {
+        name: 'Coverage Area',
+        value: 'coverage-area'
+      },
+      {
+        name: 'Endpoint',
+        value: 'endpoint'
+      },
+      {
+        name: 'ID',
+        value: '_id'
+      },
+      {
+        name: 'Identifier',
+        value: 'identifier'
+      },
+      {
+        name: 'Identifier Assigner',
+        value: 'identifier-assigner'
+      },
+      {
+        name: 'Intermediary',
+        value: 'via-intermediary'
+      },
+      {
+        name: 'Name',
+        value: 'name:contains'
+      },
+      {
+        name: 'Part of',
+        value: 'partof'
+      },
+      {
+        name: 'Postal Code',
+        value: 'address-postalcode'
+      },
+      {
+        name: 'Qualification Code',
+        value: 'qualification-code'
+      },
+      {
+        name: 'Qualification Issuer',
+        value: 'qualification-issuer'
+      },
+      {
+        name: 'Qualification Status',
+        value: 'qualification-status'
+      },
+      {
+        name: 'Qualification Where Valid Code',
+        value: 'qualification-wherevalid-code'
+      },
+      {
+        name: 'Qualification Where Valid Location',
+        value: 'qualification-wherevalid-location'
+      },
+      {
+        name: 'State',
+        value: 'address-state'
+      },
+      {
+        name: 'Telecom Available Days',
+        value: 'telecom-available-days'
+      },
+      {
+        name: 'Telecom Available End Time',
+        value: 'telecom-available-endtime'
+      },
+      {
+        name: 'Telecom Available Start Time',
+        value: 'telecom-available-start-time'
+      },
+      {
+        name: 'Type',
+        value: 'type'
+      }
+    ]
+  end
+
 
   private
   # There a bunch of extensions.   We will start with the ones that are of direct interest and go from there.

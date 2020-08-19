@@ -172,11 +172,11 @@ img-fluid {
   width: 100%;  /* This means "100% of the width of its container", the .col-md-8 */
 }
 
-#provider-query, #pharmacy-query {
+#provider-query, #pharmacy-query, #healthcare-service-query {
   word-wrap: break-word !important;
 }
 
-#provider-search-button, #pharmacy-search-button {
+#provider-search-button, #pharmacy-search-button, #healthcare-service-search-button {
   margin-top: 20px;
   margin-bottom: 30px;
 }

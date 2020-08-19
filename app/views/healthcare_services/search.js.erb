@@ -1,0 +1,2 @@
+$('#healthcare-services-table').html(<%= escape_javascript(render :healthcare_services, healthcare_services: @healthcare_services) %>)
+$('#healthcare-service-query').html(<%= html_escape(@search) %>)

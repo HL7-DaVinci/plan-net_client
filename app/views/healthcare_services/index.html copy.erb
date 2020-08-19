@@ -1,0 +1,93 @@
+<section class='container'>
+  <section class='row col-12'>
+    <div class='col-12'>
+      <h3 class='float-left text-black'>Healthcare Services</h3>
+      <%= render 'partials/query' %>
+      <%= render 'partials/pagination', resource: :healthcare_services %>
+    </div>
+    <div class='col-12 search'>
+      <div class="accordion" id="accordionExample">
+        <div class="card">
+          <div class="card-header bg-dark text-white" id="headingOne">
+            <h2 class="mb-0">
+              <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                Search
+              </button>
+            </h2>
+          </div>
+          <div id="collapseOne" class="collapse bg-dark text-white" aria-labelledby="headingOne" data-parent="#accordionExample">
+            <div class="card-body">
+              <%= render 'partials/search_form',
+                         query_params: @query_params,
+                         search_path: healthcare_services_path
+              %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <table class='table table-dark'>
+      <tr>
+        <th scope='col'>Name</th>
+        <th scope='col'>Type</th>
+        <th scope='col'>Provided By</th>
+        <th scope='col'>Categories</th>
+        <th scope='col'>Specialties</th>
+        <th scope='col'>Locations</th>
+        <th scope='col'>Phone/Fax</th>
+        <th scope='col'>Coverage Areas</th>
+        <th scope='col'>Service Provision Codes</th>
+        <th scope='col'>Eligibilities</th>
+        <th scope='col'>Programs</th>
+        <th scope='col'>Characteristics</th>
+        <th scope='col'>Communications</th>
+        <th scope='col'>Referral Methods</th>
+        <th scope='col'>Available Times</th>
+        <th scope='col'>Not Availables</th>
+        <th scope='col'>Availability Exceptions</th>
+        <th scope='col'>Endpoints</th>
+      </tr>
+      <% @healthcare_services.each do |fhir_healthcare_service| %>
+        <% healthcare_service = HealthcareService.new(fhir_healthcare_service) %>
+        <tr>
+          <td>
+            <%= link_to healthcare_service.name, healthcare_service_path(healthcare_service.id) %>
+            <% if healthcare_service.appointment_required %>
+              <span class='appointment_required'>Appointment Required</span>
+            <% end %>
+          </td>
+          <td><%= display_coding_list(healthcare_service.type) %></td>
+          <td><%= display_reference( healthcare_service.provided_by)  %></td>
+          <td><%= display_list(healthcare_service.categories) %></td>
+          <td><%= display_coding_list(healthcare_service.specialties) %></td>
+          <td><%= display_reference_list(healthcare_service.locations) %></td>
+          <td>
+            <% healthcare_service.telecoms.each do |telecom| %>
+              <%= display_telecom(telecom) %><br />
+            <% end %>
+          </td>
+          <td><%= display_list(healthcare_service.coverage_areas) %></td>
+          <td><%= display_coding_list(healthcare_service.service_provision_codes) %></td>
+          <td><%= display_list(healthcare_service.eligibilities) %></td>
+          <td><%= display_list(healthcare_service.programs) %></td>
+          <td><%= display_list(healthcare_service.characteristics) %></td>
+          <td><%= display_list(healthcare_service.communications) %></td>
+          <td><%= display_coding_list(healthcare_service.referral_methods) %></td>
+          <td>
+            <% healthcare_service.available_times.each do |time| %>
+              <%= sanitize(time.daysOfWeek.join(', ')) %>: 
+              <%= sanitize(time.availableStartTime) %> to 
+              <%= sanitize(time.availableEndTime) %><br />
+            <% end %>
+          </td>
+          <td><%= display_list(healthcare_service.not_availables) %></td>
+          <td><%= sanitize(healthcare_service.availability_exceptions) %></td>
+          <td><%= display_list(healthcare_service.endpoints) %></td>
+        </tr>
+      <% end %>
+    </table>
+    <div class='col-12'>
+      <%= render 'partials/pagination', resource: :healthcare_services, header: false %>
+    </div>
+  </section>
+</section>

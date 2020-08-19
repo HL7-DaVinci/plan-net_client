@@ -15,19 +15,19 @@
       <select id="network-select" class="custom-select" onchange="updatePharmacyNetwork(event)"></select>
         <option value=""></option>
       </select>
-       <label for="zip-input">Zip Code</label>
+      <label for="zip-input">Zip Code</label>
       <input id="zip-input" type="text" class="form-control bg-dark text-white" placeholder="06040" maxlength=5 onkeyup="updatePharmacyZip(event)">
 
-     <label for="radius-input">Radius in Miles</label>
+      <label for="radius-input">Radius in Miles</label>
       <input id="radius-input" type="text" class="form-control bg-dark text-white" placeholder="10 (default)" onkeyup="updatePharmacyRadius(event)">
       <label for="city-input">City</label>
       <input id="city-input" type="text" class="form-control bg-dark text-white" placeholder="Cambridge" onkeyup="updatePharmacyCity(event)">
       
-   <label for="name-input">Name</label>
+      <label for="name-input">Name</label>
       <input id="name-input" type="text" class="form-control bg-dark text-white" placeholder="CVS" onkeyup="updatePharmacyName(event)">
       <button id="pharmacy-search-button", type="button" class="btn btn-outline-success" onclick="submitPharmacySearch(event)">
         Find 
-     </button>
+      </button>
     </div>
     <div class='col-9'>
       <div id="pharmacy-query">

@@ -44,4 +44,96 @@ class HealthcareService < Resource
     @availability_exceptions = healthcare_service.availabilityExceptions
     @endpoints = healthcare_service.endpoint
   end
+
+  #-----------------------------------------------------------------------------
+
+  def self.query_params
+    [
+      {
+        name: 'Active',
+        value: 'active'
+      },
+      {
+        name: 'Available Days',
+        value: 'available-days'
+      },
+      {
+        name: 'Available End Time',
+        value: 'available-end-time'
+      },
+      {
+        name: 'Available Start Time',
+        value: 'available-start-time'
+      },
+      {
+        name: 'Characteristic',
+        value: 'characteristic'
+      },
+      {
+        name: 'Coverage Area',
+        value: 'coverage-area'
+      },
+      {
+        name: 'Eligibility',
+        value: 'eligibility'
+      },
+      {
+        name: 'Endpoint',
+        value: 'endpoint'
+      },
+      {
+        name: 'ID',
+        value: '_id'
+      },
+      {
+        name: 'Identifier',
+        value: 'identifier'
+      },
+      {
+        name: 'Identifier Assigner',
+        value: 'identifier-assigner'
+      },
+      {
+        name: 'Intermediary',
+        value: 'via-intermediary'
+      },
+      {
+        name: 'Location',
+        value: 'location'
+      },
+      {
+        name: 'Name',
+        value: 'name'
+      },
+      {
+        name: 'New Patient',
+        value: 'new-patient'
+      },
+      {
+        name: 'New Patient Network',
+        value: 'new-patient-network'
+      },
+      {
+        name: 'Organization',
+        value: 'organization'
+      },
+      {
+        name: 'Program',
+        value: 'program'
+      },
+      {
+        name: 'Service Category',
+        value: 'service-category'
+      },
+      {
+        name: 'Service Type',
+        value: 'service-type'
+      },
+      {
+        name: 'Specialty',
+        value: 'specialty'
+      }
+    ]
+  end
+
 end
