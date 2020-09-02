@@ -172,11 +172,11 @@ class ApplicationController < ActionController::Base
     if params[:zip].present?   # delete zip and radius params and replace with address
       zip = params[:zip]
       params.delete(:zip)
+      radius = 5 # default
       if params[:radius].present?
         radius = params[:radius].to_i
         params.delete(:radius)
       end
-
       params[:address] = Zipcode.zipcodes_within(radius, zip).join(',')
     end
     params

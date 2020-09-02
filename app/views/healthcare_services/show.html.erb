@@ -9,6 +9,14 @@
       <% end %><br />
 
       <table class='table table-dark'>
+      <tr>
+      <td>Categories:</td>
+      <td><%= display_coding_list(@healthcare_service.categories) %></td>
+    </tr>
+    <tr>
+      <td>Specialties:</td> 
+      <td><%= display_coding_list(@healthcare_service.specialties) %></td>
+    </tr>
         <tr>
           <td>Type:</td> 
           <td><%= display_coding_list(@healthcare_service.type) %></td>
@@ -17,15 +25,7 @@
           <td>Provided by:</td>
           <td><%= display_reference( @healthcare_service.provided_by) %></td>
         </tr>
-        <tr>
-          <td>Categories:</td>
-          <td><%= display_list(@healthcare_service.categories) %></td>
-        </tr>
-        <tr>
-          <td>Specialties:</td> 
-          <td><%= display_coding_list(@healthcare_service.specialties) %></td>
-        </tr>
-        <tr>
+           <tr>
           <td>Locations:</td> 
           <td><%= display_reference_list(@healthcare_service.locations) %></td>
         </tr>

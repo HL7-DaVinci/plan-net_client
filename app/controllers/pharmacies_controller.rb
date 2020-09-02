@@ -33,22 +33,24 @@ class PharmaciesController < ApplicationController
     else
       base_params = {
         _revinclude: ['OrganizationAffiliation:location'],
-        type: 'OUTPHARM',
         _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
       }
       query_params = params 
       modifiedparams = zip_plus_radius_to_address(query_params) if query_params 
+      modifiedparams[:role]="member" # should be "pharmacy"
       query = SEARCH_PARAMS
                 .select { |key, _value| modifiedparams[key].present? }
                 .each_with_object(base_params) do |(local_key, fhir_key), search_params|
                   search_params[fhir_key] = modifiedparams[local_key]
                 end
-      @bundle = @client.search(
-        FHIR::Location,
-        search: { parameters: query }
-      ).resource
+      binding.pry 
+       @bundle = @client.search(
+         FHIR::Location,
+         search: { parameters: query }).resource 
+         binding.pry 
       @search = "<Search String in Returned Bundle is empty>"
       @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
+      binding.pry 
     end
     update_bundle_links
     render json: {
@@ -102,6 +104,7 @@ class PharmaciesController < ApplicationController
 
   
   SEARCH_PARAMS = {
+    role:     '_has:OrganizationAffiliation:location:role',
     network: '_has:OrganizationAffiliation:location:network',
     address: 'address',
     city: 'address-city',
