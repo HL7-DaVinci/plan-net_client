@@ -43,14 +43,14 @@ class PharmaciesController < ApplicationController
                 .each_with_object(base_params) do |(local_key, fhir_key), search_params|
                   search_params[fhir_key] = modifiedparams[local_key]
                 end
-      binding.pry 
+      
        @bundle = @client.search(
          FHIR::Location,
          search: { parameters: query }).resource 
          binding.pry 
       @search = "<Search String in Returned Bundle is empty>"
       @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
-      binding.pry 
+ 
     end
     update_bundle_links
     render json: {
