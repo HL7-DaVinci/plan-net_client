@@ -3,12 +3,14 @@
   <div class='row'>
     <div class='col-3'>
       <%= form_for :healthcare_service, url: search_healthcare_services_path, remote: true, method: "get" do |f| %>
-        <%= f.label :insurance_plan %><br />
+        <!--<%= f.label :insurance_plan %><br />
         <%= f.select :insurance_plan, @plans, { include_blank: true }, 
                 { class: 'custom-select bg-dark text-white' } %>
         <%= f.label :network %><br />
-        <%= f.select :network, [], { include_blank: true },
-                { class: 'custom-select bg-dark text-white' } %>
+        <%= f.select :network, grouped_options_for_select(@networks), { include_blank: true },
+                { class: 'custom-select bg-dark text-white' } %>-->
+        <%= f.label :organization %><br />
+        <%= f.text_field :organization, class: 'form-control bg-dark text-white' %>
         <%= f.label :type %><br />
         <%= f.select :type, @types, { include_blank: true }, 
                 { class: 'custom-select bg-dark text-white' } %>

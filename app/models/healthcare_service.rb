@@ -69,7 +69,8 @@ class HealthcareService < Resource
   #-----------------------------------------------------------------------------
 
   SEARCH_PARAMS = {
-    network: 'network',
+    #network: '_has:providedBy:organizationaffiliation:network',
+    organization: 'organization.name',
     category: 'service-category', 
     type: 'service-type',
     specialty: 'specialty',

@@ -22,12 +22,24 @@ class HealthcareServicesController < ApplicationController
 
     @params = {}
     @plans = @plans.collect{|p| [p[:name], p[:value]]}
+
+    @networks     = @networks_by_plan.collect do |nyp| 
+                      [
+                        nyp.first, 
+                        nyp.last.collect do |n| 
+                          [n.display, n.reference]
+                        end
+                      ]
+                    end
+
     @specialties  = NUCC_CODES.
                       sort_by { |code| code[:name] }.
                       collect{|n| [n[:name], n[:value]]}
+
     @categories   = HealthcareService.categories.
                       sort_by { |category| category[:name] }.
                       collect{|c| [c[:name], c[:value]]}
+                      
     @types        = HealthcareService.types.
                       sort_by { |type| type[:name] }.
                       collect{|t| [t[:name], t[:value]]}
