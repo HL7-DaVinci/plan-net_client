@@ -1,10 +1,10 @@
 <tr>
-  <th>Name</th>
-  <th>Provided By</th>
-  <th>Categories</th>
-  <th>Specialties</th>
-  <th>Locations</th>
-  <th>Phone/Fax</th>
+  <th scope='col'>Name</th>
+  <th scope='col'>Provided By</th>
+  <th scope='col'>Categories</th>
+  <th scope='col'>Specialties</th>
+  <th scope='col'>Locations</th>
+  <th scope='col'>Phone/Fax</th>
 </tr>
 <% @healthcare_services.each do |fhir_healthcare_service| %>
   <% healthcare_service = HealthcareService.new(fhir_healthcare_service) %> 
