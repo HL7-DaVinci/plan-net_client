@@ -9,8 +9,6 @@
         <%= f.label :network %><br />
         <%= f.select :network, grouped_options_for_select(@networks), { include_blank: true },
                 { class: 'custom-select bg-dark text-white' } %>-->
-        <%= f.label :organization %><br />
-        <%= f.text_field :organization, class: 'form-control bg-dark text-white' %>
         <%= f.label :type %><br />
         <%= f.select :type, @types, { include_blank: true }, 
                 { class: 'custom-select bg-dark text-white' } %>
@@ -28,6 +26,8 @@
         <%= f.text_field :city, class: 'form-control bg-dark text-white' %>
         <%= f.label :name %><br />
         <%= f.text_field :name, class: 'form-control bg-dark text-white' %>
+        <%= f.label :organization %><br />
+        <%= f.text_field :organization, class: 'form-control bg-dark text-white' %>
         <%= f.submit 'Find', class: 'btn btn-outline-success', id: 'healthcare-service-search-button' %>
       <% end %>
     </div>
