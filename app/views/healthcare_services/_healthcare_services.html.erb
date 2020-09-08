@@ -1,80 +1,28 @@
-<% healthcare_services.each do |fhir_healthcare_service| %>
+<tr>
+  <th>Name</th>
+  <th>Provided By</th>
+  <th>Categories</th>
+  <th>Specialties</th>
+  <th>Locations</th>
+  <th>Phone/Fax</th>
+</tr>
+<% @healthcare_services.each do |fhir_healthcare_service| %>
   <% healthcare_service = HealthcareService.new(fhir_healthcare_service) %> 
   <tr>
-    <td>Type:</td> 
-    <td><%= display_coding_list(healthcare_service.type) %></td>
-  </tr>
-  <tr>
-    <td>Provided by:</td>
+    <td>
+      <%= link_to healthcare_service.name, healthcare_service_path(healthcare_service.id) %>
+      <% if healthcare_service.appointment_required %>
+        <span class='appointment_required'>Appointment Required</span>
+      <% end %>
+    </td>
     <td><%= display_reference(healthcare_service.provided_by) %></td>
-  </tr>
-  <tr>
-    <td>Categories:</td>
-    <td><%= display_list(healthcare_service.categories) %></td>
-  </tr>
-  <tr>
-    <td>Specialties:</td> 
+    <td><%= display_coding_list(healthcare_service.categories) %></td>
     <td><%= display_coding_list(healthcare_service.specialties) %></td>
-  </tr>
-  <tr>
-    <td>Locations:</td> 
     <td><%= display_reference_list(healthcare_service.locations) %></td>
-  </tr>
-  <tr>
-    <td>Phone/Fax:</td>
     <td>
       <% healthcare_service.telecoms.each do |telecom| %>
         <%= display_telecom(telecom) %><br />
       <% end %>
     </td>
-  </tr>
-  <tr>
-    <td>Coverage Areas:</td>
-    <td><%= display_list(healthcare_service.coverage_areas) %></td>
-  </tr>
-  <tr>
-    <td>Service Provision Codes:</td>
-    <td><%= display_coding_list(healthcare_service.service_provision_codes) %></td>
-  </tr>
-  <tr>
-    <td>Eligibilities:</td>
-    <td><%= display_list(healthcare_service.eligibilities) %></td>
-  </tr>
-  <tr>
-    <td>Programs:</td> 
-    <td><%= display_list(healthcare_service.programs) %></td>
-  </tr>
-  <tr>
-    <td>Characteristics:</td> 
-    <td><%= display_list(healthcare_service.characteristics) %></td>
-  </tr>
-  <tr>
-    <td>Communications:</td>
-    <td><%= display_list(healthcare_service.communications) %></td>
-  </tr>
-  <tr>
-    <td>Referral Methods:</td>
-    <td><%= display_coding_list(healthcare_service.referral_methods) %></td>
-  </tr>
-  <tr>
-    <td>Available Times:</td>
-    <td>
-      <% healthcare_service.available_times.each do |time| %>
-        <%= sanitize(time.daysOfWeek.join(', ')) %>: 
-        <%= sanitize(time.availableStartTime) %> to 
-        <%= sanitize(time.availableEndTime) %><br />
-      <% end %>
-    </td>
-  <tr>
-    <td>Not Availables:</td> 
-    <td><%= display_list(healthcare_service.not_availables) %></td>
-  </tr>
-  <tr>
-    <td>Availability Exceptions:</td> 
-    <td><%= sanitize(healthcare_service.availability_exceptions) %></td>
-  </tr>
-  <tr>
-    <td>Endpoints:</td>
-    <td><%= display_list(healthcare_service.endpoints) %></td>
   </tr>
 <% end %>

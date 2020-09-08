@@ -79,7 +79,7 @@ module ApplicationHelper
         result << coding.map(&:display)
       end
 
-      result = result.join(', ')
+      result = result.join(',<br />')
     end
 
     sanitize(result)
@@ -120,16 +120,19 @@ module ApplicationHelper
   end
 
   #-----------------------------------------------------------------------------
-  # use_controller allows us to display networks using the network controller/view, rather than the organization controller/view.
+  
+  # use_controller allows us to display networks using the network 
+  # controller/view, rather than the organization controller/view.
   # a network is-a organization, but their display needs may be distinct.
+
   def display_reference_list(list,use_controller: "default")
-    sanitize(list.map { |element| display_reference(element,use_controller:use_controller) }.join(', '))
+    sanitize(list.map { |element| display_reference(element,use_controller:use_controller) }.join(',<br />'))
   end
 
   #-----------------------------------------------------------------------------
 
   def display_extension_list(list)
-    sanitize(list.map { |extension| display_reference(extension.valueReference) }.join(', '))
+    sanitize(list.map { |extension| display_reference(extension.valueReference) }.join(',<br />'))
   end
 
   #-----------------------------------------------------------------------------
@@ -138,7 +141,7 @@ module ApplicationHelper
     if list.empty?
       result = 'None'
     else
-      result = list.map(&:text).join(', ')
+      result = list.map(&:text).join(',<br />')
     end
 
     sanitize(result)

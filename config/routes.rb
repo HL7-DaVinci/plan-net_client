@@ -4,6 +4,16 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root 'welcome#index'
 
+  resources :healthcare_services, only: [:index, :show] do
+    get 'search', on: :collection
+  end
+
+  get '/providers/networks', to: 'providers#networks'
+  get '/providers/search', to: 'providers#search'
+
+  get '/pharmacies/networks', to: 'pharmacies#networks'
+  get '/pharmacies/search', to: 'pharmacies#search'
+
   resources :endpoints,                 only: [:index, :show]
   resources :insurance_plans,           only: [:index, :show]
   resources :locations,                 only: [:index, :show]
@@ -14,15 +24,7 @@ Rails.application.routes.draw do
   resources :practitioner_roles,        only: [:index, :show]
   resources :providers,                 only: [:index]
   resources :pharmacies,                only: [:index]
-  resources :healthcare_services,       only: [:index]
 
-  get '/providers/networks', to: 'providers#networks'
-  get '/providers/search', to: 'providers#search'
 
-  get '/pharmacies/networks', to: 'pharmacies#networks'
-  get '/pharmacies/search', to: 'pharmacies#search'
-
-  get '/healthcare_services/networks', to: 'healthcare_services#networks'
-  get '/healthcare_services/search', to: 'healthcare_services#search'
 
 end

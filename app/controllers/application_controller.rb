@@ -142,7 +142,7 @@ class ApplicationController < ActionController::Base
       }
       @networks_by_plan [ entry&.resource&.id] = entry&.resource&.network
     end
-   @plans.sort_by! { |hsh| hsh[:name] }
+    @plans.sort_by! { |hsh| hsh[:name] }
   rescue => exception
     redirect_to root_path, flash: { error: 'Please specify a plan network server' }
 
@@ -168,7 +168,7 @@ class ApplicationController < ActionController::Base
   #-----------------------------------------------------------------------------
 
   def zip_plus_radius_to_address(params)
-    #  Convert zipcode + radius to  address='zipcode list'
+    #  Convert zipcode + radius to address='zipcode list'
     if params[:zip].present?   # delete zip and radius params and replace with address
       zip = params[:zip]
       params.delete(:zip)

@@ -3,7 +3,7 @@
   <div class='row'>
     <div class='col-3'>
       <label for="plan-select">Insurance Plan</label>
-      <select id="plan-select" class="custom-select"  data-networksByPlan="<%=@networks_by_plan.to_json %>" onchange="updateProviderNetworkList(event)">
+      <select id="plan-select" class="custom-select bg-dark text-white"  data-networksByPlan="<%=@networks_by_plan.to_json %>" onchange="updateProviderNetworkList(event)">
         <option value=""></option>
 
         <% @plans.each do |param| %>
@@ -12,7 +12,7 @@
       </select>
 
       <label for="network-select">Network</label>
-      <select id="network-select" class="custom-select" onchange="updateProviderNetwork(event)"></select>
+      <select id="network-select" class="custom-select bg-dark text-white" onchange="updateProviderNetwork(event)"></select>
         <option value=""></option>
       </select>
 
@@ -24,7 +24,7 @@
       <input id="city-input" type="text" class="form-control bg-dark text-white" placeholder="Cambridge" onkeyup="updateProviderCity(event)">
 
       <label for="specialty-select">Specialty</label>
-      <select id="specialty-select" class="custom-select" onchange="updateProviderSpecialty(event)">
+      <select id="specialty-select" class="custom-select bg-dark text-white" onchange="updateProviderSpecialty(event)">
       <option value=""></option>
         <% @nucc_codes.each do |param| %>
           <option value="<%= param[:value] %>"><%= param[:name] %></option>

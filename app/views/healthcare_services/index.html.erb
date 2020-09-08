@@ -2,64 +2,37 @@
   <h3 class='row text-white'>General Search</h3>
   <div class='row'>
     <div class='col-3'>
-      <label for="plan-select">Insurance Plan</label>
-      <select id="plan-select" class="custom-select" data-networksByPlan="<%= @networks_by_plan.to_json %>" onchange="updateHealthcareServiceNetworkList(event)">
-        <option value=""></option>
-
-        <% @plans.each do |param| %>
-          <option value="<%= param[:value] %>"><%= param[:name] %></option>
-        <% end %>
-      </select>
-
-      <label for="network-select">Network</label>
-      <select id="network-select" class="custom-select" onchange="updateHealthcareServiceNetwork(event)"></select>
-        <option value=""></option>
-      </select>
-
-      <label for="category-select">Type</label>
-      <select id="category-select" class="custom-select" onchange="updateHealthcareServiceType(event)">
-        <option value=""></option>
-        <% @types.each do |type| %>
-          <option value="<%= type[:value] %>"><%= type[:name] %></option>
-        <% end %>
-      </select>
-
-      <label for="category-select">Category</label>
-      <select id="category-select" class="custom-select" onchange="updateHealthcareServiceCategory(event)">
-        <option value=""></option>
-        <% @categories.each do |category| %>
-          <option value="<%= category[:value] %>"><%= category[:name] %></option>
-        <% end %>
-      </select>
-
-      <label for="specialty-select">Specialty</label>
-      <select id="specialty-select" class="custom-select" onchange="updateHealthcareServiceSpecialty(event)">
-        <option value=""></option>
-        <% @nucc_codes.each do |param| %>
-          <option value="<%= param[:value] %>"><%= param[:name] %></option>
-        <% end %>
-      </select>
-
-      <label for="zip-input">Zip Code</label>
-      <input id="zip-input" type="text" class="form-control bg-dark text-white" placeholder="06040" maxlength=5 onkeyup="updateHealthcareServiceZip(event)">
-
-      <label for="radius-input">Radius in Miles</label>
-      <input id="radius-input" type="text" class="form-control bg-dark text-white" placeholder="10 (default)" onkeyup="updateHealthcareServiceRadius(event)">
-      <label for="city-input">City</label>
-      <input id="city-input" type="text" class="form-control bg-dark text-white" placeholder="Cambridge" onkeyup="updateHealthcareServiceCity(event)">
-      
-      <label for="name-input">Name</label>
-      <input id="name-input" type="text" class="form-control bg-dark text-white" placeholder="CVS" onkeyup="updateHealthcareServiceName(event)">
-      <button id="healthcare-service-search-button", type="button" class="btn btn-outline-success" onclick="submitHealthcareServiceSearch(event)">
-        Find 
-      </button>
+      <%= form_for :healthcare_service, url: search_healthcare_services_path, remote: true, method: "get" do |f| %>
+        <%= f.label :insurance_plan %><br />
+        <%= f.select :insurance_plan, @plans, { include_blank: true }, 
+                { class: 'custom-select bg-dark text-white' } %>
+        <%= f.label :network %><br />
+        <%= f.select :network, [], { include_blank: true },
+                { class: 'custom-select bg-dark text-white' } %>
+        <%= f.label :type %><br />
+        <%= f.select :type, @types, { include_blank: true }, 
+                { class: 'custom-select bg-dark text-white' } %>
+        <%= f.label :category %><br />
+        <%= f.select :category, @categories, { include_blank: true }, 
+                { class: 'custom-select bg-dark text-white' } %>
+        <%= f.label :specialty %><br />
+        <%= f.select :specialty, @specialties, { include_blank: true }, 
+                { class: 'custom-select bg-dark text-white' } %>
+        <%= f.label :zip %><br />
+        <%= f.text_field :zip, class: 'form-control bg-dark text-white' %>
+        <%= f.label :radius %><br />
+        <%= f.text_field :radius, class: 'form-control bg-dark text-white' %>
+        <%= f.label :city %><br />
+        <%= f.text_field :city, class: 'form-control bg-dark text-white' %>
+        <%= f.label :name %><br />
+        <%= f.text_field :name, class: 'form-control bg-dark text-white' %>
+        <%= f.submit 'Find', class: 'btn btn-outline-success', id: 'healthcare-service-search-button' %>
+      <% end %>
     </div>
     <div class='col-9'>
       <div id="healthcare-service-query">
       </div>
-      <div class='btn-group float-right mt-2' role='group'>
-        <button id="previous-button" class="btn btn-outline-primary disabled">Previous</button>
-        <button id="next-button" class="btn btn-outline-primary disabled">Next</button>
+      <div id="pagination">
       </div>
       <table id="healthcare-services-table" class="table table-dark">
       </table>

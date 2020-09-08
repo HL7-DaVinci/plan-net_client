@@ -22,51 +22,16 @@ class HealthcareServicesController < ApplicationController
 
   def index
     @params = {}
-    @nucc_codes = NUCC_CODES.sort_by { |code| code[:name] }
-    @categories = CATEGORIES.sort_by { |category| category[:name] }
-    @types = TYPES.sort_by { |type| type[:name] }
-  end
-
-  #-----------------------------------------------------------------------------
-
-  # GET /healthcare_services/search
-
-  def search
-    if params[:page].present?
-      update_page(params[:page])
-    else
-      base_params = {
-        _include: ['OrganizationAffiliation:healthcareService', 'OrganizationAffiliation:location'],
-        _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-OrganizationAffiliation'
-      }
-
-      query_params = params 
-      modifiedparams = zip_plus_radius_to_address(query_params) if query_params 
-
-      query = SEARCH_PARAMS
-                .select { |key, _value| modifiedparams[key].present? }
-                .each_with_object(base_params) do |(local_key, fhir_key), search_params|
-                  search_params[fhir_key] = modifiedparams[local_key]
-                end
-
-      @bundle = @client.search(
-        FHIR::OrganizationAffiliation,
-        search: { parameters: query }
-      ).resource
-
-      @search = "<Search String in Returned Bundle is empty>"
-      @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
-    end
-
-    update_bundle_links
-
-    render json: {
-      healthcare_services: healthcare_services,
-      nextPage: @next_page_disabled,
-      previousPage: @previous_page_disabled,
-  #    searchParams: prepare_query_text(query,"Location")
-      searchParams: @search 
-    }
+    @plans = @plans.collect{|p| [p[:name], p[:value]]}
+    @specialties  = NUCC_CODES.
+                      sort_by { |code| code[:name] }.
+                      collect{|n| [n[:name], n[:value]]}
+    @categories   = CATEGORIES.
+                      sort_by { |category| category[:name] }.
+                      collect{|c| [c[:name], c[:value]]}
+    @types        = TYPES.
+                      sort_by { |type| type[:name] }.
+                      collect{|t| [t[:name], t[:value]]}
   end
 
   #-----------------------------------------------------------------------------
@@ -81,6 +46,54 @@ class HealthcareServicesController < ApplicationController
 
     @healthcare_service = HealthcareService.new(fhir_healthcare_service) unless
                               fhir_healthcare_service.nil?
+  end
+
+  #-----------------------------------------------------------------------------
+
+  # GET /healthcare_services/search
+
+  def search
+    if params[:page].present?
+      update_page(params[:page])
+    else
+      base_params = {
+        _include: ['HealthcareService:providedBy', 'HealthcareService.location'],
+        _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-HealthcareService'
+      }
+
+      query_params = params[:healthcare_service] 
+      modified_params = zip_plus_radius_to_address(query_params) if query_params 
+
+      filtered_params = SEARCH_PARAMS.select { |key, _value| modified_params[key].present? }
+      query = filtered_params
+                .each_with_object(base_params) do |(local_key, fhir_key), search_params|
+                  search_params[fhir_key] = modified_params[local_key]
+                end
+
+      @bundle = @client.search(
+        FHIR::HealthcareService,
+        search: { parameters: query }
+      ).resource
+    end
+
+    @healthcare_services ||= @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::HealthcareService }.map(&:resource)
+
+    @search = "<Search String in Returned Bundle is empty>"
+    @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
+
+    update_bundle_links
+
+    respond_to do |format|
+      format.js {}
+    end
+
+  #   render json: {
+  #     healthcare_services: healthcare_services,
+  #     nextPage: @next_page_disabled,
+  #     previousPage: @previous_page_disabled,
+  # #    searchParams: prepare_query_text(query,"Location")
+  #     searchParams: @search 
+  #   }
   end
 
   #-----------------------------------------------------------------------------
@@ -112,8 +125,8 @@ class HealthcareServicesController < ApplicationController
 
   #-----------------------------------------------------------------------------
 
-  def locations
-    @locations ||= @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::Location }.map(&:resource)
+  def healthcare_services
+    @healthcare_services ||= @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::HealthcareService }.map(&:resource)
   end
 
   #-----------------------------------------------------------------------------
@@ -136,12 +149,12 @@ class HealthcareServicesController < ApplicationController
 
   SEARCH_PARAMS = {
     network: 'network',
-    category: 'healthcareService.service-category', 
-    type: 'healthcareService.service-type',
+    category: 'service-category', 
+    type: 'service-type',
     specialty: 'specialty',
     address: 'location.address',
     city: 'location.address-city',
-    name: 'healthcareService.name'
+    name: 'name'
   }.freeze
 
   #-----------------------------------------------------------------------------
