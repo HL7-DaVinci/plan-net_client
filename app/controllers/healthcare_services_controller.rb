@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 ################################################################################
 #
 # Healthcare Services Controller
@@ -62,15 +60,20 @@ class HealthcareServicesController < ApplicationController
         _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-HealthcareService'
       }
 
-      query_params = params[:healthcare_service] 
+      query_params = params[:healthcare_service]
+
+      # Build the location-based query if zipcode and radius has been specified 
       modified_params = zip_plus_radius_to_address(query_params) if query_params 
 
+      # Only include the allowed search parameters...
       filtered_params = HealthcareService.search_params.select { |key, _value| modified_params[key].present? }
-      query = filtered_params
-                .each_with_object(base_params) do |(local_key, fhir_key), search_params|
-                  search_params[fhir_key] = modified_params[local_key]
-                end
 
+      # Build the full query with the base parameters and the filtered parameters
+      query = filtered_params.each_with_object(base_params) do |(local_key, fhir_key), search_params|
+        search_params[fhir_key] = modified_params[local_key]
+      end
+
+      # Get the matching resources from the FHIR server
       @bundle = @client.search(
         FHIR::HealthcareService,
         search: { parameters: query }
@@ -79,9 +82,11 @@ class HealthcareServicesController < ApplicationController
 
     @healthcare_services ||= @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::HealthcareService }.map(&:resource)
 
+    # Prepare the query string for display on the page
     @search = "<Search String in Returned Bundle is empty>"
     @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
 
+    # Prepare the links for the Next and Previous buttons
     update_bundle_links
 
     respond_to do |format|
