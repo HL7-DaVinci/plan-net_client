@@ -37,7 +37,7 @@ class PharmaciesController < ApplicationController
       }
       query_params = params 
       modifiedparams = zip_plus_radius_to_address(query_params) if query_params 
-      modifiedparams[:role]="member" # should be "pharmacy"
+      modifiedparams[:role]="pharmacy" 
       query = SEARCH_PARAMS
                 .select { |key, _value| modifiedparams[key].present? }
                 .each_with_object(base_params) do |(local_key, fhir_key), search_params|
@@ -47,7 +47,7 @@ class PharmaciesController < ApplicationController
        @bundle = @client.search(
          FHIR::Location,
          search: { parameters: query }).resource 
-         binding.pry 
+         # binding.pry 
       @search = "<Search String in Returned Bundle is empty>"
       @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
  
