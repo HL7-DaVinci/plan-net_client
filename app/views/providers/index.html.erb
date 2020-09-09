@@ -15,22 +15,19 @@
       <select id="network-select" class="custom-select bg-dark text-white" onchange="updateProviderNetwork(event)"></select>
         <option value=""></option>
       </select>
-
+      <label for="specialty-select">Specialty</label>
+      <select id="specialty-select" class="custom-select bg-dark text-white" onchange="updateProviderSpecialty(event)">
+      <option value=""></option>
+        <% @specialties.each do |param| %>
+          <option value="<%= param[:value] %>"><%= param[:name] %></option>
+        <% end %>
+      </select>
       <label for="zip-input">Zip Code</label>
       <input id="zip-input" type="text" class="form-control bg-dark text-white" placeholder="06040" onkeyup="updateProviderZip(event)">
       <label for="radius-input">Radius in Miles</label>
       <input id="radius-input" type="text" class="form-control bg-dark text-white" placeholder="10 (default)" onkeyup="updateProviderRadius(event)">
       <label for="city-input">City</label>
       <input id="city-input" type="text" class="form-control bg-dark text-white" placeholder="Cambridge" onkeyup="updateProviderCity(event)">
-
-      <label for="specialty-select">Specialty</label>
-      <select id="specialty-select" class="custom-select bg-dark text-white" onchange="updateProviderSpecialty(event)">
-      <option value=""></option>
-        <% @nucc_codes.each do |param| %>
-          <option value="<%= param[:value] %>"><%= param[:name] %></option>
-        <% end %>
-      </select>
-
       <label for="name-input">Name</label>
       <input id="name-input" type="text" class="form-control bg-dark text-white" onkeyup="updateProviderName(event)">
 

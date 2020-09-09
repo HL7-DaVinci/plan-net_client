@@ -22,7 +22,7 @@ class ProvidersController < ApplicationController
 
   def index
     @params = {}
-    @nucc_codes = NUCC_CODES.sort_by { |code| code[:name] }
+    @specialties = INDIVIDUAL_AND_GROUP_SPECIALTIES.sort_by { |code| code[:name] }
   end
 
   #-----------------------------------------------------------------------------

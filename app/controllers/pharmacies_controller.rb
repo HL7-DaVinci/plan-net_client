@@ -23,6 +23,9 @@ class PharmaciesController < ApplicationController
     fetch_plans
 
     @params = {}
+    @specialties = PHARMACY_SPECIALTIES.
+            sort_by { |code| code[:name] }.
+            collect{|n| [n[:name], n[:value]]}
 
     @plans = @plans.collect{|p| [p[:name], p[:value]]}
 
@@ -45,18 +48,23 @@ class PharmaciesController < ApplicationController
       update_page(params[:page])
     else
       base_params = {
-        _revinclude: ['OrganizationAffiliation:location'], type: 'OUTPHARM',
+        _revinclude: ['OrganizationAffiliation:location'], #type: 'OUTPHARM',
         _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
       }
 
       query_params = params[:pharmacy]
 
       # Build the location-based query if zipcode and radius has been specified 
-      modified_params = zip_plus_radius_to_address(query_params) if query_params 
+      if query_params
+        modified_params = zip_plus_radius_to_address(query_params) 
+      else
+        modified_params={}
+      end
+      modified_params[:role]="pharmacy" 
 
       # Only include the allowed search parameters...
       filtered_params = Location.search_params.select { |key, _value| modified_params[key].present? }
-
+  
       # Build the full query with the base parameters and the filtered parameters
       query = filtered_params.each_with_object(base_params) do |(local_key, fhir_key), search_params|
         search_params[fhir_key] = modified_params[local_key]
@@ -83,4 +91,8 @@ class PharmaciesController < ApplicationController
     end
   end
 
+
+
+
+ 
 end

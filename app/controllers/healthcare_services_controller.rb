@@ -32,7 +32,7 @@ class HealthcareServicesController < ApplicationController
                       ]
                     end
 
-    @specialties  = NUCC_CODES.
+    @specialties  = SPECIALTIES.
                       sort_by { |code| code[:name] }.
                       collect{|n| [n[:name], n[:value]]}
 
@@ -43,6 +43,8 @@ class HealthcareServicesController < ApplicationController
     @types        = HealthcareService.types.
                       sort_by { |type| type[:name] }.
                       collect{|t| [t[:name], t[:value]]}
+
+    @healthcare_services = [] 
   end
 
   #-----------------------------------------------------------------------------

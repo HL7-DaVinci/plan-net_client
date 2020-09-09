@@ -168,7 +168,9 @@ class Location < Resource
   #-----------------------------------------------------------------------------
 
   SEARCH_PARAMS = {
+    role:     '_has:OrganizationAffiliation:location:role',
     network: '_has:OrganizationAffiliation:location:network',
+    specialty: '_has:OrganizationAffiliation:location:specialty',
     address: 'address',
     city: 'address-city',
     name: 'name:contains'

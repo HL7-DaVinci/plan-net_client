@@ -9,6 +9,9 @@
         <%= f.label :network %><br />
         <%= f.select :network, grouped_options_for_select(@networks), { include_blank: true },
                 { class: 'custom-select bg-dark text-white' } %>
+        <%= f.label :specialty %><br />
+            <%= f.select :specialty, @specialties, { include_blank: true }, 
+                        { class: 'custom-select bg-dark text-white' } %>
         <%= f.label :zip %><br />
         <%= f.text_field :zip, class: 'form-control bg-dark text-white' %>
         <%= f.label :radius %><br />

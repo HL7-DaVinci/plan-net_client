@@ -9,16 +9,16 @@
         <%= f.label :network %><br />
         <%= f.select :network, grouped_options_for_select(@networks), { include_blank: true },
                 { class: 'custom-select bg-dark text-white' } %>-->
-        <%= f.label :type %><br />
-        <%= f.select :type, @types, { include_blank: true }, 
-                { class: 'custom-select bg-dark text-white' } %>
-        <%= f.label :category %><br />
+         <%= f.label :category %><br />
         <%= f.select :category, @categories, { include_blank: true }, 
                 { class: 'custom-select bg-dark text-white' } %>
         <%= f.label :specialty %><br />
         <%= f.select :specialty, @specialties, { include_blank: true }, 
                 { class: 'custom-select bg-dark text-white' } %>
-        <%= f.label :zip %><br />
+          <%= f.label :type %><br />
+                <%= f.select :type, @types, { include_blank: true }, 
+                { class: 'custom-select bg-dark text-white' } %>
+       <%= f.label :zip %><br />
         <%= f.text_field :zip, class: 'form-control bg-dark text-white' %>
         <%= f.label :radius %><br />
         <%= f.text_field :radius, class: 'form-control bg-dark text-white' %>
