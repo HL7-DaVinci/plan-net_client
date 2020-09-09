@@ -25,14 +25,4 @@ Rails.application.routes.draw do
   resources :practitioner_roles,        only: [:index, :show]
   resources :providers,                 only: [:index]
   resources :pharmacies,                only: [:index]
-
-  # This is a bit of a hack, but seeding the zipcodes into the database
-  # through the traditional 'rake db:seed' or 'bundle exec rake db:seed' 
-  # results in a stack overflow error, apparently through the validation
-  # logic.
-  #
-  # If you have access to the command line, you can just use 
-  # 'rails db/seeds.rb' instead of making this call.
-  
-  get '/seed', to: 'seed#index'
 end
