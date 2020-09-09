@@ -20,22 +20,28 @@ class Location < Resource
   #-----------------------------------------------------------------------------
 
   def initialize(location)
-    @id = location.id
-    @operational_status = location.operationalStatus
-    @name = location.name
-    @aliases = location.alias
-    @description = location.description
-    @mode = location.mode
-    @type = location.type
-    @telecoms = location.telecom
-    @address = location.address
-    @physical_type = location.physicalType
-    @position = location.position
-    @managing_organization = location.managingOrganization
-    @part_of = location.partOf
-    @hours_of_operations = location.hoursOfOperation
-    @availability_exceptions = location.availabilityExceptions
-    @endpoints = location.endpoint
+    @id                       = location.id
+    @operational_status       = location.operationalStatus
+    @name                     = location.name
+    @aliases                  = location.alias
+    @description              = location.description
+    @mode                     = location.mode
+    @type                     = location.type
+    @telecoms                 = location.telecom
+    @address                  = location.address
+    @physical_type            = location.physicalType
+    @position                 = location.position
+    @managing_organization    = location.managingOrganization
+    @part_of                  = location.partOf
+    @hours_of_operations      = location.hoursOfOperation
+    @availability_exceptions  = location.availabilityExceptions
+    @endpoints                = location.endpoint
+  end
+
+  #-----------------------------------------------------------------------------
+
+  def self.search_params 
+    SEARCH_PARAMS
   end
 
   #-----------------------------------------------------------------------------
@@ -156,5 +162,17 @@ class Location < Resource
       }
     ]
   end
+
+  #-----------------------------------------------------------------------------
+  private
+  #-----------------------------------------------------------------------------
+
+  SEARCH_PARAMS = {
+    network: '_has:OrganizationAffiliation:location:network',
+    address: 'address',
+    city: 'address-city',
+    name: 'name:contains'
+  }.freeze
+
 
 end

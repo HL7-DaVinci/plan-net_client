@@ -2,39 +2,28 @@
   <h3 class='row text-white'>Search Pharmacies</h3>
   <div class='row'>
     <div class='col-3'>
-      <label for="plan-select">Insurance Plan</label>
-      <select id="plan-select" class="custom-select bg-dark text-white" data-networksByPlan="<%=@networks_by_plan.to_json %>" onchange="updatePharmacyNetworkList(event)">
-        <option value=""></option>
-
-        <% @plans.each do |param| %>
-          <option value="<%= param[:value] %>"><%= param[:name] %></option>
-        <% end %>
-      </select>
-
-      <label for="network-select">Network</label>
-      <select id="network-select" class="custom-select bg-dark text-white" onchange="updatePharmacyNetwork(event)"></select>
-        <option value=""></option>
-      </select>
-      <label for="zip-input">Zip Code</label>
-      <input id="zip-input" type="text" class="form-control bg-dark text-white" placeholder="06040" maxlength=5 onkeyup="updatePharmacyZip(event)">
-
-      <label for="radius-input">Radius in Miles</label>
-      <input id="radius-input" type="text" class="form-control bg-dark text-white" placeholder="10 (default)" onkeyup="updatePharmacyRadius(event)">
-      <label for="city-input">City</label>
-      <input id="city-input" type="text" class="form-control bg-dark text-white" placeholder="Cambridge" onkeyup="updatePharmacyCity(event)">
-      
-      <label for="name-input">Name</label>
-      <input id="name-input" type="text" class="form-control bg-dark text-white" placeholder="CVS" onkeyup="updatePharmacyName(event)">
-      <button id="pharmacy-search-button", type="button" class="btn btn-outline-success" onclick="submitPharmacySearch(event)">
-        Find 
-      </button>
+      <%= form_for :pharmacy, url: search_pharmacies_path, remote: true, method: "get" do |f| %>
+        <%= f.label :insurance_plan %><br />
+        <%= f.select :insurance_plan, @plans, { include_blank: true }, 
+                { class: 'custom-select bg-dark text-white' } %>
+        <%= f.label :network %><br />
+        <%= f.select :network, grouped_options_for_select(@networks), { include_blank: true },
+                { class: 'custom-select bg-dark text-white' } %>
+        <%= f.label :zip %><br />
+        <%= f.text_field :zip, class: 'form-control bg-dark text-white' %>
+        <%= f.label :radius %><br />
+        <%= f.text_field :radius, class: 'form-control bg-dark text-white' %>
+        <%= f.label :city %><br />
+        <%= f.text_field :city, class: 'form-control bg-dark text-white' %>
+        <%= f.label :name %><br />
+        <%= f.text_field :name, class: 'form-control bg-dark text-white' %>
+        <%= f.submit 'Find', class: 'btn btn-outline-success', id: 'healthcare-service-search-button' %>
+      <% end %>
     </div>
     <div class='col-9'>
       <div id="pharmacy-query">
       </div>
-      <div class='btn-group float-right mt-2' role='group'>
-        <button id="previous-button" class="btn btn-outline-primary disabled">Previous</button>
-        <button id="next-button" class="btn btn-outline-primary disabled">Next</button>
+      <div id="pagination">
       </div>
       <table id="pharmacies-table" class="table table-dark">
       </table>

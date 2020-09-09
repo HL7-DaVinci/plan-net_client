@@ -8,11 +8,12 @@ Rails.application.routes.draw do
     get 'search', on: :collection
   end
 
+  resources :pharmacies, only: [:index] do
+    get 'search', on: :collection
+  end
+
   get '/providers/networks', to: 'providers#networks'
   get '/providers/search', to: 'providers#search'
-
-  get '/pharmacies/networks', to: 'pharmacies#networks'
-  get '/pharmacies/search', to: 'pharmacies#search'
 
   resources :endpoints,                 only: [:index, :show]
   resources :insurance_plans,           only: [:index, :show]

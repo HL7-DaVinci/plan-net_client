@@ -1,157 +1,17 @@
 $(() => {
-  if ($('#payer-select').length > 0) {
-    updatePharmacyNetworkList({ target: { value: $('#payer-select').val() } });
-    updatePharmacyZip({ target: { value: $('#zip-input').val() } });
-    updatePharmacyZip({ target: { value: $('#radius-input').val() } });
-    updatePharmacyCity({ target: { value: $('#city-input').val() } });
-    updatePharmacyName({ target: { value: $('#name-input').val() } });
-  }
+  update_pharmacy_network_selection_by_plan();
 });
 
-const updatePharmacyNetworkList = function (event) {
-  updatePharmacySearchParam(event, 'network');
+const update_pharmacy_network_selection_by_plan = function () {
+  networks = $('#pharmacy_network').html();
 
-  if(event.target.value === '') {
-    $('#plan-select').html('');
-  } else {
-    networksByPlan = JSON.parse(event.target.getAttribute("data-networksByPlan"))
-    htmlString = networksByPlan[event.target.value]
-        .map(network => `<option value="${network.reference}">${network.display}</option>`).join('\n');
-        $('#network-select').html(htmlString);
-        updatePharmacyNetwork({ target: { value: $('#network-select').val() } });
-  }
-};
-
-let pharmacyParams = {};
-
-const updatePharmacySearchParam = function(event, param) {
-  pharmacyParams[param] = event.target.value;
-};
-
-const updatePharmacyNetwork = function (event) {
-  updatePharmacySearchParam(event, 'network');
-};
-
-const updatePharmacyZip = function (event) {
-    updatePharmacySearchParam(event, 'zip');
-};
-const updatePharmacyRadius = function (event) {
-  updatePharmacySearchParam(event, 'radius');
-};
-
-const updatePharmacyCity= function (event) {
-  updatePharmacySearchParam(event, 'city');
-};
-
-const updatePharmacyName = function (event) {
-  updatePharmacySearchParam(event, 'name');
-};
-
-const submitPharmacySearch = function (_event) {
-  const params = Object.entries(pharmacyParams)
-        .filter(([key, value]) => value && value.length > 0)
-        .map(([key, value]) => `${key}=${value}`)
-        .join(`&`);
-
-  console.log(params);
-  fetchPharmacies(params);
-};
-
-const fetchPharmacies = function (params) {
- fetch(`/pharmacies/search.json?${params}`)
-    .then(response => response.json())
-    .then(response => 
-      {
-      const { pharmacies, nextPage, previousPage, searchParams } = response;
-      updatePharmacies(pharmacies);
-      updatePharmacyNavigationButtons(nextPage, previousPage);
-      updatePharmacyQuery(searchParams);
+  $('#pharmacy_insurance_plan').change(function() {
+    plan = $('#pharmacy_insurance_plan :selected').val();
+    options = $(networks).filter("optgroup[label='" + plan + "']").html();
+    if (options) {
+      $('#pharmacy_network').html(options);
+    } else {
+      $('#pharmacy_network').empty();
     }
-    );
-};
-
-
-const updatePharmacies = function (pharmacies) {
-  const rows = pharmacyRows(pharmacies);
-  $('#pharmacies-table').html(rows);
-};
-
-const updatePharmacyNavigationButtons = function (nextPage, previousPage) {
-  const hasNextPage = nextPage !== 'disabled';
-  const hasPreviousPage = previousPage !== 'disabled';
-
-  if (hasNextPage) {
-    $('#next-button').removeClass('disabled');
-  } else {
-    $('#next-button').addClass('disabled');
-  }
-  if (hasPreviousPage) {
-    $('#previous-button').removeClass('disabled');
-  } else {
-    $('#previous-button').addClass('disabled');
-  }
-  updatePharmacyNavigationActions(hasNextPage, hasPreviousPage);
-};
-
-const updatePharmacyNavigationActions = function (hasNextPage, hasPreviousPage) {
-  $('#next-button').off('click');
-  $('#previous-button').off('click');
-  if (hasNextPage) {
-    $('#next-button').on('click', () => fetchPharmacies('page=next'));
-  }
-  if (hasPreviousPage) {
-    $('#previous-button').on('click', () => fetchPharmacies('page=previous'));
-  }
-};
-
-const pharmacyHeaderRow = `
-  <tr>
-    <th>Name</th>
-    <th>Phone/Fax</th>
-    <th>Address</th>
-  </tr>
-`;
-
-
-
-
-const pharmacyRows = function (pharmacies) {
-  if (pharmacies.length > 0) {
-    return pharmacyHeaderRow + pharmacies.map(pharmacy => {
-      return `
-          <tr>
-            <td>
-              <a href="/locations/${pharmacy.id}">
-                ${pharmacy.name}
-              </a>
-            </td>
-            <td>${pharmacy.telecom.join('<br>')}</td>
-            <td>${pharmacy.address}</td>
-          </tr>
-        `;
-    }).join('');
-  } else {
-    return `
-      <tr>
-        <th>No pharmacies found</th>
-      </tr>
-    `;
-  }
-};
-
-const updatePharmacyQuery = function (query){
-  content = pharmacyQuery(query);
-  $('#pharmacy-query').html(content)
-};
-
-const pharmacyQuery = function (query) {
-  if(query.length > 0){
-    return `
-      <p>Query to server</p>
-      <p class="query">
-        ${query}
-      </p>
-    `;
-  }
-};
- 
+  });
+}

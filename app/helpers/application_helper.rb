@@ -93,6 +93,23 @@ module ApplicationHelper
 
   #-----------------------------------------------------------------------------
 
+  def display_address(address)
+    if address.present?
+      result =  link_to(google_maps(address)) do 
+                  [address.line.join('<br />'), 
+                  [[address.city, address.state].join(', '), 
+                          display_postal_code(address.postalCode)].join(' ')
+                  ].join('<br />').html_safe
+                end
+    else
+      result = 'None'
+    end
+    
+    sanitize(result)
+  end
+
+  #-----------------------------------------------------------------------------
+
   def display_postal_code(postal_code)
     sanitize(postal_code.match(/^\d{9}$/) ?
         postal_code.strip.sub(/([A-Z0-9]+)([A-Z0-9]{4})/, '\1-\2') : postal_code)
