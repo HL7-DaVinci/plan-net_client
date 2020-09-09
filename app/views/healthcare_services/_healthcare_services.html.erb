@@ -1,0 +1,31 @@
+<tr>
+  <th scope='col'>Name</th>
+
+  <th scope='col'>Categories</th>
+  <th scope='col'>Specialties</th>
+  <th scope='col'>Type</th>
+  <th scope='col'>Provided By</th>
+  <th scope='col'>Locations</th>
+  <th scope='col'>Phone/Fax</th>
+</tr>
+<% @healthcare_services.each do |fhir_healthcare_service| %>
+  <% healthcare_service = HealthcareService.new(fhir_healthcare_service) %> 
+  <tr>
+    <td>
+      <%= link_to healthcare_service.name, healthcare_service_path(healthcare_service.id) %>
+      <% if healthcare_service.appointment_required %>
+        <span class='appointment_required'>Appointment Required</span>
+      <% end %>
+    </td>
+    <td><%= display_coding_list(healthcare_service.categories) %></td>
+    <td><%= display_coding_list(healthcare_service.specialties) %></td>
+    <td><%= display_coding_list(healthcare_service.type) %></td>
+    <td><%= display_reference(healthcare_service.provided_by) %></td>
+    <td><%= display_reference_list(healthcare_service.locations) %></td>
+    <td>
+      <% healthcare_service.telecoms.each do |telecom| %>
+        <%= display_telecom(telecom) %><br />
+      <% end %>
+    </td>
+  </tr>
+<% end %>

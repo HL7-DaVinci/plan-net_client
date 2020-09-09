@@ -1,0 +1,17 @@
+<tr>
+  <th scope='col'>Name</th>
+  <th scope='col'>Phone/Fax</th>
+  <th scope='col'>Address</th>
+</tr>
+<% @locations.each do |fhir_location| %>
+  <% location = Location.new(fhir_location) %> 
+  <tr>
+    <td><%= link_to location.name, location_path(location.id) %></td>
+    <td>
+      <% location.telecoms.each do |telecom| %>
+        <%= display_telecom(telecom) %><br />
+      <% end %>
+    </td>
+    <td><%= display_address(location.address) %></td>
+  </tr>
+<% end %>

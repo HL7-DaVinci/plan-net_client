@@ -9,7 +9,9 @@
 ################################################################################
 
 module LocationHelper
+
   def display_position(position)
     sanitize([position.latitude, position.longitude].join(', ')) if position.present?
   end
+  
 end

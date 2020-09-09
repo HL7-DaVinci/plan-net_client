@@ -1,0 +1,3 @@
+$('#healthcare-services-table').html("<%= escape_javascript(render partial: "healthcare_services") %>");
+$('#healthcare-service-query').html("<%= escape_javascript(render partial: "partials/query") %>");
+$('#pagination').html("<%= escape_javascript(render partial: "partials/pagination_remote", locals: { resource: :healthcare_services }) %>");

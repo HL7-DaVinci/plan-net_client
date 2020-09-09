@@ -16,8 +16,10 @@ class WelcomeController < ApplicationController
 
   def index
     connect_to_server 
-     get_resource_counts
+    get_resource_counts
   end
+
+  #-----------------------------------------------------------------------------
 
   def get_resource_counts
     begin

@@ -23,14 +23,14 @@ class EndpointsController < ApplicationController
     else
       if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string])
-        reply = @client.search(FHIR::Endpoint,
-                                search: {
-                                  parameters: parameters.merge(
-                                    _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Endpoint'
-                                  )
-                                }
-                              )         
-
+        reply = @client.search(
+          FHIR::Endpoint,
+          search: {
+            parameters: parameters.merge(
+              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Endpoint'
+            )
+          }
+        )         
       else
         reply = @client.search(
           FHIR::Endpoint,
@@ -40,8 +40,8 @@ class EndpointsController < ApplicationController
             }
           }
         )
-  
       end
+
       @bundle = reply.resource
       @search = "<Search String in Returned Bundle is empty>"
       @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
@@ -49,7 +49,7 @@ class EndpointsController < ApplicationController
 
     update_bundle_links
 
-    @query_params = query_params
+    @query_params = Endpoint.query_params
     @endpoints = @bundle.entry.map(&:resource)
   end
 
@@ -66,56 +66,4 @@ class EndpointsController < ApplicationController
     @endpoint = Endpoint.new(fhir_endpoint) unless fhir_endpoint.nil?
   end
 
-  def query_params
-    [
-      {
-        name: 'Connection Type',
-        value: 'connection-type'
-      },
-      {
-        name: 'ID',
-        value: '_id'
-      },
-      {
-        name: 'Identifier',
-        value: 'identifier'
-      },
-      {
-        name: 'Identifier Assigner',
-        value: 'identifier-assigner'
-      },
-      {
-        name: 'Intermediary',
-        value: 'via-intermediary'
-      },
-      {
-        name: 'MIME Type',
-        value: 'mime-type'
-      },
-      {
-        name: 'Name',
-        value: 'name'
-      },
-      {
-        name: 'Organization',
-        value: 'organization'
-      },
-      {
-        name: 'Payload Type',
-        value: 'payload-type'
-      },
-      {
-        name: 'Status',
-        value: 'status'
-      },
-      {
-        name: 'Use Case Standard',
-        value: 'usecase-standard'
-      },
-      {
-        name: 'Use Case Type',
-        value: 'usecase-type'
-      }
-    ]
-  end
 end

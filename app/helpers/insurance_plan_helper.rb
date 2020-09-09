@@ -9,6 +9,7 @@
 ################################################################################
 
 module InsurancePlanHelper
+
   def display_owned_by(owned_by)
     owned_by.present? ? sanitize(owned_by.display) : 'Not available'
   end
@@ -24,4 +25,5 @@ module InsurancePlanHelper
   def display_coverage_area(coverage_area)
     coverage_area.present? ? display_list(coverage_area) : 'Not available'
   end
+  
 end

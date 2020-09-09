@@ -9,6 +9,7 @@
 ################################################################################
 
 class OrganizationAffiliation < Resource
+
   include ActiveModel::Model
 
   attr_accessor :id, :meta, :implicit_rules, :language, :text, :identifier,
@@ -31,4 +32,80 @@ class OrganizationAffiliation < Resource
     @endpoints = organization_affiliation.endpoint
     @networks = organization_affiliation.network
   end
+
+  #-----------------------------------------------------------------------------
+
+  def self.query_params
+    [
+      {
+        name: 'Active',
+        value: 'active'
+      },
+      {
+        name: 'Date',
+        value: 'date'
+      },
+      {
+        name: 'Email',
+        value: 'email'
+      },
+      {
+        name: 'Endpoint',
+        value: 'endpoint'
+      },
+      {
+        name: 'ID',
+        value: '_id'
+      },
+      {
+        name: 'Identifier',
+        value: 'identifier'
+      },
+      {
+        name: 'Identifier Assigner',
+        value: 'identifier-assigner'
+      },
+      {
+        name: 'Intermediary',
+        value: 'via-intermediary'
+      },
+      {
+        name: 'Location',
+        value: 'location'
+      },
+      {
+        name: 'Network',
+        value: 'network'
+      },
+      {
+        name: 'Participating Organization',
+        value: 'participating-organization'
+      },
+      {
+        name: 'Phone',
+        value: 'phone'
+      },
+      {
+        name: 'Primary Organization',
+        value: 'primary-organization'
+      },
+      {
+        name: 'Role',
+        value: 'role'
+      },
+      {
+        name: 'Service',
+        value: 'service'
+      },
+      {
+        name: 'Specialty',
+        value: 'specialty'
+      },
+      {
+        name: 'Telecom',
+        value: 'telecom'
+      }
+    ]
+  end
+
 end

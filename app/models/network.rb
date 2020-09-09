@@ -9,6 +9,7 @@
 ################################################################################
 
 class Network < Resource
+  
   include ActiveModel::Model
 
   attr_accessor :id, :meta, :implicit_rules, :language, :text, :identifier,
@@ -26,4 +27,68 @@ class Network < Resource
     @type = network.type 
     # @ownedBy = network.ownedBy  -- broken
   end
+
+  #-----------------------------------------------------------------------------
+
+  def self.query_params
+    [
+      {
+        name: 'Active',
+        value: 'active'
+      },
+      {
+        name: 'Address',
+        value: 'address'
+      },
+      {
+        name: 'City',
+        value: 'address-city'
+      },
+      {
+        name: 'Country',
+        value: 'address-country'
+      },
+      {
+        name: 'Coverage Area',
+        value: 'coverage-area'
+      },
+      {
+        name: 'Endpoint',
+        value: 'endpoint'
+      },
+      {
+        name: 'ID',
+        value: '_id'
+      },
+      {
+        name: 'Identifier',
+        value: 'identifier'
+      },
+      {
+        name: 'Identifier Assigner',
+        value: 'identifier-assigner'
+      },
+      {
+        name: 'Name',
+        value: 'name:contains'
+      },
+      {
+        name: 'Part Of',
+        value: 'partof'
+      },
+      {
+        name: 'Postal Code',
+        value: 'address-postalcode'
+      },
+      {
+        name: 'State',
+        value: 'address-state'
+      },
+      {
+        name: 'Type',
+        value: 'type'
+      }
+    ]
+  end
+
 end

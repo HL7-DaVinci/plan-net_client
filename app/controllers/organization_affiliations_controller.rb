@@ -11,6 +11,7 @@
 require 'json'
 
 class OrganizationAffiliationsController < ApplicationController
+  
   before_action :connect_to_server, only: [:index, :show]
 
   #-----------------------------------------------------------------------------
@@ -48,6 +49,7 @@ class OrganizationAffiliationsController < ApplicationController
           }
         )
       end
+      
       @bundle = reply.resource
       @search = "<Search String in Returned Bundle is empty>"
       @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
@@ -55,7 +57,7 @@ class OrganizationAffiliationsController < ApplicationController
     
     update_bundle_links
 
-    @query_params = query_params
+    @query_params = OrganizationAffiliation.query_params
     @organization_affiliations = @bundle.entry.map(&:resource)
   end
 
@@ -68,76 +70,4 @@ class OrganizationAffiliationsController < ApplicationController
                            search: { parameters: { id: params[:id] } })
   end
 
-  def query_params
-    [
-      {
-        name: 'Active',
-        value: 'active'
-      },
-      {
-        name: 'Date',
-        value: 'date'
-      },
-      {
-        name: 'Email',
-        value: 'email'
-      },
-      {
-        name: 'Endpoint',
-        value: 'endpoint'
-      },
-      {
-        name: 'ID',
-        value: '_id'
-      },
-      {
-        name: 'Identifier',
-        value: 'identifier'
-      },
-      {
-        name: 'Identifier Assigner',
-        value: 'identifier-assigner'
-      },
-      {
-        name: 'Intermediary',
-        value: 'via-intermediary'
-      },
-      {
-        name: 'Location',
-        value: 'location'
-      },
-      {
-        name: 'Network',
-        value: 'network'
-      },
-      {
-        name: 'Participating Organization',
-        value: 'participating-organization'
-      },
-      {
-        name: 'Phone',
-        value: 'phone'
-      },
-      {
-        name: 'Primary Organization',
-        value: 'primary-organization'
-      },
-      {
-        name: 'Role',
-        value: 'role'
-      },
-      {
-        name: 'Service',
-        value: 'service'
-      },
-      {
-        name: 'Specialty',
-        value: 'specialty'
-      },
-      {
-        name: 'Telecom',
-        value: 'telecom'
-      }
-    ]
-  end
 end
