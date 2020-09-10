@@ -1,4 +1,4 @@
-require 'pry'
+#require 'pry'
 require 'json'
 
 
@@ -11,7 +11,7 @@ require 'json'
     h = JSON.parse(s)
     o = File.open(outfile,"w")
     o.puts "jsonfile = ["
-    binding.pry 
+    #binding.pry 
     h["concept"].map do |code |
         # binding.pry
         o.puts "    { value: \'#{code["code"]}\', name: \'#{code["display"]}\' },"
