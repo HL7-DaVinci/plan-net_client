@@ -1,7 +1,6 @@
 
 require "json"
 require 'httparty'
-require 'pry'
 
 zipcode = 20854
     response = HTTParty.get(
@@ -13,7 +12,6 @@ zipcode = 20854
          thumbMaps: false
        }
      )
-     binding.pry
      # coords = response.deep_symbolize_keys&.dig(:results)&.first&.dig(:locations).first&.dig(:latLng)
      coords = response["results"].first["locations"].first["latLng"]
      {
@@ -22,7 +20,6 @@ zipcode = 20854
      }
      puts coords
 
-   binding.pry
 
    response = HTTParty.get(
     'https://davinci-plan-net-ri.logicahealth.org/fhir/HealthcareService',
@@ -31,6 +28,5 @@ zipcode = 20854
        }
     )
 
-    binding.pry
     jresponse = JSON.parse(response.body)
    

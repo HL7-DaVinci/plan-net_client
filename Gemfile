@@ -35,7 +35,6 @@ gem 'geokit-rails'              # Provides geolocation-based searches
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw] # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'pry'
   gem 'rubocop'
   gem 'seed_dump'
 end
