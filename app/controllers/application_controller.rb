@@ -128,6 +128,7 @@ class ApplicationController < ActionController::Base
     parameters = {}
     @networks_by_plan = {}
     parameters[:_profile] = 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-InsurancePlan' 
+    parameters[:_count] = 100
     if(id)
       parameters[:_id] = id
     end
@@ -143,6 +144,7 @@ class ApplicationController < ActionController::Base
       @networks_by_plan [ entry&.resource&.id] = entry&.resource&.network
     end
     @plans.sort_by! { |hsh| hsh[:name] }
+  
   rescue => exception
     redirect_to root_path, flash: { error: 'Please specify a plan network server' }
 
