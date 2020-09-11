@@ -3,7 +3,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.6.3'
+ruby '2.7.1'
 
 gem 'puma', '~> 3.11'           # Use Puma as the app server
 gem 'rails', '~> 5.2.3'         # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -30,7 +30,8 @@ gem 'leaflet-awesome-markers-rails', '~> 2.0'
                                 # Custom markers for Leaflet
     
 gem 'leaflet-rails'             # Handles Leaflet-based maps
-gem 'pg'                        # Use Postgres
+# gem 'pg'                        # Use Postgres
+gem 'sqlite3'
 gem 'geokit-rails'              # Provides geolocation-based searches
 
 group :development, :test do

@@ -1,4 +1,4 @@
-FROM ruby:2.6.3 
+FROM ruby:2.7.1
 
 # Install apt based dependencies required to run Rails as 
 # well as RubyGems. As the Ruby image itself is based on a 
@@ -29,9 +29,13 @@ EXPOSE 3000
 
 # Configure an entry point, so we don't need to specify 
 # "bundle exec" for each of our commands.
-ENTRYPOINT ["bundle", "exec"]
+# ENTRYPOINT ["bundle", "exec"]
 
 # The main command to run when the container starts. Also 
 # tell the Rails dev server to bind to all interfaces by 
 # default.
-CMD ["rails", "server", "-b", "0.0.0.0"]
+# CMD ["rails", "server", "-b", "0.0.0.0"]
+
+# ENV RAILS_ENV=production
+# CMD rails db:migrate && rails db:seed && rails s
+CMD bundle exec rake db:migrate && bundle exec rake db:seed && bundle exec puma -C config/puma.rb
