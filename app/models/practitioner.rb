@@ -29,12 +29,18 @@ class Practitioner < Resource
     @communications = practitioner.communication
     
     if gender.eql?("female")
-        @photo = "female-doctor-icon-9.jpg"
-        @phototitle = "Female Doctor Icon #279694"
+      @photo = "female-doctor-icon-9.jpg"
+      @phototitle = "Female Doctor Icon #279694"
     else
-         @photo = "doctor-icon-png-1.jpg"
-         @phototitle = "Doctor Icon Png #418309"
+      @photo = "doctor-icon-png-1.jpg"
+      @phototitle = "Doctor Icon Png #418309"
     end
+  end
+
+  #-----------------------------------------------------------------------------
+
+  def self.search_params 
+    SEARCH_PARAMS
   end
 
   #-----------------------------------------------------------------------------
@@ -95,5 +101,15 @@ class Practitioner < Resource
       }
     ]
   end
+
+  #-----------------------------------------------------------------------------
+
+  SEARCH_PARAMS = {
+    network: 'network',
+    address: 'location.address',
+    city: 'location.address-city',
+    specialty: 'practitioner.qualification-code',
+    name: 'practitioner.name'
+  }.freeze
 
 end

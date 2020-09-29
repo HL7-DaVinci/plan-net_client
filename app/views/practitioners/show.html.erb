@@ -35,7 +35,7 @@
             <td>Licenses:</td>
             <td>           
               <% @practitioner.qualifications.each do |qualification| %>
-                <%= render partial: 'qualification', 
+                <%= render partial: 'partials/qualification', 
                           locals: { qualification: qualification } %>
                 Period: <%= display_period(qualification.period) %><br />
                 Issuer: <%= display_issuer(qualification.issuer) %><br />

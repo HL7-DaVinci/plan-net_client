@@ -1,0 +1,35 @@
+<tr>
+  <th scope='col'>Name</th>
+  <th scope='col'>Phone/Fax</th>
+  <th scope='col'>Address</th>
+  <th scope='col'>Specialties</th>
+</tr>
+<% @practitioners.each do |fhir_practitioner| %>
+  <% practitioner = Practitioner.new(fhir_practitioner) %> 
+  <tr>
+    <td>
+      <%= link_to practitioner_path(practitioner.id) do %>
+        <%= display_photo(practitioner.photo, practitioner.gender, 
+                  class: 'list-photo') %><br />
+        <%= display_human_name(practitioner.name.first) %>
+      <% end %>
+    </td>
+    <td>
+      <% practitioner.telecoms.each do |telecom| %>
+        <%= display_telecom(telecom) %><br /><br />
+      <% end %>
+    </td>
+    <td>
+      <% practitioner.addresses.each do |address| %>
+        <%= render partial: 'partials/address', 
+                    locals: { address: address } %>
+      <% end %>
+    </td>
+    <td>
+      <% practitioner.qualifications.each do |qualification| %>
+        <%= render partial: 'partials/qualification', 
+                  locals: { qualification: qualification } %>
+      <% end %>
+    </td>
+  </tr>
+<% end %>

@@ -61,7 +61,7 @@
           <td><%= practitioner.gender %></td>
           <td>
             <% practitioner.qualifications.each do |qualification| %>
-              <%= render partial: 'qualification', 
+              <%= render partial: 'partials/qualification', 
                         locals: { qualification: qualification } %>
             <% end %>
           </td>

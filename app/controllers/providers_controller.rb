@@ -14,15 +14,29 @@ require 'uri'
 class ProvidersController < ApplicationController
 
   before_action :connect_to_server
-  before_action :fetch_plans, only: [:index]
 
   #-----------------------------------------------------------------------------
 
   # GET /providers
 
   def index
+    fetch_plans
+
     @params = {}
-    @specialties = INDIVIDUAL_AND_GROUP_SPECIALTIES.sort_by { |code| code[:name] }
+    @specialties = INDIVIDUAL_AND_GROUP_SPECIALTIES.
+            sort_by { |code| code[:name] }.
+            collect{|n| [n[:name], n[:value]]}
+
+    @plans = @plans.collect{|p| [p[:name], p[:value]]}
+
+    @networks = @networks_by_plan.collect do |nyp| 
+                  [
+                    nyp.first, 
+                    nyp.last.collect do |n| 
+                      [n.display, n.reference]
+                    end
+                  ]
+                end
   end
 
   #-----------------------------------------------------------------------------
@@ -54,30 +68,47 @@ class ProvidersController < ApplicationController
         _include: ['PractitionerRole:practitioner', 'PractitionerRole:location'],
   #      _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-PractitionerRole'
       }
-      query_params = params
-      modifiedparams = zip_plus_radius_to_address(query_params) if query_params
-      query =
-        SEARCH_PARAMS
-          .select { |key, _value| modifiedparams[key].present? }
-          .each_with_object(base_params) do |(local_key, fhir_key), search_params|
-          search_params[fhir_key] = modifiedparams[local_key]
-        end
+
+      query_params = params[:provider]
+
+      # Build the location-based query if zipcode and radius has been specified 
+      if query_params
+        modified_params = zip_plus_radius_to_address(query_params) 
+      else
+        modified_params={}
+      end
+      modified_params[:role] = "provider" 
+
+      # Only include the allowed search parameters...
+      filtered_params = Practitioner.search_params.select { |key, _value| modified_params[key].present? }
+
+      # Build the full query with the base parameters and the filtered parameters
+      query = filtered_params.each_with_object(base_params) do |(local_key, fhir_key), search_params|
+        search_params[fhir_key] = modified_params[local_key]
+      end
+
       @bundle = @client.search(
         FHIR::PractitionerRole,
         search: { parameters: query }
       ).resource
-      @search = "<Search String in Returned Bundle is empty>"
-      @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
     end
+
+    @practitioners ||= @bundle.entry.
+                        select { |entry| entry.resource.instance_of? FHIR::Practitioner }.
+                        map(&:resource)
+    byebug
+
+    # Prepare the query string for display on the page
+    @search = "<Search String in Returned Bundle is empty>"
+    @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
+
+
+    # Prepare the links for the Next and Previous buttons
     update_bundle_links
 
-    render json: {
-      providers: providers,
-      nextPage: @next_page_disabled,
-      previousPage: @previous_page_disabled,
-      # searchParams: prepare_query_text(query, 'PractitionerRole')
-        searchParams: @search 
-    }
+    respond_to do |format|
+      format.js {}
+    end
   end
 
   #-----------------------------------------------------------------------------
@@ -103,12 +134,6 @@ class ProvidersController < ApplicationController
 
   #-----------------------------------------------------------------------------
 
-  def practitioners
-    @practitioners ||= @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::Practitioner }.map(&:resource)
-  end
-
-  #-----------------------------------------------------------------------------
-
   def practitioner_roles(practitioner_id)
     roles.select { |role| role.practitioner.reference.end_with? practitioner_id }
   end
@@ -122,23 +147,17 @@ class ProvidersController < ApplicationController
   #-----------------------------------------------------------------------------
 
   def locations
-    @locations ||= @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::Location }.map(&:resource)
+    @locations ||= @bundle.entry.
+                      select { |entry| entry.resource.instance_of? FHIR::Location }.
+                      map(&:resource)
   end
 
   #-----------------------------------------------------------------------------
 
   def roles
-    @roles ||= @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::PractitionerRole }.map(&:resource)
+    @roles ||= @bundle.entry.
+                      select { |entry| entry.resource.instance_of? FHIR::PractitionerRole }.
+                      map(&:resource)
   end
-
-  #-----------------------------------------------------------------------------
-
-  SEARCH_PARAMS = {
-    network: 'network',
-    address: 'location.address',
-    city: 'location.address-city',
-    specialty: 'practitioner.qualification-code',
-    name: 'practitioner.name'
-  }.freeze
 
 end

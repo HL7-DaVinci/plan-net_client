@@ -40,4 +40,10 @@ module PractitionerHelper
       image_tag(photo, options)
   end
   
+  #-----------------------------------------------------------------------------
+
+  def display_specialty(specialty)
+    sanitize(specialty.identifier)
+  end
+  
 end
