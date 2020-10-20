@@ -180,7 +180,6 @@ class ApplicationController < ActionController::Base
         params.delete(:radius)
       end
       params[:zipcode] = Zipcode.zipcodes_within(radius, zip).join(',')
-      binding.pry 
     end
     params
   end
