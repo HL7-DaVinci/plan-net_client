@@ -27,7 +27,7 @@ class EndpointsController < ApplicationController
           FHIR::Endpoint,
           search: {
             parameters: parameters.merge(
-              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Endpoint'
+        #      _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Endpoint'
             )
           }
         )         
@@ -36,7 +36,7 @@ class EndpointsController < ApplicationController
           FHIR::Endpoint,
           search: {
             parameters: {
-              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Endpoint'
+        #      _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Endpoint'
             }
           }
         )

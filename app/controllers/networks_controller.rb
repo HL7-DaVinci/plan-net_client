@@ -28,7 +28,8 @@ class NetworksController < ApplicationController
           FHIR::Organization,
           search: {
             parameters: parameters.merge(
-              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network'
+              type: 'ntwk'
+          #    _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network'
             )
           }
         )
@@ -37,7 +38,8 @@ class NetworksController < ApplicationController
           FHIR::Organization,
           search: {
             parameters: {
-              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network'
+              type:   'ntwk'
+          #    _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network'
             }
           }
         )

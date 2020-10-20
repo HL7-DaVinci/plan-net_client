@@ -29,7 +29,7 @@ class PractitionersController < ApplicationController
           FHIR::Practitioner,
           search: {
             parameters: parameters.merge(
-              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Practitioner'
+    #          _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Practitioner'
             )
           }
         )
@@ -38,7 +38,7 @@ class PractitionersController < ApplicationController
           FHIR::Practitioner,
           search: {
             parameters: {
-              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Practitioner'
+     #         _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Practitioner'
             }
           }
         )

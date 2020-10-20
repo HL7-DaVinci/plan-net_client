@@ -70,8 +70,8 @@ class HealthcareServicesController < ApplicationController
       update_page(params[:page])
     else
       base_params = {
-        _include: ['HealthcareService:providedBy', 'HealthcareService.location'],
-        _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-HealthcareService'
+        _include: ['HealthcareService:providedBy', 'HealthcareService.location']
+ #       _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-HealthcareService'
       }
 
       query_params = params[:healthcare_service]

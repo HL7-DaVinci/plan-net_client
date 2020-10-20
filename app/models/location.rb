@@ -173,6 +173,7 @@ class Location < Resource
     specialty: '_has:OrganizationAffiliation:location:specialty',
     address: 'address',
     city: 'address-city',
+    zipcode: 'address-postalcode',
     name: 'name:contains'
   }.freeze
 

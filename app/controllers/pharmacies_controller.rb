@@ -10,6 +10,7 @@
 
 require 'json'
 require 'uri'
+require 'pry'
 
 class PharmaciesController < ApplicationController
 
@@ -49,7 +50,7 @@ class PharmaciesController < ApplicationController
     else
       base_params = {
         _revinclude: ['OrganizationAffiliation:location'], #type: 'OUTPHARM',
-        _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
+   #     _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
       }
 
       query_params = params[:pharmacy]
@@ -60,16 +61,17 @@ class PharmaciesController < ApplicationController
       else
         modified_params={}
       end
+      binding.pry 
       modified_params[:role]="pharmacy" 
 
       # Only include the allowed search parameters...
       filtered_params = Location.search_params.select { |key, _value| modified_params[key].present? }
-  
+      binding.pry 
       # Build the full query with the base parameters and the filtered parameters
       query = filtered_params.each_with_object(base_params) do |(local_key, fhir_key), search_params|
         search_params[fhir_key] = modified_params[local_key]
       end
-
+      binding.pry 
       # Get the matching resources from the FHIR server
       @bundle = @client.search(
         FHIR::Location,

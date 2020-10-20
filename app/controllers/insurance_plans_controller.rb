@@ -25,8 +25,9 @@ class InsurancePlansController < ApplicationController
       FHIR::Organization,
       search: { 
         parameters: {
-          _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network',
-          partof: "Organization/#{id}"
+      #    type: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network',
+          partof: "Organization/#{id}",
+          type: 'ntwk'
         } 
       }
     )&.resource&.entry&.map do |entry|
@@ -51,7 +52,7 @@ class InsurancePlansController < ApplicationController
           FHIR::InsurancePlan,
           search: {
             parameters: parameters.merge(
-              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-InsurancePlan'
+    #          _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-InsurancePlan'
             )
           }
         )
@@ -60,7 +61,7 @@ class InsurancePlansController < ApplicationController
           FHIR::InsurancePlan,
           search: {
             parameters: {
-              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-InsurancePlan'
+   #           _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-InsurancePlan'
             }
           }
         )

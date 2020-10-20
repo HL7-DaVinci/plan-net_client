@@ -52,7 +52,7 @@ class ProvidersController < ApplicationController
     else
       base_params = {
         _include: ['PractitionerRole:practitioner', 'PractitionerRole:location'],
-        _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-PractitionerRole'
+  #      _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-PractitionerRole'
       }
       query_params = params
       modifiedparams = zip_plus_radius_to_address(query_params) if query_params

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require "erb"
-
+require 'pry'
 ################################################################################
 #
 # Application Controller
@@ -127,7 +127,7 @@ class ApplicationController < ActionController::Base
     @plans = []
     parameters = {}
     @networks_by_plan = {}
-    parameters[:_profile] = 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-InsurancePlan' 
+    #parameters[:_profile] = 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-InsurancePlan' 
     parameters[:_count] = 100
     if(id)
       parameters[:_id] = id
@@ -179,7 +179,8 @@ class ApplicationController < ActionController::Base
         radius = params[:radius].to_i
         params.delete(:radius)
       end
-      params[:address] = Zipcode.zipcodes_within(radius, zip).join(',')
+      params[:zipcode] = Zipcode.zipcodes_within(radius, zip).join(',')
+      binding.pry 
     end
     params
   end
