@@ -106,9 +106,10 @@ class ApplicationController < ActionController::Base
   #-----------------------------------------------------------------------------
 
   def fetch_payers
+    binding.pry 
     @payers = @client.search(
       FHIR::Organization,
-      search: { parameters: { type: 'pay' } }
+      search: { parameters: { type: 'payer' } }
     )&.resource&.entry&.map do |entry|
       {
         value: entry&.resource&.id,
@@ -116,7 +117,7 @@ class ApplicationController < ActionController::Base
       }
     end
   rescue => exception
-    redirect_to root_path, flash: { error: 'Please specify a plan network server' }
+    redirect_to root_path, flash: { error: 'Please specify a plan network server (fetch_payers)' }
 
   end
 
@@ -132,7 +133,6 @@ class ApplicationController < ActionController::Base
     if(id)
       parameters[:_id] = id
     end
-
     @client.search(
       FHIR::InsurancePlan,
       search: { parameters: parameters }
@@ -146,7 +146,7 @@ class ApplicationController < ActionController::Base
     @plans.sort_by! { |hsh| hsh[:name] }
   
   rescue => exception
-    redirect_to root_path, flash: { error: 'Please specify a plan network server' }
+    redirect_to root_path, flash: { error: 'Please specify a plan network server (fetch_plans)' }
 
   end
 

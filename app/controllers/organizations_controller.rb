@@ -19,7 +19,7 @@ class OrganizationsController < ApplicationController
   # GET /organizations
 
   def index
-    typecodes = ['fac', 'bus', 'prvgrp', 'payer', 'atyprv' ].join(',')
+    typecodes = 'fac,bus,prvgrp,payer,atyprv' 
     if params[:page].present?
       update_page(params[:page])
     else
