@@ -96,8 +96,7 @@ class ProvidersController < ApplicationController
     @practitioners ||= @bundle.entry.
                         select { |entry| entry.resource.instance_of? FHIR::Practitioner }.
                         map(&:resource)
-    byebug
-
+  
     # Prepare the query string for display on the page
     @search = "<Search String in Returned Bundle is empty>"
     @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
