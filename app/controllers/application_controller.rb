@@ -110,15 +110,15 @@ class ApplicationController < ActionController::Base
     @payers = @client.search(
       FHIR::Organization,
       search: { parameters: { type: 'payer' } }
-    )&.resource&.entry&.map do |entry|
+    ).resource.entry.map do |entry|
       {
-        value: entry&.resource&.id,
-        name: entry&.resource&.name
+        value: entry.resource.id,
+        name: entry.resource.name
       }
     end
+    
   rescue => exception
     redirect_to root_path, flash: { error: 'Please specify a plan network server (fetch_payers)' }
-
   end
 
   #-----------------------------------------------------------------------------
@@ -130,24 +130,25 @@ class ApplicationController < ActionController::Base
     @networks_by_plan = {}
     #parameters[:_profile] = 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-InsurancePlan' 
     parameters[:_count] = 100
-    if(id)
+    if (id.present?)
       parameters[:_id] = id
     end
     @client.search(
       FHIR::InsurancePlan,
       search: { parameters: parameters }
-    )&.resource&.entry&.map do |entry|
-      @plans << {
-        value: entry&.resource&.id,
-        name: entry&.resource&.name
-      }
-      @networks_by_plan [ entry&.resource&.id] = entry&.resource&.network
+    ).resource.entry.map do |entry|
+      if entry.resource.id.present? && entry.resource.name.present?
+        @plans << {
+          value: entry.resource.id,
+          name: entry.resource.name
+        }
+        @networks_by_plan [ entry.resource.id] = entry.resource.network
+      end
     end
     @plans.sort_by! { |hsh| hsh[:name] }
-  
+
   rescue => exception
     redirect_to root_path, flash: { error: 'Please specify a plan network server (fetch_plans)' }
-
   end
 
   #-----------------------------------------------------------------------------
