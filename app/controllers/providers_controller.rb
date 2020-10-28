@@ -135,7 +135,7 @@ class ProvidersController < ApplicationController
 
   SEARCH_PARAMS = {
     network: 'network',
-    address: 'location.address',
+    zipcode: 'location.address-postalcode',
     city: 'location.address-city',
     specialty: 'specialty',
     name: 'practitioner.name'
