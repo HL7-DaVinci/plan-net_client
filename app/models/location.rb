@@ -172,8 +172,8 @@ class Location < Resource
     network: '_has:OrganizationAffiliation:location:network',
     specialty: '_has:OrganizationAffiliation:location:specialty',
     address: 'address',
-    city: 'address-city',
-    zipcode: 'address-postalcode',
+    city: 'address-city:contains',
+    zipcode: 'address-postalcode:contains',
     name: 'name:contains'
   }.freeze
 
