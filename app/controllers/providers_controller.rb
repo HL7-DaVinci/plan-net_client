@@ -137,7 +137,7 @@ class ProvidersController < ApplicationController
     network: 'network',
     address: 'location.address',
     city: 'location.address-city',
-    specialty: 'practitioner.qualification-code',
+    specialty: 'specialty',
     name: 'practitioner.name'
   }.freeze
 
