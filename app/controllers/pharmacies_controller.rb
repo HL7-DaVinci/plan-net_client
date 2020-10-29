@@ -62,7 +62,6 @@ class PharmaciesController < ApplicationController
         modified_params={}
       end
       modified_params[:role]="pharmacy" 
-
       # Only include the allowed search parameters...
       filtered_params = Location.search_params.select { |key, _value| modified_params[key].present? }
       # Build the full query with the base parameters and the filtered parameters

@@ -86,7 +86,7 @@ class HealthcareServicesController < ApplicationController
       query = filtered_params.each_with_object(base_params) do |(local_key, fhir_key), search_params|
         search_params[fhir_key] = modified_params[local_key]
       end
-
+     binding.pry
       # Get the matching resources from the FHIR server
       @bundle = @client.search(
         FHIR::HealthcareService,
