@@ -106,7 +106,7 @@ class ApplicationController < ActionController::Base
   #-----------------------------------------------------------------------------
 
   def fetch_payers
-    binding.pry 
+    # binding.pry 
     @payers = @client.search(
       FHIR::Organization,
       search: { parameters: { type: 'payer' } }
