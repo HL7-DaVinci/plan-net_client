@@ -18,8 +18,7 @@ class ApplicationController < ActionController::Base
 
   # Get the FHIR server url
   def server_url
-    url = params[:server_url] || session[:session_url]
-    url.strip if url.present?
+    url = (params[:server_url] || session[:server_url]).strip
   end
 
   #-----------------------------------------------------------------------------
