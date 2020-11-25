@@ -44,13 +44,18 @@ class PharmaciesController < ApplicationController
 
   # GET /pharmacies/search
 
+  # Need to update the query plan.   Current query retrieves all Locations that have an organization affiliation with ONE of (the right network,
+  # the right role).   The key relationship is pharmacy locations that are assocaited with a network.  Filtering the organizational affiliations
+  # on the client side, and eliminating the locations that are only referenced by OAs with the wrong type
+
   def search
     if params[:page].present?
       update_page(params[:page])
     else
       base_params = {
-        _revinclude: ['OrganizationAffiliation:location'], #type: 'OUTPHARM',
-   #     _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
+        _revinclude: ['OrganizationAffiliation:location']
+   #     type: 'OUTPHARM',
+   # _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
       }
 
       query_params = params[:pharmacy]
@@ -75,7 +80,39 @@ class PharmaciesController < ApplicationController
       ).resource
     end
 
-    @locations ||= @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::Location }.map(&:resource)
+    fhir_locations ||= @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::Location }.map(&:resource)
+    fhir_orgaffs ||= @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::OrganizationAffiliation }.map(&:resource)
+    @locations = {}
+    @orgaffs = []
+    binding.pry 
+    fhir_locations.map  do  |fhir_location| 
+      @locations["Location/" + fhir_location.id] =  Location.new(fhir_location)  # build a hash, and then convert to array
+    end
+    fhir_orgaffs.map  do  |fhir_orgaff| 
+      @orgaffs << OrganizationAffiliation.new(fhir_orgaff)
+    end
+    binding.pry 
+    # Now, iterate through the orgaffs, and mark the locations associated with orgaffs that satisfy the filter criteria
+    #  if query_params["network"] filter by contains_code(orgaff.network, query_Params["network"])
+    #  if query_params["specialty"] filter by contains_code(orgaff.specialty, query_Params["network"])
+    #  if always filter by contains_code(orgaff.codes, "pharmacy")
+    #  if an orgaff passes, then mark its locations with checked=true
+    @orgaffs.map do |orgaff|
+      checked = true
+      binding.pry 
+      checked &= reference_contained(orgaff.networks, query_params["network"] ) if  query_params["network"].size > 0
+      checked &= code_contained(orgaff.specialties, query_params["specialty"] ) if  query_params["specialty"].size > 0
+      checked &= code_contained(orgaff.codes, "pharmacy" )  
+
+      if(checked)
+        orgaff.locations.map do |location|
+          @locations[location.reference].checked = true if @locations[location.reference]
+        end
+      end
+    end
+
+    @locations = @locations.values.select{ |loc| loc.checked}    # -- need to sort this out  SAK
+    # @locations = @locations.values 
 
     # Prepare the query string for display on the page
     @search = "<Search String in Returned Bundle is empty>"
@@ -89,8 +126,24 @@ class PharmaciesController < ApplicationController
     end
   end
 
+    # Return true if coding includes code
+  def code_contained(list, code)
+    result = false
+    list.map(&:coding).each do |coding|
+        result |= coding.map(&:code).first == code 
+    end
+    result 
+  end
 
+  # Return true if array includes reference ref
+  def reference_contained(list, ref)
+    result = false
 
+    list.map do |r|
+        result |= r.reference == ref 
+    end
+    result 
+  end
 
  
 end

@@ -15,11 +15,12 @@ class Location < Resource
                 :active, :operational_status, :name, :aliases, :description,
                 :mode, :type, :telecoms, :address, :physical_type, :position,
                 :managing_organization, :part_of, :hours_of_operations,
-                :availability_exceptions, :endpoints
+                :availability_exceptions, :endpoints, :checked
 
   #-----------------------------------------------------------------------------
 
   def initialize(location)
+    @checked                  = false 
     @id                       = location.id
     @operational_status       = location.operationalStatus
     @name                     = location.name

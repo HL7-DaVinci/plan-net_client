@@ -3,8 +3,7 @@
   <th scope='col'>Phone/Fax</th>
   <th scope='col'>Address</th>
 </tr>
-<% @locations.each do |fhir_location| %>
-  <% location = Location.new(fhir_location) %> 
+<% @locations.each do |location| %>
   <tr>
     <td><%= link_to location.name, location_path(location.id) %></td>
     <td>
