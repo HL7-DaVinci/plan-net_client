@@ -79,27 +79,31 @@ class PharmaciesController < ApplicationController
         search: { parameters: query }
       ).resource
     end
-
-    fhir_locations ||= @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::Location }.map(&:resource)
-    fhir_orgaffs ||= @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::OrganizationAffiliation }.map(&:resource)
     @locations = {}
     @orgaffs = []
-    binding.pry 
+    loop do
+    fhir_locations = @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::Location }.map(&:resource)
+    fhir_orgaffs = @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::OrganizationAffiliation }.map(&:resource)
+
     fhir_locations.map  do  |fhir_location| 
       @locations["Location/" + fhir_location.id] =  Location.new(fhir_location)  # build a hash, and then convert to array
     end
     fhir_orgaffs.map  do  |fhir_orgaff| 
       @orgaffs << OrganizationAffiliation.new(fhir_orgaff)
     end
-    binding.pry 
+
+    url = @bundle&.next_link&.url
+    break if url.present? == false
+    @bundle = @client.parse_reply(FHIR::Bundle, @client.default_format,  @client.raw_read_url(url))
+    end
+    # now we have all of the content, we can now process the content
     # Now, iterate through the orgaffs, and mark the locations associated with orgaffs that satisfy the filter criteria
     #  if query_params["network"] filter by contains_code(orgaff.network, query_Params["network"])
-    #  if query_params["specialty"] filter by contains_code(orgaff.specialty, query_Params["network"])
+    #  if query_params["specialty"] filter by contains_code(orgaff.specialty, query_Params["specialty"])
     #  if always filter by contains_code(orgaff.codes, "pharmacy")
     #  if an orgaff passes, then mark its locations with checked=true
     @orgaffs.map do |orgaff|
       checked = true
-      binding.pry 
       checked &= reference_contained(orgaff.networks, query_params["network"] ) if  query_params["network"].size > 0
       checked &= code_contained(orgaff.specialties, query_params["specialty"] ) if  query_params["specialty"].size > 0
       checked &= code_contained(orgaff.codes, "pharmacy" )  
@@ -111,15 +115,14 @@ class PharmaciesController < ApplicationController
       end
     end
 
-    @locations = @locations.values.select{ |loc| loc.checked}    # -- need to sort this out  SAK
-    # @locations = @locations.values 
+    @locations = @locations.values.select{ |loc| loc.checked}   
 
     # Prepare the query string for display on the page
     @search = "<Search String in Returned Bundle is empty>"
     @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
 
     # Prepare the links for the Next and Previous buttons
-    update_bundle_links
+    update_bundle_links   # need to sort this out
 
     respond_to do |format|
       format.js {}
