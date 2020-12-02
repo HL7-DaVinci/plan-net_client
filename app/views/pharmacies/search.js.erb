@@ -1,3 +1,2 @@
 $('#pharmacies-table').html("<%= escape_javascript(render partial: "pharmacies") %>");
 $('#pharmacy-query').html("<%= escape_javascript(render partial: "partials/query") %>");
-$('#pagination').html("<%= escape_javascript(render partial: "partials/pagination_remote", locals: { resource: :pharmacies }) %>");

@@ -3,7 +3,7 @@
   <th scope='col'>Phone/Fax</th>
   <th scope='col'>Address</th>
 </tr>
-<% @locations.each do |location| %>
+<% @items.each do |location| %>
   <tr>
     <td><%= link_to location.name, location_path(location.id) %></td>
     <td>

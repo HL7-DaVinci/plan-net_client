@@ -49,7 +49,8 @@ class PharmaciesController < ApplicationController
   # on the client side, and eliminating the locations that are only referenced by OAs with the wrong type
 
   def search
-    if params[:page].present?
+    if  params[:page].present?
+      binding.pry 
       update_page(params[:page])
     else
       base_params = {
@@ -57,9 +58,8 @@ class PharmaciesController < ApplicationController
    #     type: 'OUTPHARM',
    # _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
       }
-
+      
       query_params = params[:pharmacy]
-
       # Build the location-based query if zipcode and radius has been specified 
       if query_params
         modified_params = zip_plus_radius_to_address(query_params) 
@@ -78,23 +78,24 @@ class PharmaciesController < ApplicationController
         FHIR::Location,
         search: { parameters: query }
       ).resource
+      @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first
     end
     @locations = {}
     @orgaffs = []
     loop do
-    fhir_locations = @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::Location }.map(&:resource)
-    fhir_orgaffs = @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::OrganizationAffiliation }.map(&:resource)
+      fhir_locations = @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::Location }.map(&:resource)
+      fhir_orgaffs = @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::OrganizationAffiliation }.map(&:resource)
 
-    fhir_locations.map  do  |fhir_location| 
-      @locations["Location/" + fhir_location.id] =  Location.new(fhir_location)  # build a hash, and then convert to array
-    end
-    fhir_orgaffs.map  do  |fhir_orgaff| 
-      @orgaffs << OrganizationAffiliation.new(fhir_orgaff)
-    end
+      fhir_locations.map  do  |fhir_location| 
+        @locations["Location/" + fhir_location.id] =  Location.new(fhir_location)  # build a hash, and then convert to array
+      end
+      fhir_orgaffs.map  do  |fhir_orgaff| 
+        @orgaffs << OrganizationAffiliation.new(fhir_orgaff)
+      end
 
-    url = @bundle&.next_link&.url
-    break if url.present? == false
-    @bundle = @client.parse_reply(FHIR::Bundle, @client.default_format,  @client.raw_read_url(url))
+      url = @bundle&.next_link&.url
+      break if url.present? == false
+      @bundle = @client.parse_reply(FHIR::Bundle, @client.default_format,  @client.raw_read_url(url))
     end
     # now we have all of the content, we can now process the content
     # Now, iterate through the orgaffs, and mark the locations associated with orgaffs that satisfy the filter criteria
@@ -113,13 +114,15 @@ class PharmaciesController < ApplicationController
           @locations[location.reference].checked = true if @locations[location.reference]
         end
       end
-    end
+  end
 
     @locations = @locations.values.select{ |loc| loc.checked}   
+    @pagy_a, @items   = pagy_array(@locations)
 
+    binding.pry 
     # Prepare the query string for display on the page
-    @search = "<Search String in Returned Bundle is empty>"
-    @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
+    #@search = "<Search String in Returned Bundle is empty>"
+    #@search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
 
     # Prepare the links for the Next and Previous buttons
     update_bundle_links   # need to sort this out

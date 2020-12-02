@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require "erb"
 require 'pry'
+require 'pagy/extras/array'
 ################################################################################
 #
 # Application Controller
@@ -12,6 +13,7 @@ require 'pry'
 class ApplicationController < ActionController::Base
 
   include ERB::Util
+  include Pagy::Backend
   FHIR.logger.level = Logger::DEBUG
 
   #-----------------------------------------------------------------------------
