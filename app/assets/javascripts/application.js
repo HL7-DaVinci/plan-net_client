@@ -17,4 +17,5 @@
 //= require bootstrap-sprockets
 //= require leaflet
 //= require leaflet.awesome-markers
+//= require pagy
 //= require_tree .
