@@ -17,6 +17,7 @@ cd plan-net_client
 bundle install
 ```
 Start PostgreSQL
+
 Initialize the zipcode database once:
 ```sh
 ruby db/seed_zipcodes.rb
