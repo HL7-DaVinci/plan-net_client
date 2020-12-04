@@ -6,7 +6,7 @@ The client reference implementation can installed and run locally on your machin
 
 * [Ruby 2.6+](https://www.ruby-lang.org/en/)
 * [Ruby Bundler](http://bundler.io/)
-* [SQLite](https://www.sqlite.org/)
+* [PostgreSQL](https://www.postgresql.org/)
 
 And run the following commands from the terminal:
 
@@ -15,6 +15,14 @@ And run the following commands from the terminal:
 git clone https://github.com/HL7-DaVinci/plan-net_client
 cd plan-net_client
 bundle install
+```
+Start PostgreSQL
+Initialize the zipcode database once:
+```sh
+ruby db/seed_zipcodes.rb
+```
+Now you are ready to start the client.
+```sh
 rails s
 ```
 
