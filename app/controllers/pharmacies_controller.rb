@@ -125,10 +125,10 @@ class PharmaciesController < ApplicationController
     #@search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
 
     # Prepare the links for the Next and Previous buttons
-    update_bundle_links   # need to sort this out
+    # update_bundle_links   # need to sort this out
 
     respond_to do |format|
-      format.js {}
+      format.js { }
     end
   end
 
