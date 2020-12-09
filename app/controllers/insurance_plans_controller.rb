@@ -27,7 +27,7 @@ class InsurancePlansController < ApplicationController
       search: { 
         parameters: {
       #    type: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-InsurancePlan',
-          _id: #{id}"
+          _id: "#{id}"
         } 
       }
     )&.resource&.entry&.network.map do |network|

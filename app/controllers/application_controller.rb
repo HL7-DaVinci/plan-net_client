@@ -20,7 +20,6 @@ class ApplicationController < ActionController::Base
 
   # Get the FHIR server url
   def server_url
-    binding.pry 
     url = (params[:server_url] || session[:server_url])
     url = url.strip if url 
   end
@@ -31,7 +30,6 @@ class ApplicationController < ActionController::Base
   # for future requests.
 
   def connect_to_server
-    binding.pry
     if server_url.present?
       @client = FHIR::Client.new(server_url)
       @client.use_r4
