@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get 'pharmacymix/index'
+  get 'controllername/pharmacymix'
+  get 'controllername/index'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root 'welcome#index'
 
@@ -9,6 +12,10 @@ Rails.application.routes.draw do
   end
 
   resources :pharmacies, only: [:index] do
+    get 'search', on: :collection
+  end
+
+  resources :pharmacymixes, only: [:index] do
     get 'search', on: :collection
   end
 
@@ -25,4 +32,5 @@ Rails.application.routes.draw do
   resources :practitioner_roles,        only: [:index, :show]
   resources :providers,                 only: [:index]
   resources :pharmacies,                only: [:index]
+  resources :pharmacymixes,             only: [:index]
 end
