@@ -15,18 +15,23 @@ class PharmacymixesController < ApplicationController
   def search
         insurance_plan = query_params = params[:pharmacymix]["insurance_plan"]
         networks = plan_networks(insurance_plan)
-        binding.pry 
         # A pharmacy location can be associated with multiple organization affiliation relationships and multiple specialties
       # We will report "mix" as:
       #   - total unique organizations and locations (specialty = nil)
       #   - For each of the pharmacy specialties (compounding, retail, mailorder, etc) - unique organizations and locations
       # Tje building block is a query for pharmacy locations by network and specialty that will return {specialty: <specialty>, organizations: <organizations>, locations: <locations>}
-      pharmacy_mix = []
-      pharmacy_mix << pharmacy_locations(networks, nil, "All")
-      PHARMACY_SPECIALTIES.map do |specialty|
-      pharmacy_mix << pharmacy_locations(networks, specialty[:value], specialty[:name])
+      @items = []
+      @items << pharmacy_locations(networks, nil, "All")
+      binding.pry 
+      if @items[0][:locations] > 0
+        PHARMACY_SPECIALTIES.map do |specialty|
+        @items << pharmacy_locations(networks, specialty[:value], specialty[:name])
+        end
       end
       binding.pry 
+      respond_to do |format|
+        format.js { }
+      end
   end
   def pharmacy_locations(networks, specialty, specialtydisplay)
     # retrieve organizationaffiliations that satisfy type=pharmacy and specialty = specialty (if provided)
@@ -62,7 +67,7 @@ class PharmacymixesController < ApplicationController
         bundle = @client.parse_reply(FHIR::Bundle, @client.default_format,  @client.raw_read_url(url))
       end
       { "specialty": specialtydisplay,
-        "organization": organizations.size,
+        "organizations": organizations.size,
         "locations": locations.size}
 
       rescue => exception

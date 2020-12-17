@@ -1,0 +1,12 @@
+        <tr>
+            <th scope='col'>Pharmacy Type</th>
+            <th scope='col'>Organizations</th>
+            <th scope='col'>Locations</th>
+          </tr>
+          <% @items.each do |item| %>
+            <tr>
+              <td><%= item[:specialty] %></td>
+              <td><%= item[:organizations] %></td>
+              <td><%= item[:locations] %></td>
+            </tr>
+          <% end %>
