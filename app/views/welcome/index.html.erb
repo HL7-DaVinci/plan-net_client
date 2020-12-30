@@ -35,4 +35,19 @@
 			<% end %>
 		<% end %>
 	</section>
+	<% if @client %>
+	<%= form_tag welcome_export_url, method: 'get', class: 'form-inline', id: 'server-form' do %>
+	<section class='row col-12'>
+			<div class='col-md-4'>
+			</div>
+            <div class='col-md-4'>
+				<%= button_tag class: 'btn btn-primary col-md-4', id: 'export', type: 'submit' do %>
+				Export
+				<% end %>
+			</div>
+			<div class='col-md-4'>
+			</div>
+	</section>
+	<% end %>
+	<% end %>
 </section>

@@ -19,6 +19,26 @@ class WelcomeController < ApplicationController
     get_resource_counts
   end
 
+  # Hit the $export operation and display the paths to the data for export
+  # Only works with synchronous export
+  def export
+    connect_to_server 
+    response = RestClient::Request.new( :method => :get, :url => server_url + "/$export", :prefer => "respond-async").execute 
+
+    # should expect code=202 with Content-Location header with the absolute URL of an endpoint
+    # then should hit the endpoint until a code = 200 is received
+    if response.code == 200
+      results = JSON.parse(response.to_str)
+      binding.pry 
+      @request = results["request"]
+      @outputs = results["output"]
+      @requiresToken = results["requiresAccessToken"]
+    else
+      @request = response.request.url  + "  failed with code = " + response.code.to_s
+      @requiresToken = "Failed"
+      @outputs= []
+    end
+  end
   #-----------------------------------------------------------------------------
 
   def get_resource_counts

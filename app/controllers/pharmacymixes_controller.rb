@@ -22,13 +22,11 @@ class PharmacymixesController < ApplicationController
       # Tje building block is a query for pharmacy locations by network and specialty that will return {specialty: <specialty>, organizations: <organizations>, locations: <locations>}
       @items = []
       @items << pharmacy_locations(networks, nil, "All")
-      binding.pry 
       if @items[0][:locations] > 0
         PHARMACY_SPECIALTIES.map do |specialty|
         @items << pharmacy_locations(networks, specialty[:value], specialty[:name])
         end
       end
-      binding.pry 
       respond_to do |format|
         format.js { }
       end
