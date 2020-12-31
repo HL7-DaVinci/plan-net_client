@@ -1,0 +1,12 @@
+
+        <section class='row col-12'>
+                <div class='col-md-4'>
+                  <%= button_to "Export", {action: :export},  {method: :get, class: 'col-md-4 btn btn-primary', disabled: @exportdisabled } %>
+                </div>
+                <div class='col-md-4'>
+                    <%= button_to "PollExport",  {action: :pollexport}, {method: :get, class: 'col-md-4 btn btn-primary', disabled: @pollexportdisabled } %>
+                </div>
+               <div class='col-md-4'>
+                    <%= button_to "Cancel", {action: :cancel}, {method: :get , class: 'col-md-4 btn btn-primary', disabled: @canceldisabled } %>
+                </div>
+        </section>

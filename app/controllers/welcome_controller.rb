@@ -17,26 +17,66 @@ class WelcomeController < ApplicationController
   def index
     connect_to_server 
     get_resource_counts
+    setexportpoll(nil)
   end
 
-  # Hit the $export operation and display the paths to the data for export
-  # Only works with synchronous export
-  def export
-    connect_to_server 
-    response = RestClient::Request.new( :method => :get, :url => server_url + "/$export", :prefer => "respond-async").execute 
+  # Poll for comletion of $export operation and, if complete,  display the paths to the data for export
 
-    # should expect code=202 with Content-Location header with the absolute URL of an endpoint
-    # then should hit the endpoint until a code = 200 is received
-    if response.code == 200
-      results = JSON.parse(response.to_str)
+  def export
+    binding.pry 
+    connect_to_server 
+    exportpoll_url = session[:exportpoll]
+    binding.pry 
+    if exportpoll_url   #exportpoll
+      response = RestClient::Request.new( :method => :get, :url => exportpoll_url, :prefer => "respond-async").execute 
+      
+      # should expect code=200 with Content-Location header with the absolute URL of an endpoint
+      # then should hit the endpoint until a code = 200 is received
+      # 500 error
+      # 202 in progress with X-Progress header
+      # 200 complete
+     case response.code
+      when 200
+          results = JSON.parse(response.to_str)
+          binding.pry 
+          @request = results["request"]
+          @outputs = results["output"]
+          @requiresToken = results["requiresAccessToken"]
+          setexportpoll(nil)
+        when 202
+          results = JSON.parse(response.to_str)
+          progress = results[:X-Progress]
+          binding.pry 
+          @request = results["request"]
+          @outputs = []
+          @requiresToken = "In progress:   #{progress}... try again later"
+      else # 500 or anything else
+          @request = response.request.url  + "  failed with code = " + response.code.to_s
+          @requiresToken = "Failed"
+          @outputs= []
+          setexportpoll(nil)
+        end
+    else   #export
+      response = RestClient::Request.new( :method => :get, :url => server_url + "/$export", :prefer => "respond-async").execute 
+      # should expect code=202 with Content-Location header with the absolute URL of an endpoint
+      # then should hit the endpoint until a code = 200 is received
       binding.pry 
-      @request = results["request"]
-      @outputs = results["output"]
-      @requiresToken = results["requiresAccessToken"]
-    else
-      @request = response.request.url  + "  failed with code = " + response.code.to_s
-      @requiresToken = "Failed"
-      @outputs= []
+      if response.code == 200   # request submitted successfully
+        results = JSON.parse(response.to_str)
+        binding.pry 
+        # exportpollurl = results[:headers][:Content-Location]
+        exportpollurl = server_url + "/$export"     # temporary
+        setexportpoll(exportpollurl)
+        @request = response.request.url  + "  successfuly requested"
+        @requiresToken = "Requested"
+        @outputs= []
+        binding.pry 
+      else
+        @request = response.request.url  + "  failed with code = " + response.code.to_s
+        @requiresToken = "Failed"
+        @outputs= []
+        setexportpoll(nil)
+      end
     end
   end
   #-----------------------------------------------------------------------------
@@ -111,8 +151,16 @@ class WelcomeController < ApplicationController
       @organizationAffiliations = 0
       @practitioners = 0
       @practitionerRoles = 0
-  
+      setexportpoll(nil)
 		end
 
+  end
+  def setexportpoll(url)
+    if url
+      @label = "ExportPoll"
+    else
+      @label = "Export"
+    end
+    session[:exportpoll] = url
   end
 end

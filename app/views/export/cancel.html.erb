@@ -1,0 +1,12 @@
+<h1>Export#cancel</h1>
+<section class='container'>
+	<% if @client %>
+		<p class="text-success m-auto client-connected" style='text-align: center'>
+			Exporting from  <%= cookies[:server_url] -%>
+		</p>
+        <%= render 'buttons' %>
+		<%= render 'message' %>
+	<%else%>
+		<p class="text-danger m-auto" style='text-align: center'>No Connection Established</p>
+	<% end %>
+</section>
