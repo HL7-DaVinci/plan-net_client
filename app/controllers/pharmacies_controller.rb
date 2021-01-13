@@ -44,80 +44,100 @@ class PharmaciesController < ApplicationController
 
   # GET /pharmacies/search
 
-  # Need to update the query plan.   Current query retrieves all Locations that have an organization affiliation with ONE of (the right network,
-  # the right role).   The key relationship is pharmacy locations that are assocaited with a network.  Filtering the organizational affiliations
-  # on the client side, and eliminating the locations that are only referenced by OAs with the wrong type
+  # Need to update the query plan.  Current query retrieves all Locations that 
+  # have an organization affiliation with ONE of (the right network, the right role).   
+  #
+  # The key relationship is pharmacy locations that are associated with a network.  
+  # Filtering the organization affiliations on the client side, and eliminating 
+  # the locations that are only referenced by organization affiliations with the 
+  # wrong type.
 
   def search
-    if  params[:page].present?
-      binding.pry 
+    if params[:page].present?
+      byebug 
       update_page(params[:page])
     else
       base_params = {
         _revinclude: ['OrganizationAffiliation:location']
-   #     type: 'OUTPHARM',
-   # _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
+        # type: 'OUTPHARM',
+        # _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
       }
       
       query_params = params[:pharmacy]
+
       # Build the location-based query if zipcode and radius has been specified 
       if query_params
         modified_params = zip_plus_radius_to_address(query_params) 
       else
-        modified_params={}
+        modified_params = {}
       end
-      modified_params[:role]="pharmacy" 
+
+      modified_params[:role] = "pharmacy" 
+
       # Only include the allowed search parameters...
       filtered_params = Location.search_params.select { |key, _value| modified_params[key].present? }
+
       # Build the full query with the base parameters and the filtered parameters
       query = filtered_params.each_with_object(base_params) do |(local_key, fhir_key), search_params|
         search_params[fhir_key] = modified_params[local_key]
       end
+
+      byebug
       # Get the matching resources from the FHIR server
       @bundle = @client.search(
         FHIR::Location,
         search: { parameters: query }
       ).resource
+
       @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first
+      byebug
     end
+
     @locations = {}
     @orgaffs = []
-    loop do
-      fhir_locations = @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::Location }.map(&:resource)
-      fhir_orgaffs = @bundle.entry.select { |entry| entry.resource.instance_of? FHIR::OrganizationAffiliation }.map(&:resource)
 
-      fhir_locations.map  do  |fhir_location| 
-        @locations["Location/" + fhir_location.id] =  Location.new(fhir_location)  # build a hash, and then convert to array
+    # Build the Ruby models to represent all of the FHIR data
+    loop do
+      fhir_locations = filter(@bundle.entry.map(&:resource), "Location")
+      fhir_orgaffs = filter(@bundle.entry.map(&:resource), "OrganizationAffiliation")
+
+      fhir_locations.map do |fhir_location| 
+        # build a hash, and then convert to array
+        @locations["Location/" + fhir_location.id] = Location.new(fhir_location)  
       end
-      fhir_orgaffs.map  do  |fhir_orgaff| 
+
+      fhir_orgaffs.map do |fhir_orgaff| 
         @orgaffs << OrganizationAffiliation.new(fhir_orgaff)
       end
 
-      url = @bundle&.next_link&.url
-      break if url.present? == false
-      @bundle = @client.parse_reply(FHIR::Bundle, @client.default_format,  @client.raw_read_url(url))
+      break unless @bundle.next_link.present?
+      url = @bundle.next_link.url
+      break unless url.present?
+      @bundle = @client.parse_reply(FHIR::Bundle, @client.default_format, @client.raw_read_url(url))
     end
+
     # now we have all of the content, we can now process the content
     # Now, iterate through the orgaffs, and mark the locations associated with orgaffs that satisfy the filter criteria
     #  if query_params["network"] filter by contains_code(orgaff.network, query_Params["network"])
     #  if query_params["specialty"] filter by contains_code(orgaff.specialty, query_Params["specialty"])
     #  if always filter by contains_code(orgaff.codes, "pharmacy")
     #  if an orgaff passes, then mark its locations with checked=true
+
     @orgaffs.map do |orgaff|
       checked = true
-      checked &= reference_contained(orgaff.networks, query_params["network"] ) if  query_params["network"].size > 0
-      checked &= code_contained(orgaff.specialties, query_params["specialty"] ) if  query_params["specialty"].size > 0
+      checked &= reference_contained(orgaff.networks, query_params["network"] ) if query_params["network"].size > 0
+      checked &= code_contained(orgaff.specialties, query_params["specialty"] ) if query_params["specialty"].size > 0
       checked &= code_contained(orgaff.codes, "pharmacy" )  
 
-      if(checked)
+      if (checked)
         orgaff.locations.map do |location|
           @locations[location.reference].checked = true if @locations[location.reference]
         end
       end
-  end
+    end
 
-    @locations = @locations.values.select{ |loc| loc.checked}   
-    @pagy_a, @items   = pagy_array(@locations)
+    @locations = @locations.values.select{ |loc| loc.checked }   
+    @pagy_a, @items = pagy_array(@locations)
 
     binding.pry 
     # Prepare the query string for display on the page
@@ -132,24 +152,42 @@ class PharmaciesController < ApplicationController
     end
   end
 
-    # Return true if coding includes code
+  #-----------------------------------------------------------------------------
+
+  # Filter out resources that don't match the requested type
+
+  def filter(fhir_resources, type)
+    fhir_resources.select do |resource| 
+      resource.resourceType == type
+    end
+  end
+
+  #-----------------------------------------------------------------------------
+
+  # Return true if coding includes code
+
   def code_contained(list, code)
     result = false
+
     list.map(&:coding).each do |coding|
-        result |= coding.map(&:code).first == code 
+      result |= coding.map(&:code).first == code 
     end
+
     result 
   end
 
+  #-----------------------------------------------------------------------------
+
   # Return true if array includes reference ref
+
   def reference_contained(list, ref)
     result = false
 
     list.map do |r|
-        result |= r.reference == ref 
+      result |= r.reference == ref 
     end
+
     result 
   end
 
- 
 end

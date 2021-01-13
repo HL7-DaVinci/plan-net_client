@@ -2,6 +2,7 @@
 require "erb"
 require 'pry'
 require 'pagy/extras/array'
+
 ################################################################################
 #
 # Application Controller
@@ -40,9 +41,9 @@ class ApplicationController < ActionController::Base
     end
 
     rescue => exception
-       err = "Connection failed: Ensure provided url points to a valid FHIR server"
-       binding.pry 
-       redirect_to root_path, flash: { error: err }
+      err = "Connection failed: Ensure provided url points to a valid FHIR server"
+      binding.pry 
+      redirect_to root_path, flash: { error: err }
   end
 
   #-----------------------------------------------------------------------------
@@ -128,31 +129,37 @@ class ApplicationController < ActionController::Base
   #-----------------------------------------------------------------------------
 
   # Fetch all plans, and remember their resources, names, and networks
+
   def fetch_plans (id = nil)
     @plans = []
     parameters = {}
     @networks_by_plan = {}
+
     #parameters[:_profile] = 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-InsurancePlan' 
     parameters[:_count] = 100
     if (id.present?)
       parameters[:_id] = id
     end
-    @client.search(
-      FHIR::InsurancePlan,
-      search: { parameters: parameters }
-    ).resource.entry.map do |entry|
-      if entry.resource.id.present? && entry.resource.name.present?
-        @plans << {
-          value: entry.resource.id,
-          name: entry.resource.name
-        }
-        @networks_by_plan [ entry.resource.id] = entry.resource.network
-      end
-    end
-    @plans.sort_by! { |hsh| hsh[:name] }
 
-  rescue => exception
-    redirect_to root_path, flash: { error: 'Please specify a plan network server (fetch_plans)' }
+    insurance_plans = @client.search(FHIR::InsurancePlan,
+                                      search: { parameters: parameters })
+    if good_response(insurance_plans.response[:code]) 
+      insurance_plans.resource.entry.map do |entry|
+        if entry.resource.id.present? && entry.resource.name.present?
+          @plans << {
+            value: entry.resource.id,
+            name: entry.resource.name
+          }
+          @networks_by_plan[entry.resource.id] = entry.resource.network
+        end
+      end
+
+      @plans.sort_by! { |hsh| hsh[:name] }
+    else
+      redirect_to root_path, 
+          flash: { error: "Could not retrieve insurance plans from the server (fetch_plans, " + 
+                        insurance_plans.response[:code].to_s + ")" }
+    end
   end
 
   #-----------------------------------------------------------------------------
@@ -186,6 +193,7 @@ class ApplicationController < ActionController::Base
       end
       params[:zipcode] = Zipcode.zipcodes_within(radius, zip).join(',')
     end
+    byebug
     params
   end
 
@@ -239,6 +247,12 @@ class ApplicationController < ActionController::Base
     else
       zip
     end
+  end
+
+  #-----------------------------------------------------------------------------
+
+  def good_response(response)
+    response >= 200 && response < 300
   end
 
   #-----------------------------------------------------------------------------
@@ -425,9 +439,9 @@ class ApplicationController < ActionController::Base
     { value: '347C00000X', name: 'Private Vehicle' },
     { value: '347D00000X', name: 'Train' },
     { value: '347E00000X', name: 'Transportation Broker' }
-].freeze 
+  ].freeze 
 
-INDIVIDUAL_AND_GROUP_SPECIALTIES = [
+  INDIVIDUAL_AND_GROUP_SPECIALTIES = [
     { value: '101Y00000X', name: 'Counselor' },
     { value: '101YA0400X', name: 'Addiction (Substance Use Disorder) Counselor' },
     { value: '101YM0800X', name: 'Mental Health Counselor' },
@@ -1097,23 +1111,23 @@ INDIVIDUAL_AND_GROUP_SPECIALTIES = [
     { value: '376J00000X', name: 'Homemaker' },
     { value: '376K00000X', name: 'Nurses Aide' },
     { value: '405300000X', name: 'Prevention Professional' }
-].freeze
-  
-SPECIALTIES = (NON_INDIVIDUAL_SPECIALTIES + INDIVIDUAL_AND_GROUP_SPECIALTIES).freeze 
-  
-PHARMACY_SPECIALTIES = [
-  { value: '333600000X', name: 'Pharmacy' },
-  { value: '3336C0002X', name: 'Clinic Pharmacy' },
-  { value: '3336C0003X', name: 'Community/Retail Pharmacy' },
-  { value: '3336C0004X', name: 'Compounding Pharmacy' },
-  { value: '3336H0001X', name: 'Home Infusion Therapy Pharmacy' },
-  { value: '3336I0012X', name: 'Institutional Pharmacy' },
-  { value: '3336L0003X', name: 'Long Term Care Pharmacy' },
-  { value: '3336M0002X', name: 'Mail Order Pharmacy' },
-  { value: '3336M0003X', name: 'Managed Care Organization Pharmacy' },
-  { value: '3336N0007X', name: 'Nuclear Pharmacy' },
-  { value: '3336S0011X', name: 'Specialty Pharmacy' }
-].freeze 
+  ].freeze
+    
+  SPECIALTIES = (NON_INDIVIDUAL_SPECIALTIES + INDIVIDUAL_AND_GROUP_SPECIALTIES).freeze 
+    
+  PHARMACY_SPECIALTIES = [
+    { value: '333600000X', name: 'Pharmacy' },
+    { value: '3336C0002X', name: 'Clinic Pharmacy' },
+    { value: '3336C0003X', name: 'Community/Retail Pharmacy' },
+    { value: '3336C0004X', name: 'Compounding Pharmacy' },
+    { value: '3336H0001X', name: 'Home Infusion Therapy Pharmacy' },
+    { value: '3336I0012X', name: 'Institutional Pharmacy' },
+    { value: '3336L0003X', name: 'Long Term Care Pharmacy' },
+    { value: '3336M0002X', name: 'Mail Order Pharmacy' },
+    { value: '3336M0003X', name: 'Managed Care Organization Pharmacy' },
+    { value: '3336N0007X', name: 'Nuclear Pharmacy' },
+    { value: '3336S0011X', name: 'Specialty Pharmacy' }
+  ].freeze 
 
   NUCC_CODES = [
     { value: '101Y00000X', name: 'Counselor' },

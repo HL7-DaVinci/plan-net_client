@@ -1,5 +1,4 @@
 $(() => {
-  Pagy.init();
   update_pharmacy_network_selection_by_plan();
 });
 
