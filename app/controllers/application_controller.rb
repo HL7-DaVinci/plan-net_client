@@ -27,6 +27,13 @@ class ApplicationController < ActionController::Base
 
   #-----------------------------------------------------------------------------
 
+  def setup_dalli
+    options = { :namespace => "plan-net", :compress => true }
+    @dalli_client = Dalli::Client.new('localhost:11211', options)
+  end
+
+  #-----------------------------------------------------------------------------
+
   # Connect the FHIR client with the specified server and save the connection
   # for future requests.
 

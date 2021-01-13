@@ -11,10 +11,12 @@
 require 'json'
 require 'uri'
 require 'pry'
+require 'dalli'
 
 class PharmaciesController < ApplicationController
 
   before_action :connect_to_server
+  before_action :setup_dalli
 
   #-----------------------------------------------------------------------------
 
@@ -54,8 +56,8 @@ class PharmaciesController < ApplicationController
 
   def search
     if params[:page].present?
-      byebug 
-      update_page(params[:page])
+      @locations = @dalli_client.get("pharmacy-locations-#{session.id}")
+      byebug
     else
       base_params = {
         _revinclude: ['OrganizationAffiliation:location']
@@ -89,62 +91,64 @@ class PharmaciesController < ApplicationController
       ).resource
 
       @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first
-    end
 
-    @locations = {}
-    @orgaffs = []
+      @locations = {}
+      @orgaffs = []
 
-    # Build the Ruby models to represent all of the FHIR data
-    loop do
-      fhir_locations = filter(@bundle.entry.map(&:resource), "Location")
-      fhir_orgaffs = filter(@bundle.entry.map(&:resource), "OrganizationAffiliation")
+      # Build the Ruby models to represent all of the FHIR data
+      loop do
+        fhir_locations = filter(@bundle.entry.map(&:resource), "Location")
+        fhir_orgaffs = filter(@bundle.entry.map(&:resource), "OrganizationAffiliation")
 
-      fhir_locations.map do |fhir_location| 
-        # build a hash, and then convert to array
-        @locations["Location/" + fhir_location.id] = Location.new(fhir_location)  
+        fhir_locations.map do |fhir_location| 
+          # build a hash, and then convert to array
+          @locations["Location/" + fhir_location.id] = Location.new(fhir_location)  
+        end
+
+        fhir_orgaffs.map do |fhir_orgaff| 
+          @orgaffs << OrganizationAffiliation.new(fhir_orgaff)
+        end
+
+        break unless @bundle.next_link.present?
+        url = @bundle.next_link.url
+        break unless url.present?
+        @bundle = @client.parse_reply(FHIR::Bundle, @client.default_format, @client.raw_read_url(url))
       end
 
-      fhir_orgaffs.map do |fhir_orgaff| 
-        @orgaffs << OrganizationAffiliation.new(fhir_orgaff)
-      end
+      # now we have all of the content, we can now process the content
+      # Now, iterate through the orgaffs, and mark the locations associated with orgaffs that satisfy the filter criteria
+      #  if query_params["network"] filter by contains_code(orgaff.network, query_Params["network"])
+      #  if query_params["specialty"] filter by contains_code(orgaff.specialty, query_Params["specialty"])
+      #  if always filter by contains_code(orgaff.codes, "pharmacy")
+      #  if an orgaff passes, then mark its locations with checked=true
 
-      break unless @bundle.next_link.present?
-      url = @bundle.next_link.url
-      break unless url.present?
-      @bundle = @client.parse_reply(FHIR::Bundle, @client.default_format, @client.raw_read_url(url))
-    end
+      @orgaffs.map do |orgaff|
+        checked = true
+        checked &= reference_contained(orgaff.networks, query_params["network"] ) if query_params["network"].size > 0
+        checked &= code_contained(orgaff.specialties, query_params["specialty"] ) if query_params["specialty"].size > 0
+        checked &= code_contained(orgaff.codes, "pharmacy" )  
 
-    # now we have all of the content, we can now process the content
-    # Now, iterate through the orgaffs, and mark the locations associated with orgaffs that satisfy the filter criteria
-    #  if query_params["network"] filter by contains_code(orgaff.network, query_Params["network"])
-    #  if query_params["specialty"] filter by contains_code(orgaff.specialty, query_Params["specialty"])
-    #  if always filter by contains_code(orgaff.codes, "pharmacy")
-    #  if an orgaff passes, then mark its locations with checked=true
-
-    @orgaffs.map do |orgaff|
-      checked = true
-      checked &= reference_contained(orgaff.networks, query_params["network"] ) if query_params["network"].size > 0
-      checked &= code_contained(orgaff.specialties, query_params["specialty"] ) if query_params["specialty"].size > 0
-      checked &= code_contained(orgaff.codes, "pharmacy" )  
-
-      if (checked)
-        orgaff.locations.map do |location|
-          @locations[location.reference].checked = true if @locations[location.reference]
+        if (checked)
+          orgaff.locations.map do |location|
+            @locations[location.reference].checked = true if @locations[location.reference]
+          end
         end
       end
+
+      @locations = @locations.values.select{ |loc| loc.checked }
+      @dalli_client.set("pharmacy-locations-#{session.id}", @locations)   
+
+      #binding.pry 
+
+      # Prepare the query string for display on the page
+      #@search = "<Search String in Returned Bundle is empty>"
+      #@search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
+
+      # Prepare the links for the Next and Previous buttons
+      # update_bundle_links   # need to sort this out
     end
 
-    @locations = @locations.values.select{ |loc| loc.checked }   
     @pagy_a, @items = pagy_array(@locations)
-
-    #binding.pry 
-
-    # Prepare the query string for display on the page
-    #@search = "<Search String in Returned Bundle is empty>"
-    #@search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
-
-    # Prepare the links for the Next and Previous buttons
-    # update_bundle_links   # need to sort this out
 
     respond_to do |format|
       format.js { }
