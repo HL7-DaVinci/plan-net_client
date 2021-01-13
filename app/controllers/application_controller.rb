@@ -26,8 +26,10 @@ class ApplicationController < ActionController::Base
   #-----------------------------------------------------------------------------
 
   def setup_dalli
-    options = { :namespace => "plan-net", :compress => true }
-    @dalli_client = Dalli::Client.new('localhost:11211', options)
+    unless Rails.env.production?
+      options = { :namespace => "plan-net", :compress => true }
+      @dalli_client = Dalli::Client.new('localhost:11211', options)
+    end
   end
 
   #-----------------------------------------------------------------------------
