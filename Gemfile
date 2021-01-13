@@ -57,4 +57,3 @@ end
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby] # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 
 gem "pry", "~> 0.12.2"
-gem 'pagy', '~> 3.5' # omit patch digit and use the latest if possible

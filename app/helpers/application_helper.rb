@@ -12,7 +12,6 @@ require 'httparty'
 module ApplicationHelper
   # Determines the CSS class of the flash message for display from the
   # specified level.
-  include Pagy::Frontend
   
   def flash_class(level)
     case level

@@ -57,7 +57,12 @@ class PharmaciesController < ApplicationController
   def search
     if params[:page].present?
       @locations = @dalli_client.get("pharmacy-locations-#{session.id}")
-      byebug
+      case params[:page]
+      when 'previous'
+        session[:offset] -= 20 unless session[:offset] == 0
+      when 'next'
+        session[:offset] += 20 unless session[:offset] > @locations.count
+      end
     else
       base_params = {
         _revinclude: ['OrganizationAffiliation:location']
@@ -90,7 +95,7 @@ class PharmaciesController < ApplicationController
         search: { parameters: query }
       ).resource
 
-      @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first
+      session[:search] = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first
 
       @locations = {}
       @orgaffs = []
@@ -136,7 +141,8 @@ class PharmaciesController < ApplicationController
       end
 
       @locations = @locations.values.select{ |loc| loc.checked }
-      @dalli_client.set("pharmacy-locations-#{session.id}", @locations)   
+      @dalli_client.set("pharmacy-locations-#{session.id}", @locations) 
+      session[:offset] = 0 
 
       #binding.pry 
 
@@ -148,7 +154,8 @@ class PharmaciesController < ApplicationController
       # update_bundle_links   # need to sort this out
     end
 
-    @pagy_a, @items = pagy_array(@locations)
+    @items = @locations.slice(session[:offset], PAGE_SIZE)
+    @search = session[:search] 
 
     respond_to do |format|
       format.js { }
