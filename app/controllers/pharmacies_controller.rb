@@ -57,12 +57,16 @@ class PharmaciesController < ApplicationController
   def search
     if params[:page].present?
       @locations = @dalli_client.get("pharmacy-locations-#{session.id}")
+      binding.pry
       case params[:page]
       when 'previous'
-        session[:offset] -= 20 unless session[:offset] == 0
+        session[:offset] -= 20
       when 'next'
-        session[:offset] += 20 unless session[:offset] > @locations.count
+        session[:offset] += 20 
       end
+      session[:offset] = [session[:offset],0].max 
+      session[:offset] = [session[:offset],@locations.count-1].min 
+      binding.pry 
     else
       base_params = {
         _revinclude: ['OrganizationAffiliation:location']
@@ -139,7 +143,7 @@ class PharmaciesController < ApplicationController
           end
         end
       end
-
+      binding.pry 
       @locations = @locations.values.select{ |loc| loc.checked }
       @dalli_client.set("pharmacy-locations-#{session.id}", @locations) 
       session[:offset] = 0 
