@@ -193,7 +193,6 @@ class ApplicationController < ActionController::Base
       end
       params[:zipcode] = Zipcode.zipcodes_within(radius, zip).join(',')
     end
-    byebug
     params
   end
 

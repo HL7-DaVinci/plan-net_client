@@ -82,7 +82,6 @@ class PharmaciesController < ApplicationController
         search_params[fhir_key] = modified_params[local_key]
       end
 
-      byebug
       # Get the matching resources from the FHIR server
       @bundle = @client.search(
         FHIR::Location,
@@ -90,7 +89,6 @@ class PharmaciesController < ApplicationController
       ).resource
 
       @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first
-      byebug
     end
 
     @locations = {}
@@ -139,7 +137,8 @@ class PharmaciesController < ApplicationController
     @locations = @locations.values.select{ |loc| loc.checked }   
     @pagy_a, @items = pagy_array(@locations)
 
-    binding.pry 
+    #binding.pry 
+
     # Prepare the query string for display on the page
     #@search = "<Search String in Returned Bundle is empty>"
     #@search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
