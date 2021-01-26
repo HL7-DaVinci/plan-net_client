@@ -58,16 +58,14 @@ class NetworksController < ApplicationController
 
   #-----------------------------------------------------------------------------
 
-  # GET /insurance_plans/[id]
+  # GET /network/[id]
 
   def show
-    reply = @client.search(FHIR::Organization,
-                           search: { parameters: { _id: params[:id],
-                                                   _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network' } })
-    bundle = reply.resource
-    fhir_network = bundle.entry.map(&:resource).first
-
+    reply = @client.read(FHIR::Organization, params[:id])
+    fhir_network = reply.resource
+    binding.pry 
     @network = Network.new(fhir_network) unless fhir_network.nil?
+    @organization = @network 
   end
 
 end

@@ -59,8 +59,9 @@ class PractitionerRolesController < ApplicationController
   # GET /practitioner_roles/[id]
 
   def show
-    reply = @client.search(FHIR::PractitionerRole,
-                           search: { parameters: { id: params[:id] } })
+  reply = @client.read(FHIR::PractitionerRole, params[:id])
+  fhir_practitioner_role = reply.resource
+  @practitioner_role = PractitionerRole.new(fhir_practitioner_role) unless fhir_practitioner_role.nil?
   end
 
 end

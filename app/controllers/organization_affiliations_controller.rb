@@ -68,6 +68,10 @@ class OrganizationAffiliationsController < ApplicationController
   def show
     reply = @client.search(FHIR::OrganizationAffiliation,
                            search: { parameters: { id: params[:id] } })
+
+reply = @client.read(FHIR::OrganizationAffiliation, params[:id])
+fhir_organization_affiliation = reply.resource
+@organization_affiliation = OrganizationAffiliation.new(fhir_organization_affiliation) unless fhir_organization_affiliation.nil?                       
   end
 
 end

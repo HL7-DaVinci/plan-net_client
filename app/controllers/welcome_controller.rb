@@ -119,7 +119,7 @@ class WelcomeController < ApplicationController
       search = { parameters: {  _summary: "count", type: 'fac,bus,prvgrp,payer,atyprv' } }
       results = @client.search(FHIR::Organization, search: search )
       @organizations = results.resource.total unless results.resource == nil
-   
+
       #profile = 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-OrganizationAffiliation'
       search = { parameters: {  _summary: "count" } }
       results = @client.search(FHIR::OrganizationAffiliation, search: search )

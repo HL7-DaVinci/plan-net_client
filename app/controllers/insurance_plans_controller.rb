@@ -70,13 +70,15 @@ class InsurancePlansController < ApplicationController
 
       @bundle = reply.resource
       @search = "<Search String in Returned Bundle is empty>"
-      @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
+      @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle && @bundle.link.first 
     end
 
     update_bundle_links
 
     @query_params = InsurancePlan.query_params
-    @insurance_plans = @bundle.entry.map(&:resource)
+    @insurance_plans = []
+    @insurance_plans = @bundle.entry.map(&:resource) if @bundle 
+  
   end
 
   #-----------------------------------------------------------------------------
@@ -84,13 +86,9 @@ class InsurancePlansController < ApplicationController
   # GET /insurance_plans/[id]
 
   def show
-    reply = @client.search(FHIR::InsurancePlan,
-                           search: { parameters: { _id: params[:id] } })
-    bundle = reply.resource
-    fhir_insurnace_plan = bundle.entry.map(&:resource).first
-
-    @insurance_plan = InsurancePlan.new(fhir_insurnace_plan) unless fhir_insurnace_plan.nil?
-    # plan_networks (params[:id])
+    reply = @client.read(FHIR::InsurancePlan, params[:id])
+    fhir_insurance_plan = reply.resource
+    @insurance_plan = InsurancePlan.new(fhir_insurance_plan) unless fhir_insurance_plan.nil?
   end
 
 end
