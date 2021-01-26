@@ -56,7 +56,13 @@ class PharmaciesController < ApplicationController
 
   def search
     if params[:page].present?
-      @locations = @dalli_client.get("pharmacy-locations-#{session.id}")
+      # Temporary
+      if Rails.env.production?
+        @locations = Rails.cache.read("pharmacy-locations-#{session.id}")
+      else
+        @locations = @dalli_client.get("pharmacy-locations-#{session.id}")
+      end
+
       case params[:page]
       when 'previous'
         session[:offset] -= 20
@@ -142,7 +148,14 @@ class PharmaciesController < ApplicationController
         end
       end
       @locations = @locations.values.select{ |loc| loc.checked }
-      @dalli_client.set("pharmacy-locations-#{session.id}", @locations) 
+
+      # Temporary
+      if Rails.env.production?
+        Rails.cache.write("pharmacy-locations-#{session.id}", @locations)
+      else
+        @dalli_client.set("pharmacy-locations-#{session.id}", @locations) 
+      end
+
       session[:offset] = 0 
 
       #binding.pry 
