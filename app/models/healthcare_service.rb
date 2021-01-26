@@ -76,6 +76,7 @@ class HealthcareService < Resource
     specialty: 'specialty',
     address: 'location.address',
     city: 'location.address-city',
+    zipcode: 'location.address-postalcode',
     name: 'name'
   }.freeze
 

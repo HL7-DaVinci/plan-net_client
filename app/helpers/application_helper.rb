@@ -12,7 +12,7 @@ require 'httparty'
 module ApplicationHelper
   # Determines the CSS class of the flash message for display from the
   # specified level.
-
+  
   def flash_class(level)
     case level
     when 'notice'

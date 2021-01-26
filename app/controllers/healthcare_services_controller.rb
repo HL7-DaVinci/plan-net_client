@@ -70,8 +70,8 @@ class HealthcareServicesController < ApplicationController
       update_page(params[:page])
     else
       base_params = {
-        _include: ['HealthcareService:providedBy', 'HealthcareService.location'],
-        _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-HealthcareService'
+        _include: ['HealthcareService:providedBy', 'HealthcareService.location']
+ #       _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-HealthcareService'
       }
 
       query_params = params[:healthcare_service]
@@ -86,7 +86,6 @@ class HealthcareServicesController < ApplicationController
       query = filtered_params.each_with_object(base_params) do |(local_key, fhir_key), search_params|
         search_params[fhir_key] = modified_params[local_key]
       end
-
       # Get the matching resources from the FHIR server
       @bundle = @client.search(
         FHIR::HealthcareService,

@@ -29,7 +29,7 @@ class LocationsController < ApplicationController
           FHIR::Location,
           search: {
             parameters: modifiedparams.merge(
-              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
+     #         _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
             )
           }
         )         
@@ -38,7 +38,7 @@ class LocationsController < ApplicationController
           FHIR::Location,
           search: {
             parameters: {
-              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
+      #        _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
             }
           }
         )

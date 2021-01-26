@@ -1,0 +1,12 @@
+<tr>
+  <th  scope='col' style="text-align:left">Specialty</th>
+  <th  scope='col'>Organizations</th>
+  <th scope='col'>Locations</th>
+</tr>
+<% @items.each do |item| %>
+  <tr>
+    <td style="text-align:left"><%= item[:specialty] %></td>
+    <td style="text-align:center"><%= item[:organizations] %></td>
+    <td style="text-align:center"><%= item[:locations] %></td>
+  </tr>
+<% end %>

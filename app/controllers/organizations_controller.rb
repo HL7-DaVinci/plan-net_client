@@ -19,16 +19,19 @@ class OrganizationsController < ApplicationController
   # GET /organizations
 
   def index
+    typecodes = 'fac,bus,prvgrp,payer,atyprv' 
     if params[:page].present?
       update_page(params[:page])
     else
       if params[:query_string].present?
         parameters = query_hash_from_string(params[:query_string])
+
         reply = @client.search(
           FHIR::Organization,
           search: {
             parameters: parameters.merge(
-              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Organization'
+       #       _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Organization'
+               type:      typecodes         
             )
           }
         )
@@ -37,7 +40,8 @@ class OrganizationsController < ApplicationController
           FHIR::Organization,
           search: {
             parameters: {
-              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Organization'
+        #      _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Organization'
+              type:      typecodes    
             }
           }
         )

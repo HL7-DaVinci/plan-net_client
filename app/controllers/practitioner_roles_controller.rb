@@ -28,7 +28,7 @@ class PractitionerRolesController < ApplicationController
           FHIR::PractitionerRole,
           search: {
             parameters: parameters.merge(
-              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-PractitionerRole'
+     #         _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-PractitionerRole'
             )
           }
         )
@@ -37,7 +37,7 @@ class PractitionerRolesController < ApplicationController
           FHIR::PractitionerRole,
           search: {
             parameters: {
-              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-PractitionerRole'
+      #        _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-PractitionerRole'
             }
           }
         )

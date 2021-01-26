@@ -1,0 +1,20 @@
+<section class='row col-12'>
+        <table class="table table-dark md-12">
+		<tr>
+		<td>Request</td>
+		<td><%=@request%></td>
+		<tr>
+		<tr>
+		<td>Requires Token</td>
+		<td><%=@requiresToken%></td>
+		<tr>
+		</table>
+		<table class="table table-dark md-12">
+		<% @outputs.each do |output| %>
+		<tr>
+		<td><%= output["type"] %> </td>
+		<td><%= output["url"] %> </td>
+		</tr>		
+		<% end %>
+	</table>
+    </section>

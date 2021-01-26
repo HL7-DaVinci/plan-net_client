@@ -32,6 +32,7 @@ gem 'leaflet-awesome-markers-rails', '~> 2.0'
 gem 'leaflet-rails'             # Handles Leaflet-based maps
 gem 'pg'                        # Use Postgres
 gem 'geokit-rails'              # Provides geolocation-based searches
+gem 'dalli'                     # Memcache client
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw] # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -54,3 +55,5 @@ group :test do
 end
 
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby] # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+
+gem "pry", "~> 0.12.2"

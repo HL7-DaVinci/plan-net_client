@@ -1,0 +1,2 @@
+module PharmacymixesHelper
+end

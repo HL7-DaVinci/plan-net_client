@@ -17,22 +17,24 @@ class InsurancePlansController < ApplicationController
   #-----------------------------------------------------------------------------
 
   # GET /insurance_plans/networks
-  # The current test data doesn't link insurance plans to networks as of 11/8...
-  # probably need to rectify that, or fake it by linkages.
 
+  # Test data now includes links to networks.    
+  # We only handle the case where an insurance plan has one cost sharing plan, and the network is at the global level.
+  # For a plan with multiple cost sharing plans, each with its own networks, this will fail.
   def plan_networks (id)
     @network_list = @client.search(
-      FHIR::Organization,
+      FHIR::InsurancePlan,
       search: { 
         parameters: {
-          _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Network',
-          partof: "Organization/#{id}"
+      #    type: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-InsurancePlan',
+          _id: "#{id}"
         } 
       }
-    )&.resource&.entry&.map do |entry|
+    )&.resource&.entry&.network.map do |network|
+      binding.pry 
       {
-        value: entry&.resource&.id,
-        name: entry&.resource&.name
+        value: network.reference,
+        name: network.display
       }
     end
   end
@@ -51,7 +53,7 @@ class InsurancePlansController < ApplicationController
           FHIR::InsurancePlan,
           search: {
             parameters: parameters.merge(
-              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-InsurancePlan'
+    #          _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-InsurancePlan'
             )
           }
         )
@@ -60,7 +62,7 @@ class InsurancePlansController < ApplicationController
           FHIR::InsurancePlan,
           search: {
             parameters: {
-              _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-InsurancePlan'
+   #           _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-InsurancePlan'
             }
           }
         )
