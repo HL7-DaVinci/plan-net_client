@@ -61,10 +61,8 @@ class PractitionersController < ApplicationController
   # GET /practitioners/[id]
 
   def show
-    reply = @client.search(FHIR::Practitioner,
-                           search: { parameters: { _id: params[:id] } })
-    bundle = reply.resource
-    fhir_practitioner = bundle.entry.map(&:resource).first
+    reply = @client.read(FHIR::Practitioner, params[:id])
+    fhir_practitioner = reply.resource
     @practitioner = Practitioner.new(fhir_practitioner) unless fhir_practitioner.nil?
   end
 

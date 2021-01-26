@@ -49,13 +49,15 @@ class OrganizationsController < ApplicationController
     
       @bundle = reply.resource
       @search = "<Search String in Returned Bundle is empty>"
-      @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle.link.first 
+      binding.pry 
+      @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle && @bundle.link && @bundle.link.first 
     end
 
     update_bundle_links
 
     @query_params = Organization.query_params
-    @organizations = @bundle.entry.map(&:resource)
+    @organizations = []
+    @organizations = @bundle.entry.map(&:resource) if @bundle
   end
 
   #-----------------------------------------------------------------------------
@@ -63,11 +65,8 @@ class OrganizationsController < ApplicationController
   # GET /organizations/[id]
 
   def show
-    reply = @client.search(FHIR::Organization,
-                           search: { parameters: { _id: params[:id] } })
-    bundle = reply.resource
-    fhir_organization = bundle.entry.map(&:resource).first
-
+    reply = @client.read(FHIR::Organization, params[:id])
+    fhir_organization = reply.resource
     @organization = Organization.new(fhir_organization) unless fhir_organization.nil?
   end
 

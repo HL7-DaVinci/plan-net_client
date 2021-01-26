@@ -8,14 +8,9 @@ Rails.application.routes.draw do
   get 'pharmacymix/index'
   get 'controllername/pharmacymix'
   get 'controllername/index'
-  get 'controllername/export'
-  get 'controllername/exportpoll'
-  get 'controllername/exportcancel'
+
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root 'welcome#index'
-  get '/welcome/export', to: 'welcome#export'
-  get '/welcome/exportpoll', to: 'welcome#exportpoll'
-  get '/welcome/exportcancel', to: 'welcome#exportcancel'
 
   resources :healthcare_services, only: [:index, :show] do
     get 'search', on: :collection

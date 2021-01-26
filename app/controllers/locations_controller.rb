@@ -60,11 +60,8 @@ class LocationsController < ApplicationController
   # GET /locations/[id]
 
   def show
-    reply = @client.search(FHIR::Location,
-                           search: { parameters: { _id: params[:id] } })
-    bundle = reply.resource
-    fhir_location = bundle.entry.map(&:resource).first
-
+    reply = @client.read(FHIR::Location, params[:id])
+    fhir_location = reply.resource
     @location = Location.new(fhir_location) unless fhir_location.nil?
   end
 
