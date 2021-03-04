@@ -55,6 +55,7 @@ class PharmaciesController < ApplicationController
   # wrong type.
 
   def search
+  
     if params[:page].present?
       # Temporary
       if Rails.env.production?
@@ -88,7 +89,11 @@ class PharmaciesController < ApplicationController
       end
 
       modified_params[:role] = "pharmacy" 
-
+      # if network and specialty are present, filter those on the client.
+      network = modified_params["network"]
+      specialty = modified_params["specialty"]
+      modified_params.delete("network")
+      modified_params.delete("specialty")
       # Only include the allowed search parameters...
       filtered_params = Location.search_params.select { |key, _value| modified_params[key].present? }
 
@@ -137,8 +142,8 @@ class PharmaciesController < ApplicationController
 
       @orgaffs.map do |orgaff|
         checked = true
-        checked &= reference_contained(orgaff.networks, query_params["network"] ) if query_params["network"].size > 0
-        checked &= code_contained(orgaff.specialties, query_params["specialty"] ) if query_params["specialty"].size > 0
+        checked &= reference_contained(orgaff.networks, network  ) if network
+        checked &= code_contained(orgaff.specialties, specialty ) if specialty 
         checked &= code_contained(orgaff.codes, "pharmacy" )  
 
         if (checked)
