@@ -18,10 +18,22 @@ bundle install
 ```
 Start PostgreSQL
 
+Create the zipcode database:
+```sh
+rake db:create
+rake db:migrate
+```
+
 Initialize the zipcode database once:
 ```sh
 ruby db/seed_zipcodes.rb
 ```
+
+Install and start memcached
+```
+instructions
+```
+
 Now you are ready to start the client.
 ```sh
 rails s
