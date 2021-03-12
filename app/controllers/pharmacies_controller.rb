@@ -90,8 +90,8 @@ class PharmaciesController < ApplicationController
 
       modified_params[:role] = "pharmacy" 
       # if network and specialty are present, filter those on the client.
-      network = modified_params["network"]
-      specialty = modified_params["specialty"]
+      network = modified_params["network"].length > 0 ? modified_params["network"] :  nil 
+      specialty = modified_params["specialty"].length > 0 ? modified_params["specialty"] :  nil 
       modified_params.delete("network")
       modified_params.delete("specialty")
       # Only include the allowed search parameters...
@@ -132,7 +132,7 @@ class PharmaciesController < ApplicationController
         break unless url.present?
         @bundle = @client.parse_reply(FHIR::Bundle, @client.default_format, @client.raw_read_url(url))
       end
-
+  
       # now we have all of the content, we can now process the content
       # Now, iterate through the orgaffs, and mark the locations associated with orgaffs that satisfy the filter criteria
       #  if query_params["network"] filter by contains_code(orgaff.network, query_Params["network"])
@@ -145,7 +145,6 @@ class PharmaciesController < ApplicationController
         checked &= reference_contained(orgaff.networks, network  ) if network
         checked &= code_contained(orgaff.specialties, specialty ) if specialty 
         checked &= code_contained(orgaff.codes, "pharmacy" )  
-
         if (checked)
           orgaff.locations.map do |location|
             @locations[location.reference].checked = true if @locations[location.reference]
@@ -153,7 +152,6 @@ class PharmaciesController < ApplicationController
         end
       end
       @locations = @locations.values.select{ |loc| loc.checked }
-
       # Temporary
       if Rails.env.production?
         Rails.cache.write("pharmacy-locations-#{session.id}", @locations)
@@ -174,6 +172,7 @@ class PharmaciesController < ApplicationController
     end
 
     @items = @locations.slice(session[:offset], PAGE_SIZE)
+    binding.pry 
     @search = session[:search] 
 
     respond_to do |format|
