@@ -78,7 +78,7 @@ class PharmaciesController < ApplicationController
         # type: 'OUTPHARM',
         # _profile: 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location'
       }
-      
+
       query_params = params[:pharmacy]
 
       # Build the location-based query if zipcode and radius has been specified 
@@ -172,7 +172,6 @@ class PharmaciesController < ApplicationController
     end
 
     @items = @locations.slice(session[:offset], PAGE_SIZE)
-    binding.pry 
     @search = session[:search] 
 
     respond_to do |format|

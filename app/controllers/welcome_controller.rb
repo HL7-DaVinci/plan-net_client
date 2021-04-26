@@ -23,10 +23,8 @@ class WelcomeController < ApplicationController
   # Poll for comletion of $export operation and, if complete,  display the paths to the data for export
 
   def export
-    binding.pry 
     connect_to_server 
     exportpoll_url = session[:exportpoll]
-    binding.pry 
     if exportpoll_url   #exportpoll
       response = RestClient::Request.new( :method => :get, :url => exportpoll_url, :prefer => "respond-async").execute 
       
@@ -60,17 +58,15 @@ class WelcomeController < ApplicationController
       response = RestClient::Request.new( :method => :get, :url => server_url + "/$export", :prefer => "respond-async").execute 
       # should expect code=202 with Content-Location header with the absolute URL of an endpoint
       # then should hit the endpoint until a code = 200 is received
-      binding.pry 
+
       if response.code == 200   # request submitted successfully
         results = JSON.parse(response.to_str)
-        binding.pry 
         # exportpollurl = results[:headers][:Content-Location]
         exportpollurl = server_url + "/$export"     # temporary
         setexportpoll(exportpollurl)
         @request = response.request.url  + "  successfuly requested"
         @requiresToken = "Requested"
         @outputs= []
-        binding.pry 
       else
         @request = response.request.url  + "  failed with code = " + response.code.to_s
         @requiresToken = "Failed"
@@ -92,12 +88,11 @@ class WelcomeController < ApplicationController
       @organizationAffiliations = 0
       @practitioners = 0
       @practitionerRoles = 0
-  
+
 		 	#profile = 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Endpoint'
       search = { parameters: { _summary: "count" } }
       results = @client.search(FHIR::Endpoint, search: search )
       @endpoints = results.resource.total  unless results.resource == nil
-  
       #profile = 'http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-HealthcareService'
       search = { parameters: {_summary: "count" } }
       results = @client.search(FHIR::HealthcareService, search: search )
@@ -141,7 +136,6 @@ class WelcomeController < ApplicationController
       @locations = results.resource.total unless results.resource == nil
   
     rescue => exception
- 
       @endpoints = 0
       @healthCareServices = 0
       @insurancePlans = 0

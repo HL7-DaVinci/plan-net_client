@@ -56,12 +56,14 @@ class ProvidersController < ApplicationController
       }
       query_params = params
       modifiedparams = zip_plus_radius_to_address(query_params) if query_params
+      # binding.pry 
       query =
         SEARCH_PARAMS
           .select { |key, _value| modifiedparams[key].present? }
           .each_with_object(base_params) do |(local_key, fhir_key), search_params|
           search_params[fhir_key] = modifiedparams[local_key]
         end
+      # binding.pry 
       @bundle = @client.search(
         FHIR::PractitionerRole,
         search: { parameters: query }

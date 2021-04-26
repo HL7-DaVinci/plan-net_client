@@ -49,7 +49,6 @@ class ApplicationController < ActionController::Base
 
     rescue => exception
       err = "Connection failed: Ensure provided url points to a valid FHIR server"
-      binding.pry 
       redirect_to root_path, flash: { error: err }
   end
 
