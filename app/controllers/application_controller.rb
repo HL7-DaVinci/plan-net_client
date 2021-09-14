@@ -447,6 +447,7 @@ class ApplicationController < ActionController::Base
   ].freeze 
 
   INDIVIDUAL_AND_GROUP_SPECIALTIES = [
+    { value: '101200000X', name: 'Drama Therapist' },
     { value: '101Y00000X', name: 'Counselor' },
     { value: '101YA0400X', name: 'Addiction (Substance Use Disorder) Counselor' },
     { value: '101YM0800X', name: 'Mental Health Counselor' },
@@ -611,6 +612,7 @@ class ApplicationController < ActionController::Base
     { value: '171000000X', name: 'Military Health Care Provider' },
     { value: '1710I1002X', name: 'Independent Duty Corpsman' },
     { value: '1710I1003X', name: 'Independent Duty Medical Technicians' },
+    { value: '171400000X', name: 'Health & Wellness Coach' },
     { value: '171100000X', name: 'Acupuncturist' },
     { value: '171M00000X', name: 'Case Manager/Care Coordinator' },
     { value: '171R00000X', name: 'Interpreter' },
@@ -831,6 +833,7 @@ class ApplicationController < ActionController::Base
     { value: '2084B0002X', name: 'Obesity Medicine (Psychiatry & Neurology) Physician' },
     { value: '2084B0040X', name: 'Behavioral Neurology & Neuropsychiatry Physician' },
     { value: '2084D0003X', name: 'Diagnostic Neuroimaging (Psychiatry & Neurology) Physician' },
+    
     { value: '2084F0202X', name: 'Forensic Psychiatry Physician' },
     { value: '2084H0002X', name: 'Hospice and Palliative Medicine (Psychiatry & Neurology) Physician' },
     { value: '2084N0008X', name: 'Neuromuscular Medicine (Psychiatry & Neurology) Physician' },
@@ -1044,6 +1047,7 @@ class ApplicationController < ActionController::Base
     { value: '2472R0900X', name: 'Renal Dialysis Technician' },
     { value: '2472V0600X', name: 'Veterinary Technician' },
     { value: '247ZC0005X', name: 'Clinical Laboratory Director (Non-physician)' },
+    { value: '342000000X', name: 'Transportation Network Company' },
     { value: '363A00000X', name: 'Physician Assistant' },
     { value: '363AM0700X', name: 'Medical Physician Assistant' },
     { value: '363AS0400X', name: 'Surgical Physician Assistant' },
@@ -1322,7 +1326,7 @@ class ApplicationController < ActionController::Base
     { value: '320600000X', name: 'Residential Treatment Facility, Mental Retardation and/or Developmental Disabilities' },
     { value: '320700000X', name: 'Residential Treatment Facility, Physical Disabilities' },
     { value: '320800000X', name: 'Community Based Residential Treatment Facility, Mental Illness' },
-    { value: '320900000X', name: 'Community Based Residential Treatment Facility, Mental Retardation and/or Developmental Disabilities' },
+    { value: '320900000X', name: 'Intellectual and/or Developmental Disabilities Community Based Residential Treatment Facility' },
     { value: '322D00000X', name: 'Residential Treatment Facility, Emotionally Disturbed Children' },
     { value: '323P00000X', name: 'Psychiatric Residential Treatment Facility' },
     { value: '324500000X', name: 'Substance Abuse Rehabilitation Facility' },

@@ -63,7 +63,7 @@ class ProvidersController < ApplicationController
           .each_with_object(base_params) do |(local_key, fhir_key), search_params|
           search_params[fhir_key] = modifiedparams[local_key]
         end
-      # binding.pry 
+      # binding.pry
       @bundle = @client.search(
         FHIR::PractitionerRole,
         search: { parameters: query }
@@ -140,7 +140,9 @@ class ProvidersController < ApplicationController
     zipcode: 'location.address-postalcode',
     city: 'location.address-city',
     specialty: 'specialty',
-    name: 'practitioner.name'
+    name: 'practitioner.name',
+    date: 'date',
+    active: 'active'
   }.freeze
 
 end
