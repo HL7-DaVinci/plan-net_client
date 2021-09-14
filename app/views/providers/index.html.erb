@@ -30,6 +30,11 @@
       <input id="city-input" type="text" class="form-control bg-dark text-white" placeholder="Cambridge" onkeyup="updateProviderCity(event)">
       <label for="name-input">Name</label>
       <input id="name-input" type="text" class="form-control bg-dark text-white" onkeyup="updateProviderName(event)">
+      <label for="active-input">Active On</label>
+      <input id="active-input" type="date" class="form-control bg-dark text-white" onkeyup="updateProviderActiveDate(event)">
+      <label for="is-active-input">Show only currently active plans</label>
+      <input id="is-active-input" type="checkbox" value="true" onclick="updateProviderActive(event)">
+      <br>
 
       <button id="provider-search-button", class="btn btn-outline-success" onclick="submitProviderSearch(event)">
         Find

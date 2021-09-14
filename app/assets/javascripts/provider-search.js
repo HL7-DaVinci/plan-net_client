@@ -5,6 +5,8 @@ $(() => {
     updateProviderCity({ target: { value: $('#city-input').val() } });
     updateProviderSpecialty({ target: { value: $('#specialty-select').val() } });
     updateProviderName({ target: { value: $('#name-input').val() } });
+    updateProviderActiveDate({ target: { value: $('#active-input').val() } });
+    updateProviderActive({ target: { value: $('#is-active-input').val() } });
   }
 });
 
@@ -68,6 +70,15 @@ const updateProviderSpecialty = function (event) {
 
 const updateProviderName = function (event) {
   updateProviderSearchParam(event, 'name');
+};
+
+const updateProviderActive = function (event) {
+  console.log("in here!");
+  updateProviderSearchParam(event, 'active');
+}
+
+const updateProviderActiveDate = function (event) {
+  providerParams['date'] = 'le' + event.target.value + '&date=ge' + event.target.value;
 };
 
 const submitProviderSearch = function (_event) {
