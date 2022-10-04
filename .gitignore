@@ -36,3 +36,7 @@
 # Ignore Macintosh files
 **/.DS_Store
 
+# IntelliJ
+*.iws
+.idea/workspace.xml
+.idea/tasks.xml
