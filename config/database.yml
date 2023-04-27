@@ -16,22 +16,22 @@
 
 default: &default
   adapter: postgresql
-  encoding: unicode
-  pool: 5
+  encoding: utf8
+  pool: <%= (ENV['EXAMPLE_SERVER_THREADS'].to_i + 2) || 8 %>
   timeout: 5000
 
 development:
   <<: *default
-  database: plan_net_development
+  database: <%= ENV["EXAMPLE_DATABASE_URL"] %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: plan_net_test
+  database: <%= ENV["EXAMPLE_DATABASE_URL_TEST"] %>
 
 production:
   <<: *default
-  database: plan_net_production
+  database: <%= ENV["EXAMPLE_DATABASE_URL"] %>
 
