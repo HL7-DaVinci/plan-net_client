@@ -94,5 +94,5 @@ pharmacy_mix << pharmacy_locations(networks, nil, "All")
 PHARMACY_SPECIALTIES.map do |specialty|
   pharmacy_mix << pharmacy_locations(networks, specialty[:value], specialty[:name])
 end
-binding.pry 
+#binding.pry 
 

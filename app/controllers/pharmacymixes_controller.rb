@@ -55,7 +55,7 @@ class PharmacymixesController < ApplicationController
       end
       fhir_orgaffs # return the array
       rescue => exception
-        binding.pry 
+        #binding.pry 
   end
   def pharmacy_locations(orgaffs, specialty, specialtydisplay)
     # retrieve organizationaffiliations that satisfy type=pharmacy and specialty = specialty (if provided)
@@ -75,7 +75,7 @@ class PharmacymixesController < ApplicationController
         "locations": locations.size}
 
       rescue => exception
-        binding.pry 
+        #binding.pry 
 
   end
 

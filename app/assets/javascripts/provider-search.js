@@ -7,11 +7,12 @@ $(() => {
     updateProviderName({ target: { value: $('#name-input').val() } });
     updateProviderActiveDate({ target: { value: $('#active-input').val() } });
     updateProviderActive({ target: { value: $('#is-active-input').val() } });
+    updateProviderNewPatient({ target: { value: $('#new-patient-input').val() } });
   }
 });
 
 const updateProviderNetworkList = function (event) {
-  updateProviderSearchParam(event, 'network');
+  updateProviderSearchParam(event, 'practitionerrole-network');
   if(event.target.value === '') {
     $('#plan-select').html('');
   } else {
@@ -49,7 +50,7 @@ const updateProviderSearchParam = function(event, param) {
 };
 
 const updateProviderNetwork = function (event) {
-  updateProviderSearchParam(event, 'network');
+  updateProviderSearchParam(event, 'practitionerrole-network');
 };
 
 const updateProviderZip = function (event) {
@@ -77,6 +78,11 @@ const updateProviderActive = function (event) {
   updateProviderSearchParam(event, 'active');
 }
 
+const updateProviderNewPatient = function (event) {
+  updateProviderSearchParam(event, 'practitionerrole-new-patient');
+}
+
+
 const updateProviderActiveDate = function (event) {
   providerParams['date'] = 'le' + event.target.value + '&date=ge' + event.target.value;
 };
@@ -93,6 +99,7 @@ const submitProviderSearch = function (_event) {
 };
 
 const fetchProviders = function (params) {
+  console.log(`/providers/search.json?${params}`);
   fetch(`/providers/search.json?${params}`)
     .then(response => response.json())
     .then(response => {

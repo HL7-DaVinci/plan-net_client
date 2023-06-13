@@ -31,7 +31,7 @@ class InsurancePlansController < ApplicationController
         } 
       }
     )&.resource&.entry&.network.map do |network|
-      binding.pry 
+      #binding.pry 
       {
         value: network.reference,
         name: network.display

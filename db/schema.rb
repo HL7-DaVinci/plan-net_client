@@ -13,6 +13,8 @@
 ActiveRecord::Schema.define(version: 2020_08_13_134506) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "adminpack"
+  enable_extension "pgagent"
   enable_extension "plpgsql"
 
   create_table "zipcodes", force: :cascade do |t|

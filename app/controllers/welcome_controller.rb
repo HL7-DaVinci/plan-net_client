@@ -36,7 +36,7 @@ class WelcomeController < ApplicationController
      case response.code
       when 200
           results = JSON.parse(response.to_str)
-          binding.pry 
+          #binding.pry 
           @request = results["request"]
           @outputs = results["output"]
           @requiresToken = results["requiresAccessToken"]
@@ -44,7 +44,7 @@ class WelcomeController < ApplicationController
         when 202
           results = JSON.parse(response.to_str)
           progress = results[:X-Progress]
-          binding.pry 
+          #binding.pry 
           @request = results["request"]
           @outputs = []
           @requiresToken = "In progress:   #{progress}... try again later"

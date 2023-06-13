@@ -213,7 +213,12 @@ class ApplicationController < ActionController::Base
   #-----------------------------------------------------------------------------
 
   def display_telecom(telecom)
-    telecom.system + ': ' + telecom.value
+
+    if telecom.try(:system).nil?
+      telecom.try(:system) + ': ' + telecom.try(:value)
+    else
+      'contact: ' + telecom.try(:value)
+    end
   end
 
   #-----------------------------------------------------------------------------

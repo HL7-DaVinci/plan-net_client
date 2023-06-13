@@ -142,7 +142,8 @@ class ProvidersController < ApplicationController
     specialty: 'specialty',
     name: 'practitioner.name',
     date: 'date',
-    active: 'active'
+    active: 'active',
+    new_patient: 'practitionerrole-new-patient'
   }.freeze
 
 end

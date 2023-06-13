@@ -18,7 +18,8 @@ class Resource
     @language = resource.language
     @text = resource.text
     @identifier = resource.identifier
-    @active = resource.active
+    @active = resource.active,
+    @new_patient = resource.new_patient
   end
 
   #-----------------------------------------------------------------------------

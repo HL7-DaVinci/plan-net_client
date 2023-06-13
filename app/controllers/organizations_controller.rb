@@ -49,7 +49,7 @@ class OrganizationsController < ApplicationController
     
       @bundle = reply.resource
       @search = "<Search String in Returned Bundle is empty>"
-      binding.pry 
+      #binding.pry 
       @search = URI.decode(@bundle.link.select { |l| l.relation === "self"}.first.url) if @bundle && @bundle.link && @bundle.link.first 
     end
 

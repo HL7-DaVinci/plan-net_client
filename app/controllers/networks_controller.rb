@@ -63,7 +63,7 @@ class NetworksController < ApplicationController
   def show
     reply = @client.read(FHIR::Organization, params[:id])
     fhir_network = reply.resource
-    binding.pry 
+    #binding.pry 
     @network = Network.new(fhir_network) unless fhir_network.nil?
     @organization = @network 
   end

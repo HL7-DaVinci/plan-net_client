@@ -13,7 +13,7 @@ class PractitionerRole < Resource
   include ActiveModel::Model
 
   attr_accessor :id, :meta, :implicit_rules, :language, :text, :identifier,
-                :active, :period, :practitioner, :organization, :code,
+                :active, :new_patient, :period, :practitioner, :organization, :code,
                 :specialties, :locations, :healthcare_services, :telecoms,
                 :available_times, :not_availables, :availability_exceptions,
                 :endpoints
@@ -34,6 +34,7 @@ class PractitionerRole < Resource
     @not_availables = practitioner_role.notAvailable
     @availability_exceptions = practitioner_role.availabilityExceptions
     @endpoints = practitioner_role.endpoint
+    @new_patient = resource.new_patient
   end
 
   #-----------------------------------------------------------------------------
@@ -89,12 +90,12 @@ class PractitionerRole < Resource
         value: 'location'
       },
       {
-        name: 'Network',
-        value: 'network'
+        name: 'practitionerrole-network',
+        value: 'practitionerrole-network'
       },
       {
-        name: 'New Patient',
-        value: 'new-patient'
+        name: 'practitionerrole-new-patient',
+        value: 'practitionerrole-new-patient'
       },
       {
         name: 'New Patient Network',

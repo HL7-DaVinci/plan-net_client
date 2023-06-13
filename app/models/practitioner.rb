@@ -12,7 +12,7 @@ class Practitioner < Resource
   include ActiveModel::Model
 
   attr_accessor :id, :meta, :implicit_rules, :language, :text, :identifier,
-                :active, :name, :telecoms, :addresses, :gender, :birthDate,
+                :active, :new_patient, :name, :telecoms, :addresses, :gender, :birthDate,
                 :photo, :qualifications, :communications
 
   #-----------------------------------------------------------------------------

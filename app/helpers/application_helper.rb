@@ -32,15 +32,63 @@ module ApplicationHelper
 
  
   def display_human_name(name)
-    result = [name.prefix.join(', '), name.given.join(' '), name.family].join(' ')
-    result += ', ' + name.suffix.join(', ') if name.suffix.present?
+
+    if !name.try(:text).nil?
+      result = name.try(:text)
+    else
+      
+      if !name.try(:prefix).nil?
+        result = name.try(:prefix).join(', ')
+      end
+  
+      if !name.try(:given).nil?
+        if result.length != 0
+          result = result + ' '
+        end
+        result = result + name.try(:given).join(', ')
+      end
+      if !name.try(:family).nil?
+        if result.length != 0
+          result = result + ' '
+        end
+        result = result + name.try(:family)
+      end
+  
+      if !name.try(:suffix).nil?
+        if result.length != 0
+          result = result + ' '
+        end
+        result = result + name.try(:suffix).join(', ')
+      end
+      
+    end
+
     sanitize(result)
+    
   end
+
+
+  #def display_human_name(name)
+  #  result = "None"
+  #  puts name.inspect
+
+    #result = [if name.prefix.nil? '' : name.prefix.join(', '), if name.given.nil? '' : name.given.join(' '), if name.family.nil? '' : name.family].join(' ')
+  #  result = name.family
+  #  result = [if name.prefix.nil? '' : name.prefix.join(', '), if name.given.nil? '' : name.given.join(' '), if name.family.nil? '' : name.family].join(' ')
+    #result += ', ' + name.suffix.join(', ') if name.suffix.present?
+  #  sanitize(result)
+  #end
 
   #-----------------------------------------------------------------------------
 
   def display_telecom(telecom)
-    sanitize(telecom.system + ': ' + number_to_phone(telecom.value, area_code: true))
+    if !telecom.try(:value).nil?
+      if !telecom.try(:system).nil?
+        sanitize(telecom.try(:system) + ': ' + number_to_phone(telecom.try(:value), area_code: true))
+      else
+        sanitize('contact: ' + number_to_phone(telecom.try(:value), area_code: true))
+      end
+    end
   end
 
   #-----------------------------------------------------------------------------
