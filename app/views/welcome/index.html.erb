@@ -26,7 +26,9 @@
      <section class='row col-12'>
                 <%= form_tag root_path, method: 'get', class: 'form-inline', id: 'server-form' do %>
                         <div class='form-group col-md-10'>
-                                <%= text_field_tag :server_url, cookies[:server_url], class: 'form-control', placeholder: 'https://davinci-drug-formulary-ri.logicahealth.org/fhir' %>
+                                <%= text_field_tag :server_url, cookies[:server_url], class: 'form-control', 
+																value: (cookies[:server_url] or 'https://plan-net-ri.davinci.hl7.org/fhir'),
+																placeholder: 'https://plan-net-ri.davinci.hl7.org/fhir' %>
                         </div>
 
                         <%= button_tag class: 'btn btn-primary col-md-2', id: 'server-url' do %>

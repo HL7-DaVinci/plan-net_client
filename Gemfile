@@ -3,7 +3,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.6.10'
+ruby '2.7.8'
 
 gem 'puma', '~> 3.11'           # Use Puma as the app server
 gem 'rails', '~> 5.2.3'         # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -31,6 +31,7 @@ gem 'leaflet-awesome-markers-rails', '~> 2.0'
     
 gem 'leaflet-rails'             # Handles Leaflet-based maps
 gem 'pg'                        # Use Postgres
+gem 'sqlite3', "~> 1.6.0"       # Use sqlite3 as the database for Active Record
 gem 'geokit-rails'              # Provides geolocation-based searches
 gem 'dalli'                     # Memcache client
 
