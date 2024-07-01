@@ -46,7 +46,9 @@ module ApplicationHelper
   #-----------------------------------------------------------------------------
 
   def display_identifier(identifier)
-    sanitize("#{identifier.assigner.display}: ( #{identifier.type.text}, #{identifier.value})")
+    begin
+      sanitize("#{identifier.assigner.display}: ( #{identifier.type.text}, #{identifier.value})")
+    end
   #    sanitize([identifier.type.text, identifier.value, identifier.assigner.display].join(', '))
   end
 
