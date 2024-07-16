@@ -121,8 +121,10 @@ module ApplicationHelper
   #-----------------------------------------------------------------------------
 
   def display_postal_code(postal_code)
-    sanitize(postal_code.match(/^\d{9}$/) ?
-        postal_code.strip.sub(/([A-Z0-9]+)([A-Z0-9]{4})/, '\1-\2') : postal_code)
+    if postal_code.present?
+      sanitize(postal_code.match(/^\d{9}$/) ?
+          postal_code.strip.sub(/([A-Z0-9]+)([A-Z0-9]{4})/, '\1-\2') : postal_code)
+    end
   end
 
   #-----------------------------------------------------------------------------
