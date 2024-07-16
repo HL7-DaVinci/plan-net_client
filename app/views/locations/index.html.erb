@@ -57,13 +57,15 @@
             <% end %>
           </td>
           <td>
-            <%= link_to google_maps(location.address) do %>
-              <% location.address.line.each do |line| %>
-                <%= sanitize(line) %><br />
+            <% if location.address.present? %>
+              <%= link_to google_maps(location.address) do %>
+                <% location.address.line.each do |line| %>
+                  <%= sanitize(line) %><br />
+                <% end %>
+                <%= sanitize(location.address.city) %>, 
+                <%= sanitize(location.address.state) %> 
+                <%= display_postal_code(location.address.postalCode) %><br />
               <% end %>
-              <%= sanitize(location.address.city) %>, 
-              <%= sanitize(location.address.state) %> 
-              <%= display_postal_code(location.address.postalCode) %><br />
             <% end %>
           </td>
           <td><%= sanitize(location.physical_type) %></td>
